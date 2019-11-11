@@ -1,7 +1,9 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Window;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +20,13 @@ public abstract class BaseActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+        hideStatusBarBack();
+
+
         setContentView(getLayoutId());
         ButterKnife.bind(this);
         initViews();
@@ -37,4 +46,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
+
+    public  void hideStatusBarBack() {
+        if (Build.VERSION.SDK_INT >= 21) {
+            Window window = getWindow();
+            window.clearFlags(67108864);
+            window.getDecorView().setSystemUiVisibility(1280);
+            window.addFlags(Integer.MIN_VALUE);
+            window.setStatusBarColor(0);
+        }
+    }
+
 }
