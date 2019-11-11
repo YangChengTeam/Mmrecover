@@ -1,18 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".controller.activitys.MainActivity">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/blue"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <View
+        android:id="@id/v_status_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="25.0dip"
+        android:background="@color/blue" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:id="@id/rl_title_top"
+        android:layout_width="fill_parent"
+        android:layout_height="55.0dip"
+        android:layout_below="@id/v_status_bar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18.0dip"
+            android:includeFontPadding="false"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="21.0sp" />
+
+        <ImageView
+            android:id="@id/im_user"
+            android:layout_width="55.0dip"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="2.0dip"
+            android:padding="16.0dip"
+            android:scaleType="fitXY"
+            android:src="@mipmap/home_user" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/gl_container"
+        android:layout_below="@id/rl_title_top"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="37.0dip"
+            android:background="@mipmap/home_broad">
+
+            <ImageView
+                android:id="@id/im_broad"
+                android:layout_width="18.0dip"
+                android:layout_height="15.0dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16.0dip"
+                android:scaleType="fitXY"
+                android:src="@mipmap/pay_broad2" />
+
+            <com.yc.mmrecover.controller.view.wdiget.VTextView
+                android:id="@id/tv_broadcast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="22.0dip"
+                android:layout_toRightOf="@id/im_broad"
+                android:textColor="@color/white"
+                android:textSize="14.0sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@id/tv_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:includeFontPadding="false"
+            android:text="71"
+            android:textColor="@color/white"
+            android:textSize="120.0sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/tv_percent"
+            android:layout_marginTop="15.0dip"
+            android:layout_toRightOf="@id/tv_percent"
+            android:text="%"
+            android:textColor="@color/white"
+            android:textSize="18.0sp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20.0dip"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@id/tv_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="23GB/56GB"
+                android:textColor="@color/white"
+                android:textSize="18.0sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:text="空间占用"
+                android:textColor="@color/white"
+                android:textSize="20.0sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <GridLayout
+        android:id="@id/gl_container"
+        android:layout_width="fill_parent"
+        android:layout_height="260.0dip"
+        android:layout_alignParentBottom="true"
+        android:background="@mipmap/home_bk"
+        android:paddingTop="20.0dip" />
+</RelativeLayout>

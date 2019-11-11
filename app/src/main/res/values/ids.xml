@@ -3,6 +3,14 @@
     <item type="id" name="ll_waiting"></item>
     <item type="id" name="v_status_bar"></item>
 
+    <item type="id" name="tv_size"></item>
+    <item type="id" name="tv_percent"></item>
+    <item type="id" name="im_broad"></item>
+    <item type="id" name="gl_container"></item>
+    <item type="id" name="rl_title_top"></item>
+    <item type="id" name="im_user"></item>
+    <item type="id" name="tv_broadcast"></item>
+
    <!-- <item type="id" name="action_bar">false</item>
     <item type="id" name="action_bar_activity_content">false</item>
     <item type="id" name="action_bar_container">false</item>
@@ -41,7 +49,7 @@
     <item type="id" name="expand_activities_button">false</item>
     <item type="id" name="expanded_menu">false</item>
     <item type="id" name="fl_content">false</item>
-    <item type="id" name="gl_container">false</item>
+
     <item type="id" name="gridView">false</item>
     <item type="id" name="group_divider">false</item>
     <item type="id" name="home">false</item>
@@ -50,7 +58,7 @@
     <item type="id" name="im_a">false</item>
     <item type="id" name="im_ali_select">false</item>
     <item type="id" name="im_back">false</item>
-    <item type="id" name="im_broad">false</item>
+
     <item type="id" name="im_close">false</item>
     <item type="id" name="im_head">false</item>
     <item type="id" name="im_icon">false</item>
@@ -64,7 +72,7 @@
     <item type="id" name="im_select_bk1">false</item>
     <item type="id" name="im_select_bk2">false</item>
     <item type="id" name="im_start">false</item>
-    <item type="id" name="im_user">false</item>
+
     <item type="id" name="im_video_mask">false</item>
     <item type="id" name="im_w">false</item>
     <item type="id" name="im_water_mark">false</item>
@@ -109,7 +117,7 @@
     <item type="id" name="rl_price2">false</item>
     <item type="id" name="rl_root">false</item>
     <item type="id" name="rl_select">false</item>
-    <item type="id" name="rl_title_top">false</item>
+
     <item type="id" name="rl_top">false</item>
     <item type="id" name="scrollIndicatorDown">false</item>
     <item type="id" name="scrollIndicatorUp">false</item>
@@ -147,7 +155,7 @@
     <item type="id" name="tv_backup">false</item>
     <item type="id" name="tv_backup1">false</item>
     <item type="id" name="tv_backup_err">false</item>
-    <item type="id" name="tv_broadcast">false</item>
+
     <item type="id" name="tv_buy">false</item>
     <item type="id" name="tv_code">false</item>
     <item type="id" name="tv_content">false</item>
@@ -166,7 +174,7 @@
     <item type="id" name="tv_note">false</item>
     <item type="id" name="tv_operation">false</item>
     <item type="id" name="tv_pay">false</item>
-    <item type="id" name="tv_percent">false</item>
+
     <item type="id" name="tv_phone">false</item>
     <item type="id" name="tv_qa">false</item>
     <item type="id" name="tv_recommend">false</item>
@@ -175,7 +183,7 @@
     <item type="id" name="tv_show_backup">false</item>
     <item type="id" name="tv_show_detail">false</item>
     <item type="id" name="tv_shuoming">false</item>
-    <item type="id" name="tv_size">false</item>
+
     <item type="id" name="tv_status">false</item>
     <item type="id" name="tv_step">false</item>
     <item type="id" name="tv_step1">false</item>
