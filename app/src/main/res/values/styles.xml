@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="StartAppTheme" parent="@style/AppTheme">
+        <!--<item name="android:windowBackground">@mipmap/login_bk</item>-->
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+    </style>
+
 </resources>
