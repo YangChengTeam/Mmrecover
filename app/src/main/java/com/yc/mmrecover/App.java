@@ -12,7 +12,7 @@ import com.kk.utils.FileUtil;
 import com.kk.utils.LogUtil;
 import com.kk.utils.TaskUtil;
 import com.umeng.commonsdk.UMConfigure;
-import com.yc.mmrecover.bean.model.ChannelInfo;
+import com.yc.mmrecover.model.bean.ChannelInfo;
 
 import java.io.IOException;
 import java.io.InputStream;

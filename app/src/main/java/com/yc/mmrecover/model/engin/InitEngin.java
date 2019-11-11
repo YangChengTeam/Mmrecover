@@ -1,4 +1,4 @@
-package com.yc.mmrecover.bean.engin;
+package com.yc.mmrecover.model.engin;
 
 import android.content.Context;
 

@@ -1,4 +1,4 @@
-package com.yc.mmrecover.bean.model;
+package com.yc.mmrecover.model.bean;
 
 public class ChannelInfo {
     private String node_id;
