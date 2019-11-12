@@ -15,8 +15,10 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"></uses-permission>
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -39,12 +41,16 @@
         <activity android:name=".controller.activitys.PayActivity"></activity>
         <activity android:name=".controller.activitys.SearchActivity"></activity>
 
+
         <activity android:name=".controller.activitys.ShowFileActivity"></activity>
         <activity android:name=".controller.activitys.ShowImageActivity"></activity>
         <activity android:name=".controller.activitys.ShowVoiceActivity"></activity>
         <activity android:name=".controller.activitys.ShowVideoActivity"></activity>
 
         <service android:name=".thread.ScanVideoService"></service>
+
+        <activity android:name=".controller.activitys.WebActivity"></activity>
+
     </application>
 
 </manifest>

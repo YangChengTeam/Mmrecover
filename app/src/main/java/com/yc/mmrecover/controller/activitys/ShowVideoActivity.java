@@ -11,6 +11,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class ShowVideoActivity extends BaseShowActivity {
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_video_show;

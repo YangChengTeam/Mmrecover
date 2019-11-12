@@ -13,8 +13,8 @@
 
         <ImageView
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="fitStart"
+            android:layout_height="175dp"
+            android:scaleType="fitXY"
             android:src="@mipmap/customer_bk" />
 
         <LinearLayout
@@ -42,6 +42,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_top"
+        android:layout_marginTop="45dp"
         android:orientation="vertical" />
 
     <TextView

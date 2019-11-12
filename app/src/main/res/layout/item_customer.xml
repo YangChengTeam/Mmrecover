@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/gray_bk"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="90.0dip"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="93.0dip"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@id/im_icon"
+                android:layout_width="31.0dip"
+                android:layout_height="26.0dip"
+                android:scaleType="fitXY"
+                android:src="@mipmap/customer_wx" />
+
+            <TextView
+                android:id="@id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6.0dip"
+                android:text="客服微信"
+                android:textColor="@color/black_word"
+                android:textSize="13.0sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1.0dip"
+            android:layout_height="fill_parent"
+            android:background="@color/gray_line" />
+
+        <RelativeLayout
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20.0dip"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="微信号：123123"
+                    android:textColor="@color/black_word"
+                    android:textSize="15.0sp" />
+
+                <TextView
+                    android:id="@id/tv_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13.0dip"
+                    android:text="vip专属客服"
+                    android:textColor="@color/gray_word2"
+                    android:textSize="14.0sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="23.0dip"
+            android:layout_height="3.0dip"
+            android:layout_marginTop="26.0dip"
+            android:scaleType="fitXY"
+            android:src="@mipmap/customer_dot" />
+
+        <View
+            android:layout_width="22.0dip"
+            android:layout_height="1.0dip" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="10.0dip"
+        android:background="@color/gray_bk" />
+</LinearLayout>

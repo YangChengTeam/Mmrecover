@@ -20,8 +20,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-
-        VUiKit.postDelayed(2000, () -> {
+        VUiKit.postDelayed(900, () -> {
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
             finish();
         });
