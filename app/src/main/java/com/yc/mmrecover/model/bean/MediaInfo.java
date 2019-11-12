@@ -1,6 +1,8 @@
 package com.yc.mmrecover.model.bean;
 
-public class MediaInfo {
+import java.io.Serializable;
+
+public class MediaInfo implements Serializable {
     private String fileName;
     private int height;
     private boolean isSelect;
