@@ -141,8 +141,8 @@
                 android:layout_width="30.0dip"
                 android:layout_height="30.0dip"
                 android:layout_gravity="center_horizontal"
-                app:indicatorName="LineSpinFadeLoader"
-                app:indicatorColor="@color/white"  />
+                app:indicatorColor="@color/white"
+                app:indicatorName="LineSpinFadeLoader" />
 
             <TextView
                 android:id="@+id/tv_mask"
@@ -153,4 +153,6 @@
                 android:textColor="@color/white" />
         </LinearLayout>
     </RelativeLayout>
+
+
 </RelativeLayout>

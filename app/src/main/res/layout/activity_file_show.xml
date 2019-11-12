@@ -64,7 +64,7 @@
                 android:src="@mipmap/image_start" />
         </LinearLayout>
 
-        <GridView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/gridView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -128,10 +128,11 @@
                 android:layout_width="30.0dip"
                 android:layout_height="30.0dip"
                 android:layout_gravity="center_horizontal"
-                app:indicatorName="LineSpinFadeLoader"
-                app:indicatorColor="@color/white" />
+                app:indicatorColor="@color/white"
+                app:indicatorName="LineSpinFadeLoader" />
 
             <TextView
+                android:id="@+id/tv_mask"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3.0dip"

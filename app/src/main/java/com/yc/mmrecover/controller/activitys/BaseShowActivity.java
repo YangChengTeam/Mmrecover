@@ -45,8 +45,8 @@ public abstract class BaseShowActivity extends BaseActivity {
     @BindView(R.id.tv_recovered)
     TextView mTvRecovered;
 
-    @BindView(R.id.tv_del)
-    TextView mDelBtn;
+//    @BindView(R.id.tv_del)
+//    TextView mDelBtn;
 
     @BindView(R.id.tv_mask)
     TextView mTvMask;
@@ -90,7 +90,7 @@ public abstract class BaseShowActivity extends BaseActivity {
 
         this.mTvRecover.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.yellow_btn));
         this.mTvRecovered.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.gray_button));
-        this.mDelBtn.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.red_word));
+//        this.mDelBtn.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.red_word));
         this.mMediaList = new ArrayList<>();
         initData();
         scan();
