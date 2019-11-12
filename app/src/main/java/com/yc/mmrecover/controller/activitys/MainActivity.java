@@ -108,14 +108,23 @@ public class MainActivity extends BaseActivity {
 
     private void initGridLayout() {
         int i = 0;
+
         while (i < this.btnTextList.length) {
             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
             layoutParams.rowSpec = GridLayout.spec(i / 3, 1.0f);
             layoutParams.columnSpec = GridLayout.spec(i % 3, 1.0f);
             View homeButton = getHomeButton(this.btnTextList[i], this.btnImageList[i]);
-            homeButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-
+            homeButton.setTag(i);
+            RxView.clicks(homeButton).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v)->{
+                switch (Integer.valueOf(homeButton.getTag().toString())){
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                        startActivity(new Intent(MainActivity.this, ContactActivity.class));
+                        break;
                 }
             });
             gridLayout.addView(homeButton, layoutParams);
