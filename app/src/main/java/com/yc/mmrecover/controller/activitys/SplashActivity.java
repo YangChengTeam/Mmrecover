@@ -1,12 +1,18 @@
 package com.yc.mmrecover.controller.activitys;
 
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.widget.TextView;
+
+import com.kk.utils.VUiKit;
 import com.yc.mmrecover.R;
 
 import butterknife.BindView;
 
 public class SplashActivity extends BaseActivity {
 
-    /*<item name="android:windowBackground">@mipmap/login_bk</item>*/
+    @BindView(R.id.tv_app_name)
+    TextView appNameTextView;
 
     @Override
     protected int getLayoutId() {
@@ -15,6 +21,9 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-
+        VUiKit.postDelayed(2000, () -> {
+            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            finish();
+        });
     }
 }

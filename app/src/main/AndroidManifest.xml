@@ -18,29 +18,19 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".controller.activitys.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StartAppTheme">
-
-        </activity>
-        <activity android:name=".controller.activitys.MainActivity">
-
-        </activity>
-        <activity android:name=".controller.activitys.ComplaintActivity"></activity>
-        <activity android:name=".controller.activitys.ContactActivity"></activity>
-        <activity android:name=".controller.activitys.FeedbackActivity"></activity>
-        <activity android:name=".controller.activitys.HelpActivity"></activity>
-        <activity android:name=".controller.activitys.PayActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.activitys.SearchActivity"></activity>
+        <activity android:name=".controller.activitys.MainActivity"></activity>
+        <activity android:name=".controller.activitys.MyActivity"></activity>
     </application>
 
 </manifest>
