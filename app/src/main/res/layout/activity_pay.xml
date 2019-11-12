@@ -1,6 +1,382 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/blue">
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/gray_bk"
+        android:orientation="vertical">
+
+        <View
+            android:id="@id/v_status_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="25.0dip"
+            android:background="@color/blue" />
+
+        <include layout="@layout/layout_title" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="37.0dip"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@id/im_broad"
+                android:layout_width="18.0dip"
+                android:layout_height="15.0dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16.0dip"
+                android:scaleType="fitXY"
+                android:src="@mipmap/pay_broad" />
+
+            <com.yc.mmrecover.controller.view.wdiget.VTextView
+                android:id="@id/tv_broadcast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="12.0dip"
+                android:layout_toRightOf="@id/im_broad"
+                android:textColor="@color/black_word"
+                android:textSize="16.0sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="210.0dip"
+            android:layout_marginTop="10.0dip"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@id/rl_price1"
+                android:layout_width="fill_parent"
+                android:layout_height="68.0dip"
+                android:layout_marginLeft="15.0dip"
+                android:layout_marginTop="16.0dip"
+                android:layout_marginRight="15.0dip">
+
+                <ImageView
+                    android:id="@id/im_select_bk1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/pay_frame_on"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@id/tv_recommend"
+                    android:layout_width="75.0dip"
+                    android:layout_height="23.0dip"
+                    android:layout_alignParentRight="true"
+                    android:background="@mipmap/pay_recommend"
+                    android:gravity="center"
+                    android:text="  推荐"
+                    android:textColor="@color/white"
+                    android:textSize="15.0sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12.0dip"
+                    android:layout_marginTop="15.0dip"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@id/tv_98"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5.0dip"
+                        android:text="98元"
+                        android:textColor="@color/black_word"
+                        android:textSize="16.0sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5.0dip"
+                        android:text="永久恢复"
+                        android:textColor="@color/red_word"
+                        android:textSize="13.0sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="12.0dip"
+                    android:layout_marginBottom="10.0dip"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@id/tv_content1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:text="可恢复微信聊天记录、视频、语音和图片"
+                        android:textColor="@color/gray_word2"
+                        android:textSize="13.0sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:text="+VIP专属客服"
+                        android:textColor="@color/red_word"
+                        android:textSize="13.0sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@id/im_select1"
+                    android:layout_width="20.0dip"
+                    android:layout_height="20.0dip"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/pay_select"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@id/rl_price2"
+                android:layout_width="fill_parent"
+                android:layout_height="68.0dip"
+                android:layout_marginLeft="15.0dip"
+                android:layout_marginTop="12.0dip"
+                android:layout_marginRight="15.0dip">
+
+                <ImageView
+                    android:id="@id/im_select_bk2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/pay_frame_off"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12.0dip"
+                    android:layout_marginTop="15.0dip"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@id/tv_28"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5.0dip"
+                        android:text="28元"
+                        android:textColor="@color/black_word"
+                        android:textSize="16.0sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5.0dip"
+                        android:text="永久恢复"
+                        android:textColor="@color/red_word"
+                        android:textSize="13.0sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="12.0dip"
+                    android:layout_marginBottom="10.0dip"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@id/tv_content2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:text="可恢复微信视频、语音、图片"
+                        android:textColor="@color/gray_word2"
+                        android:textSize="13.0sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:text="+VIP专属客服"
+                        android:textColor="@color/red_word"
+                        android:textSize="13.0sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@id/im_select2"
+                    android:layout_width="20.0dip"
+                    android:layout_height="20.0dip"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/pay_select"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15.0dip"
+                android:layout_marginTop="12.0dip"
+                android:layout_marginRight="15.0dip"
+                android:text="充值后畅享VIP专属客服在线支持（微信/QQ/工单）"
+                android:textColor="@color/black_word"
+                android:textSize="13.0sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="86.0dip"
+            android:layout_marginTop="10.0dip"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@id/rl_pay_wx"
+                android:layout_width="fill_parent"
+                android:layout_height="0.0dip"
+                android:layout_weight="1.0">
+
+                <ImageView
+                    android:id="@id/im_w"
+                    android:layout_width="23.0dip"
+                    android:layout_height="23.0dip"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16.0dip"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/pay_wchat" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_toRightOf="@id/im_w"
+                    android:text="微信支付"
+                    android:textColor="@color/black_word"
+                    android:textSize="15.0sp" />
+
+                <ImageView
+                    android:id="@id/im_wx_select"
+                    android:layout_width="21.0dip"
+                    android:layout_height="21.0dip"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.0dip"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/pay_check" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@id/rl_pay_ali"
+                android:layout_width="fill_parent"
+                android:layout_height="0.0dip"
+                android:layout_weight="1.0">
+
+                <ImageView
+                    android:id="@id/im_a"
+                    android:layout_width="23.0dip"
+                    android:layout_height="23.0dip"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16.0dip"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/pay_alipay" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_toRightOf="@id/im_a"
+                    android:text="支付宝支付"
+                    android:textColor="@color/black_word"
+                    android:textSize="15.0sp" />
+
+                <ImageView
+                    android:id="@id/im_ali_select"
+                    android:layout_width="21.0dip"
+                    android:layout_height="21.0dip"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16.0dip"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/pay_un_check" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="47.0dip"
+            android:layout_marginTop="10.0dip"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16.0dip"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="付费前请仔细阅读"
+                    android:textColor="@color/gray_word"
+                    android:textSize="15.0sp" />
+
+                <TextView
+                    android:id="@id/tv_note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="《会员须知》"
+                    android:textColor="@color/blue"
+                    android:textSize="15.0sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@id/ll_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20.0dip"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="我已阅读"
+                    android:textColor="@color/gray_word"
+                    android:textSize="15.0sp" />
+
+                <ImageView
+                    android:id="@id/im_read"
+                    android:layout_width="19.0dip"
+                    android:layout_height="19.0dip"
+                    android:layout_marginLeft="7.0dip"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/pay_read" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@id/tv_pay"
+        android:layout_width="344.0dip"
+        android:layout_height="44.0dip"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16.0dip"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="17.0sp" />
+</RelativeLayout>
