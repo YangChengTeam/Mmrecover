@@ -2,13 +2,10 @@ package com.yc.mmrecover.controller.activitys;
 
 import com.yc.mmrecover.R;
 
-public class MyActivity extends BaseActivity {
-
-
-
+public class ShowFileActivity extends BaseActivity {
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_my;
+        return R.layout.activity_file_show;
     }
 
     @Override

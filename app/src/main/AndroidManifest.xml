@@ -38,6 +38,13 @@
         <activity android:name=".controller.activitys.HelpActivity"></activity>
         <activity android:name=".controller.activitys.PayActivity"></activity>
         <activity android:name=".controller.activitys.SearchActivity"></activity>
+
+        <activity android:name=".controller.activitys.ShowFileActivity"></activity>
+        <activity android:name=".controller.activitys.ShowImageActivity"></activity>
+        <activity android:name=".controller.activitys.ShowVoiceActivity"></activity>
+        <activity android:name=".controller.activitys.ShowVideoActivity"></activity>
+
+        <service android:name=".thread.ScanVideoService"></service>
     </application>
 
 </manifest>

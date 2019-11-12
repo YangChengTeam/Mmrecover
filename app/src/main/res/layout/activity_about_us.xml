@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <View
-            android:id="@id/v_status_bar"
+            android:id="@+id/v_status_bar"
             android:layout_width="fill_parent"
             android:layout_height="25.0dip"
             android:background="@color/blue" />
@@ -25,7 +25,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@id/im_icon"
+                android:id="@+id/im_icon"
                 android:layout_width="83.0dip"
                 android:layout_height="83.0dip"
                 android:layout_marginTop="40.0dip"
@@ -49,7 +49,7 @@
                 android:textSize="14.0sp" />
 
             <TextView
-                android:id="@id/tv_version"
+                android:id="@+id/tv_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="47.0dip"

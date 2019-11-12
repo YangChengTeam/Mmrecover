@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="65.0dip"
+        android:background="@color/gray_bk"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/v_status_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="25.0dip"
+            android:background="@color/blue" />
+
+        <include layout="@layout/layout_title" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="56.0dip"
+            android:layout_marginLeft="15.0dip"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0">
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="10.0dip"
+                    android:layout_marginTop="15.0dip" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/progressBar"
+                    android:text="多选恢复;长按可查看照片"
+                    android:textColor="@color/gray_word"
+                    android:textSize="14.0sp" />
+
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/progressBar"
+                    android:layout_alignParentRight="true"
+                    android:text="扫描中"
+                    android:textColor="@color/black_word"
+                    android:textSize="13.0sp" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/im_start"
+                android:layout_width="56.0dip"
+                android:layout_height="56.0dip"
+                android:padding="15.0dip"
+                android:scaleType="fitXY"
+                android:src="@mipmap/image_start" />
+        </LinearLayout>
+
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5.0dip"
+            android:horizontalSpacing="2.0dip"
+            android:numColumns="4"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="2.0dip" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="65.0dip"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_recover"
+            android:layout_width="0.0dip"
+            android:layout_height="44.0dip"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8.0dip"
+            android:layout_marginRight="8.0dip"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="立即恢复"
+            android:textColor="@color/white"
+            android:textSize="16.0dip" />
+
+        <TextView
+            android:id="@+id/tv_recovered"
+            android:layout_width="0.0dip"
+            android:layout_height="44.0dip"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8.0dip"
+            android:layout_marginRight="8.0dip"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="已恢复"
+            android:textColor="@color/white"
+            android:textSize="16.0dip" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_mask"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/black_trans2"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:layout_width="30.0dip"
+                android:layout_height="30.0dip"
+                android:layout_gravity="center_horizontal"
+                app:indicatorName="LineSpinFadeLoader"
+                app:indicatorColor="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3.0dip"
+                android:text="正在恢复图片"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

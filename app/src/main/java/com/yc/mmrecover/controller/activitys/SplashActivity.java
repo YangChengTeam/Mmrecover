@@ -1,7 +1,6 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.widget.TextView;
 
 import com.kk.utils.VUiKit;
