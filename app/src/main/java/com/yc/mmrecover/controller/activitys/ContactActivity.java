@@ -20,9 +20,9 @@ import butterknife.OnClick;
 public class ContactActivity extends BaseActivity {
 
     @BindView(R.id.tv_pay)
-     TextView tvPay;
+    TextView tvPay;
     @BindView(R.id.ll_contact)
-     LinearLayout llContact;
+    LinearLayout llContact;
 
     private View gdView, qqView, wxView;
 
@@ -67,7 +67,7 @@ public class ContactActivity extends BaseActivity {
                 stringBuilder.append("http://wxapp.leshu.com/home/enquiry?device_id=");
                 String deviceId = "2";
 //                stringBuilder.append(Func.getMachineCode(ContactActivity.this)); //TODO
-                stringBuilder.append(deviceId); //TODO
+                stringBuilder.append(deviceId);
                 intent.putExtra("web_url", stringBuilder.toString());
                 ContactActivity.this.startActivity(intent);
             }
