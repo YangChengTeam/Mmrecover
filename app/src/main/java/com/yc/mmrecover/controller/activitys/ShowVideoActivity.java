@@ -38,6 +38,9 @@ public class ShowVideoActivity extends BaseShowActivity {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if (mIsScan) {
+                    return;
+                }
                 MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
                 if (mediaInfo.isSelect()) {
                     view.findViewById(R.id.im_select).setVisibility(View.GONE);
@@ -51,6 +54,9 @@ public class ShowVideoActivity extends BaseShowActivity {
         mAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+                if (mIsScan) {
+                    return false;
+                }
                 Intent intent = new Intent(ShowVideoActivity.this, DetailVideoActivity.class);
                 intent.putExtra("info", (Serializable) (MediaInfo) adapter.getData().get(position));
                 ShowVideoActivity.this.startActivity(intent);
