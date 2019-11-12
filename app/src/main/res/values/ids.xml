@@ -150,8 +150,10 @@
     <item name="titleDividerNoCustom" type="id" />
     <item name="title_template" type="id" />
     <item name="topPanel" type="id" />
+    <item name="tv_28_real" type="id" />
     <item name="tv_28" type="id" />
     <item name="tv_98" type="id" />
+    <item name="tv_98_real" type="id" />
     <item name="tv_backup" type="id" />
     <item name="tv_backup1" type="id" />
     <item name="tv_backup_err" type="id" />
