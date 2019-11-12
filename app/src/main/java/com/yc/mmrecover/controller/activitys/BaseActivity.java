@@ -3,12 +3,15 @@ package com.yc.mmrecover.controller.activitys;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.umeng.analytics.MobclickAgent;
+import com.yc.mmrecover.R;
 
 import butterknife.ButterKnife;
 
@@ -25,17 +28,22 @@ public abstract class BaseActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        if (getActionBar() != null) {
-            getActionBar().hide();
-        }
-
         hideStatusBarBack();
-
 
         setContentView(getLayoutId());
         ButterKnife.bind(this);
         initViews();
     }
+
+    protected void initTitle(String str) {
+        ((TextView) findViewById(R.id.tv_title)).setText(str);
+        findViewById(R.id.im_back).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                BaseActivity.this.finish();
+            }
+        });
+    }
+
 
     protected abstract int getLayoutId();
 

@@ -70,7 +70,7 @@ public abstract class BaseShowActivity extends BaseActivity {
 
     protected boolean mIsScan;
     protected boolean mIsSelectAll;
-    private int mMaxProgress = 100;
+    protected int mMaxProgress = 100;
 
     protected BaseQuickAdapter mAdapter;
     protected List<MediaInfo> mMediaList;
@@ -78,15 +78,30 @@ public abstract class BaseShowActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (!this.mIsScan) {
-            this.mRlMask.setVisibility(View.GONE);
-        }
     }
 
     @Override
     protected void initViews() {
         initActionBar();
         initProgressBar();
+
+        RxView.clicks(mStartBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+            if (!mIsScan) {
+                scan();
+            }
+        });
+
+        RxView.clicks(mTvRecover).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+
+        });
+
+        RxView.clicks(mTvRecovered).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+
+        });
+
+        RxView.clicks(mDelBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+
+        });
 
         this.mTvRecover.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.yellow_btn));
         this.mTvRecovered.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.gray_button));
@@ -96,9 +111,7 @@ public abstract class BaseShowActivity extends BaseActivity {
         scan();
     }
 
-
     protected abstract void initData();
-
 
     protected void initTitle(String title) {
         this.title = title;
@@ -157,6 +170,7 @@ public abstract class BaseShowActivity extends BaseActivity {
         this.mIsScan = true;
         this.mMediaList.clear();
         this.mAdapter.notifyDataSetChanged();
+        this.mProgressBar.setProgress(0);
         this.mTvStatus.setText("扫描中");
         this.mRlMask.setVisibility(View.VISIBLE);
         this.mTvMask.setText(title + "扫描中");
@@ -169,6 +183,8 @@ public abstract class BaseShowActivity extends BaseActivity {
         this.mRlMask.setVisibility(View.GONE);
         ScanVideoService.stopService();
         this.mTvStatus.setText("扫描完成");
+        this.mStartBtn.setImageDrawable(getResources().getDrawable(R.mipmap.image_start));
+        this.mProgressBar.setProgress(mMaxProgress);
     }
 
     @Override
@@ -182,5 +198,4 @@ public abstract class BaseShowActivity extends BaseActivity {
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
-
 }
