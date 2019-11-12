@@ -1,21 +1,19 @@
 package com.yc.mmrecover.controller.activitys;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.GlobalData;
-import com.yc.mmrecover.util.BackgroundShape;
-
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.view.View.OnClickListener;
-import android.widget.Toast;
-
+import com.yc.mmrecover.utils.BackgroundShape;
 
 import butterknife.BindView;
 import butterknife.OnClick;

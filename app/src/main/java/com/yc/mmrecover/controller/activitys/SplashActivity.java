@@ -21,7 +21,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void initViews() {
         VUiKit.postDelayed(900, () -> {
-            startActivity(new Intent(SplashActivity.this, PayActivity.class));
+            startActivity(new Intent(SplashActivity.this, MainActivity.class));
             finish();
         });
     }

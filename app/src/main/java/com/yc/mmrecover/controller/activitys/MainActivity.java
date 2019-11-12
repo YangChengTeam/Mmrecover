@@ -21,8 +21,6 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivity {
-
-
     @BindView(R.id.gl_container)
     GridLayout gridLayout;
 
@@ -36,7 +34,6 @@ public class MainActivity extends BaseActivity {
 
     private int[] btnImageList = new int[]{R.mipmap.home_chat, R.mipmap.home_video, R.mipmap.home_pic, R.mipmap.home_voice, R.mipmap.home_doc, R.mipmap.home_customer};
     private String[] btnTextList = new String[]{"聊天记录", "微信视频", "微信图片", "微信语音", "微信文档", "专属客服"};
-
 
     @Override
     protected int getLayoutId() {
@@ -108,14 +105,32 @@ public class MainActivity extends BaseActivity {
 
     private void initGridLayout() {
         int i = 0;
+
         while (i < this.btnTextList.length) {
             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
             layoutParams.rowSpec = GridLayout.spec(i / 3, 1.0f);
             layoutParams.columnSpec = GridLayout.spec(i % 3, 1.0f);
             View homeButton = getHomeButton(this.btnTextList[i], this.btnImageList[i]);
-            homeButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-
+            homeButton.setTag(i);
+            RxView.clicks(homeButton).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v)->{
+                switch (Integer.valueOf(homeButton.getTag().toString())){
+                    case 0:
+                        break;
+                    case 1:
+                        startActivity(new Intent(MainActivity.this, ShowVideoActivity.class));
+                        break;
+                    case 2:
+                        startActivity(new Intent(MainActivity.this, ShowImageActivity.class));
+                        break;
+                    case 3:
+                        startActivity(new Intent(MainActivity.this, ShowVoiceActivity.class));
+                        break;
+                    case 4:
+                        startActivity(new Intent(MainActivity.this, ShowFileActivity.class));
+                        break;
+                    case 5:
+                        startActivity(new Intent(MainActivity.this, ContactActivity.class));
+                        break;
                 }
             });
             gridLayout.addView(homeButton, layoutParams);

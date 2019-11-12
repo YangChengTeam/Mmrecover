@@ -5,7 +5,7 @@
     android:background="@color/blue">
 
     <ImageView
-        android:id="@id/im_back"
+        android:id="@+id/im_back"
         android:layout_width="57.0dip"
         android:layout_height="fill_parent"
         android:padding="19.0dip"
@@ -13,7 +13,7 @@
         android:src="@mipmap/img_back" />
 
     <TextView
-        android:id="@id/tv_title"
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -23,7 +23,7 @@
         android:textSize="16.0sp" />
 
     <TextView
-        android:id="@id/tv_operation"
+        android:id="@+id/tv_operation"
         android:layout_width="200.0dip"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"

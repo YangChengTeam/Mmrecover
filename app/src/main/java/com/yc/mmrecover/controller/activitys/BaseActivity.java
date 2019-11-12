@@ -24,6 +24,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
+
+        if (getActionBar() != null) {
+            getActionBar().hide();
+        }
+
         hideStatusBarBack();
 
 
@@ -47,7 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         MobclickAgent.onPause(this);
     }
 
-    public  void hideStatusBarBack() {
+    public void hideStatusBarBack() {
         if (Build.VERSION.SDK_INT >= 21) {
             Window window = getWindow();
             window.clearFlags(67108864);

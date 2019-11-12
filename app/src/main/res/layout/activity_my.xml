@@ -7,13 +7,13 @@
     android:orientation="vertical">
 
     <View
-        android:id="@id/v_status_bar"
+        android:id="@+id/v_status_bar"
         android:layout_width="fill_parent"
         android:layout_height="25.0dip"
         android:background="@color/blue" />
 
     <ImageView
-        android:id="@id/im_back"
+        android:id="@+id/im_back"
         android:layout_width="57.0dip"
         android:layout_height="57.0dip"
         android:padding="19.0dip"
@@ -21,7 +21,7 @@
         android:src="@mipmap/img_back" />
 
     <ImageView
-        android:id="@id/im_head"
+        android:id="@+id/im_head"
         android:layout_width="68.0dip"
         android:layout_height="68.0dip"
         android:layout_gravity="center_horizontal"
@@ -30,7 +30,7 @@
         android:src="@mipmap/user_head" />
 
     <TextView
-        android:id="@id/tv_user"
+        android:id="@+id/tv_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -47,7 +47,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@id/ll_contact"
+            android:id="@+id/ll_contact"
             android:layout_width="fill_parent"
             android:layout_height="63.0dip"
             android:orientation="horizontal">
@@ -78,7 +78,7 @@
             android:background="@color/gray_line" />
 
         <LinearLayout
-            android:id="@id/ll_help"
+            android:id="@+id/ll_help"
             android:layout_width="fill_parent"
             android:layout_height="63.0dip"
             android:orientation="horizontal">
@@ -109,7 +109,7 @@
             android:background="@color/gray_line" />
 
         <LinearLayout
-            android:id="@id/ll_about"
+            android:id="@+id/ll_about"
             android:layout_width="fill_parent"
             android:layout_height="63.0dip"
             android:orientation="horizontal">
@@ -140,7 +140,7 @@
             android:background="@color/gray_line" />
 
         <RelativeLayout
-            android:id="@id/ll_code"
+            android:id="@+id/ll_code"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -163,7 +163,7 @@
                 android:textSize="16.0sp" />
 
             <TextView
-                android:id="@id/tv_code"
+                android:id="@+id/tv_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -173,7 +173,7 @@
                 android:textSize="16.0sp" />
 
             <TextView
-                android:id="@id/tv_copy"
+                android:id="@+id/tv_copy"
                 android:layout_width="90.0dip"
                 android:layout_height="28.0dip"
                 android:layout_below="@id/tv_code"

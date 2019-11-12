@@ -1,24 +1,22 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.GlobalData;
-import com.yc.mmrecover.util.BackgroundShape;
+import com.yc.mmrecover.utils.BackgroundShape;
 
 import java.util.List;
-
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.text.Html;
-import android.widget.Toast;
-
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -124,8 +122,6 @@ public class PayActivity extends BaseActivity {
         tvNote.getPaint().setFlags(8);
         tvNote.getPaint().setAntiAlias(true);
         tvNote.setText(Html.fromHtml("《会员须知》"));
-
-        tvPay.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.yellow_btn));
 
     }
 

@@ -25,6 +25,7 @@
         <activity
             android:name=".controller.activitys.SplashActivity"
             android:screenOrientation="portrait"
+            android:icon="@mipmap/ic_launcher"
             android:theme="@style/StartAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,7 +41,17 @@
         <activity android:name=".controller.activitys.HelpActivity"></activity>
         <activity android:name=".controller.activitys.PayActivity"></activity>
         <activity android:name=".controller.activitys.SearchActivity"></activity>
+
+
+        <activity android:name=".controller.activitys.ShowFileActivity"></activity>
+        <activity android:name=".controller.activitys.ShowImageActivity"></activity>
+        <activity android:name=".controller.activitys.ShowVoiceActivity"></activity>
+        <activity android:name=".controller.activitys.ShowVideoActivity"></activity>
+
+        <service android:name=".thread.ScanVideoService"></service>
+
         <activity android:name=".controller.activitys.WebActivity"></activity>
+
     </application>
 
 </manifest>
