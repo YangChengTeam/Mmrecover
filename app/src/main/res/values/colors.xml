@@ -69,6 +69,8 @@
     <color name="primary_text_default_material_light">#de000000</color>
     <color name="primary_text_disabled_material_dark">#4dffffff</color>
     <color name="primary_text_disabled_material_light">#39000000</color>
+    <color name="red_case">#ff0011</color>
+    <color name="red_money">#ea0502</color>
     <color name="red_word">#ffde1700</color>
     <color name="red_word2">#ffd71211</color>
     <color name="ripple_material_dark">#33ffffff</color>

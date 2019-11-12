@@ -86,16 +86,33 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="￥"
+                        android:textColor="@color/red_money"
+                        android:textSize="14.0sp"
+                        android:textStyle="bold" />
+
+                    <TextView
                         android:id="@id/tv_98"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5.0dip"
+                        android:text="98"
+                        android:textColor="@color/red_money"
+                        android:textSize="20.0sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@id/tv_98_real"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="98元"
                         android:textColor="@color/black_word"
                         android:textSize="16.0sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tv_pay_des"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5.0dip"
@@ -166,12 +183,19 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="￥"
+                        android:textColor="@color/red_money"
+                        android:textSize="14.0sp"
+                        android:textStyle="bold" />
+
+                    <TextView
                         android:id="@id/tv_28"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5.0dip"
-                        android:text="28元"
-                        android:textColor="@color/black_word"
+                        android:text="28"
+                        android:textColor="@color/red_money"
                         android:textSize="16.0sp"
                         android:textStyle="bold" />
 

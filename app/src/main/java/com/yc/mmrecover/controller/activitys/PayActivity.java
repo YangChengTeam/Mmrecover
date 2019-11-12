@@ -14,29 +14,10 @@ import com.yc.mmrecover.util.BackgroundShape;
 
 import java.util.List;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.Html;
-import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 import butterknife.BindView;
@@ -143,6 +124,8 @@ public class PayActivity extends BaseActivity {
         tvNote.getPaint().setFlags(8);
         tvNote.getPaint().setAntiAlias(true);
         tvNote.setText(Html.fromHtml("《会员须知》"));
+
+        tvPay.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.yellow_btn));
 
     }
 

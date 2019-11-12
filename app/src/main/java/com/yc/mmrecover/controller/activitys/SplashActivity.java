@@ -1,7 +1,6 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.widget.TextView;
 
 import com.kk.utils.VUiKit;
@@ -22,7 +21,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void initViews() {
         VUiKit.postDelayed(900, () -> {
-            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            startActivity(new Intent(SplashActivity.this, PayActivity.class));
             finish();
         });
     }
