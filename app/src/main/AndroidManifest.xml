@@ -25,13 +25,13 @@
             android:name=".controller.activitys.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StartAppTheme">
+
+        </activity>
+        <activity android:name=".controller.activitys.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".controller.activitys.MainActivity">
-
         </activity>
     </application>
 

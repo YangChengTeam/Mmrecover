@@ -39,7 +39,7 @@
     <string name="abc_shareactionprovider_share_with">Share with</string>
     <string name="abc_shareactionprovider_share_with_application">Share with %s</string>
     <string name="abc_toolbar_collapse_description">Collapse</string>
-    <string name="app_name">微信恢复管家</string>
+    <string name="app_name">微信恢复助手</string>
     <string name="library_android_database_sqlcipher_author">Zetetic, LLC</string>
     <string name="library_android_database_sqlcipher_authorWebsite">https://www.zetetic.net/sqlcipher/</string>
     <string name="library_android_database_sqlcipher_isOpenSource">true</string>
