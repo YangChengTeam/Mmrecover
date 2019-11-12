@@ -6,12 +6,15 @@ import android.annotation.TargetApi;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 
 /**
@@ -22,12 +25,23 @@ public class WebActivity extends BaseActivity {
 
     @BindView(R.id.web_view)
     WebView mWebView;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
 
 
     private String mTitle;
     private String mUrl;
     private String TAG = "mmrecover_log_WebActivity";
 
+
+    @OnClick({R.id.im_back})
+    void onViewClick(View view) {
+        switch (view.getId()) {
+            case R.id.im_back:
+                finish();
+                break;
+        }
+    }
 
     @Override
     protected int getLayoutId() {
@@ -53,6 +67,8 @@ public class WebActivity extends BaseActivity {
     protected void initViews() {
 
         initIntent();
+
+        tvTitle.setText(mTitle);
 
         this.mWebView.getSettings().setJavaScriptEnabled(true);
         this.mWebView.loadUrl(this.mUrl);

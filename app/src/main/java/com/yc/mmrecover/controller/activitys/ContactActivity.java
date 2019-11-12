@@ -8,7 +8,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yc.mmrecover.R;
+import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.util.BackgroundShape;
+
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.view.View.OnClickListener;
+import android.widget.Toast;
+
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -48,6 +55,68 @@ public class ContactActivity extends BaseActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (GlobalData.vipType == 1) {
+            ((TextView) this.wxView.findViewById(R.id.tv_title)).setText("微信号：********");
+            ((TextView) this.wxView.findViewById(R.id.tv_content)).setText("VIP专属客服，成为会员显示号码");
+            ((TextView) this.qqView.findViewById(R.id.tv_title)).setText("QQ号：********");
+            ((TextView) this.qqView.findViewById(R.id.tv_content)).setText("VIP专属客服，成为会员显示号码");
+            this.wxView.setOnClickListener(new OnClickListener() {
+                public void onClick(View view) {
+                    Toast.makeText(ContactActivity.this, "成为会员显示号码", Toast.LENGTH_SHORT).show();
+                }
+            });
+            this.qqView.setOnClickListener(new OnClickListener() {
+                public void onClick(View view) {
+                    Toast.makeText(ContactActivity.this, "成为会员显示号码", Toast.LENGTH_SHORT).show();
+                }
+            });
+            this.tvPay.setVisibility(View.VISIBLE);
+            return;
+        }
+        String wechatId = "123456";
+        String qqId = "123456";
+        TextView tvTitle = (TextView) this.wxView.findViewById(R.id.tv_title);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("微信号：");
+//        stringBuilder.append(GlobalData.customer_wx); //TODO
+        stringBuilder.append(wechatId);
+        tvTitle.setText(stringBuilder.toString());
+        ((TextView) this.wxView.findViewById(R.id.tv_content)).setText("专人专线，您的专属VIP客服");
+        tvTitle = (TextView) this.qqView.findViewById(R.id.tv_title);
+        StringBuilder stringBuilder2 = new StringBuilder();
+        stringBuilder2.append("QQ号：");
+//        stringBuilder2.append(GlobalData.customer_qq);  //TODO
+        stringBuilder2.append(qqId);
+        tvTitle.setText(stringBuilder2.toString());
+        ((TextView) this.qqView.findViewById(R.id.tv_content)).setText("专人专线，您的专属VIP客服");
+        this.wxView.setOnClickListener(new OnClickListener() {
+            public void onClick(View view) {
+                ClipboardManager clipboardManager = (ClipboardManager) ContactActivity.this.getSystemService("clipboard");
+//                String wechatId= GlobalData.customer_wx; //TODO
+                ClipData newPlainText = ClipData.newPlainText("Label", wechatId);
+                if (clipboardManager != null) {
+                    clipboardManager.setPrimaryClip(newPlainText);
+                }
+                Toast.makeText(ContactActivity.this, "微信号已复制到剪贴板", Toast.LENGTH_SHORT).show();
+            }
+        });
+        this.qqView.setOnClickListener(new OnClickListener() {
+            public void onClick(View view) {
+                ClipboardManager clipboardManager = (ClipboardManager) ContactActivity.this.getSystemService("clipboard");
+//                String qqId = GlobalData.customer_qq;  //TODO
+                ClipData newPlainText = ClipData.newPlainText("Label", qqId);
+                if (clipboardManager != null) {
+                    clipboardManager.setPrimaryClip(newPlainText);
+                }
+                Toast.makeText(ContactActivity.this, "QQ号已复制到剪贴板", Toast.LENGTH_SHORT).show();
+            }
+        });
+        this.tvPay.setVisibility(View.GONE);
+    }
+
+    @Override
     protected void initViews() {
         tvPay.setBackgroundDrawable(new BackgroundShape(this, 25, R.color.yellow_btn));
 
@@ -72,8 +141,6 @@ public class ContactActivity extends BaseActivity {
                 ContactActivity.this.startActivity(intent);
             }
         });
-
-
     }
 
     private View getCustomerButton(String str, int i) {
