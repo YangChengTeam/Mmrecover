@@ -21,12 +21,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 
-import butterknife.BindView;
 
 public class ShowVideoActivity extends BaseShowActivity {
-
-
-
 
 
     @Override
