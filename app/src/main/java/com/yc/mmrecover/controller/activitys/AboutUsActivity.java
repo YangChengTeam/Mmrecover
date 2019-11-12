@@ -1,6 +1,6 @@
-package com.yc.mmrecover.controller.fragments;
+package com.yc.mmrecover.controller.activitys;
 
-public class VoiceFragment extends BaseFragment {
+public class AboutUsActivity extends BaseActivity {
     @Override
     protected int getLayoutId() {
         return 0;
