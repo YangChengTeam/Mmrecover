@@ -27,7 +27,7 @@ public class RecoverImageActivity extends BaseRecoverActivity {
 
     @Override
     public String initPath() {
-        return "/数据恢复助手/微信图片恢复/";
+        return "数据恢复助手/微信图片恢复/";
     }
 
     @Override

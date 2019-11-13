@@ -53,6 +53,7 @@ public abstract class BaseRecoverActivity extends BaseActivity {
                     MediaInfo mediaBean = new MediaInfo();
                     mediaBean.setLastModifyTime((int) (file2.lastModified() / 1000));
                     mediaBean.setPath(absolutePath);
+                    mediaBean.setFileName(file2.getName());
                     mediaBean.setSize(length);
                     mediaBean.setStrSize(Func.getSizeString(length));
                     BaseRecoverActivity.this.mMediaList.add(mediaBean);

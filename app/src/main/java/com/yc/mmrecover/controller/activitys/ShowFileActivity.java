@@ -2,6 +2,7 @@ package com.yc.mmrecover.controller.activitys;
 
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -25,6 +26,21 @@ public class ShowFileActivity extends BaseShowActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(this.mAdapter);
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if (mIsScan) {
+                    return;
+                }
+                MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
+                if (mediaInfo.isSelect()) {
+                    view.findViewById(R.id.im_select).setVisibility(View.GONE);
+                } else {
+                    view.findViewById(R.id.im_select).setVisibility(View.VISIBLE);
+                }
+                mediaInfo.setSelect(!mediaInfo.isSelect());
+            }
+        });
     }
 
     @Override

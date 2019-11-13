@@ -56,7 +56,6 @@
         <activity android:name=".controller.activitys.DetailVideoActivity"></activity>
         <activity android:name=".controller.activitys.DetailImageActivty"></activity>
 
-
         <activity android:name=".controller.activitys.RecoverVideoActivity"></activity>
         <activity android:name=".controller.activitys.RecoverImageActivity"></activity>
         <activity android:name=".controller.activitys.RecoverVoiceActivity"></activity>
