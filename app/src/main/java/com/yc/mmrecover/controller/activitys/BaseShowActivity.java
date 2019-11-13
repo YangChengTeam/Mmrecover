@@ -101,6 +101,7 @@ public abstract class BaseShowActivity extends BaseActivity {
             mTvMask.setText("正在恢复" + initTitle());
 
             TaskUtil.getImpl().runTask(() -> {
+                //外存根目录  (Environment.getExternalStorageDirectory())
                 File dir = new File(Environment.getExternalStorageDirectory() + "/" + initPath());
                 if (!dir.exists()) {
                     dir.mkdirs();

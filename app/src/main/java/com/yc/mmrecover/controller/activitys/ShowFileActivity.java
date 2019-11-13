@@ -32,24 +32,21 @@ public class ShowFileActivity extends BaseShowActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(this.mAdapter);
 
-
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                MediaInfo mediaInfo = mMediaList.get(position);
-                try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    String[] tmps = mediaInfo.getFileName().split(".");
-                    intent.setDataAndType(Uri.fromFile(new File(mediaInfo.getPath())), "application/txt");
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    // no Activity to handle this kind of files
+                if (mIsOperate) {
+                    return;
                 }
+                MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
+                if (mediaInfo.isSelect()) {
+                    view.findViewById(R.id.im_select).setVisibility(View.GONE);
+                } else {
+                    view.findViewById(R.id.im_select).setVisibility(View.VISIBLE);
+                }
+                mediaInfo.setSelect(!mediaInfo.isSelect());
             }
         });
-
-
     }
 
     @Override
