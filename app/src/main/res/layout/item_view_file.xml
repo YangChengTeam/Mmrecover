@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="75.0dip">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="75.0dip"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/rl_select"
+            android:layout_width="17.0dip"
+            android:layout_height="17.0dip"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="21.0dip">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="fitXY"
+                android:src="@mipmap/image_unselect" />
+
+            <ImageView
+                android:id="@+id/im_select"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="fitXY"
+                android:src="@mipmap/image_select"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="54.0dip"
+            android:layout_height="54.0dip"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8.0dip"
+            android:scaleType="fitXY"
+            android:src="@mipmap/doc" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="9.0dip"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textColor="@color/black_word"
+                android:textSize="13.0sp" />
+
+            <TextView
+                android:id="@+id/tv_time2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6.0dip"
+                android:textColor="@color/gray_word2"
+                android:textSize="13.0sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dip"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="14.0dip"
+        android:layout_marginRight="15.0dip"
+        android:background="@color/gray_line" />
+</RelativeLayout>
