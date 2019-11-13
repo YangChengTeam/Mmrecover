@@ -12,33 +12,15 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
     private int spacing;
     private boolean includeEdge;
 
-
-    private int startFrom;
-
     public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
         this.spanCount = spanCount;
         this.spacing = spacing;
         this.includeEdge = includeEdge;
     }
 
-    /**
-     * 设置从哪个位置开始设置间距
-     *
-     * @param position
-     */
-    public void setStartFrom(int position) {
-        this.startFrom = position;
-    }
-
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         int position = parent.getChildAdapterPosition(view); // item position
-        if (position < startFrom) {
-            return;
-        }
-
-        // position - startFrom 排除不考虑的位置这样算才正确
-        position = position - startFrom;
         int column = position % spanCount; // item column
 
         if (includeEdge) {

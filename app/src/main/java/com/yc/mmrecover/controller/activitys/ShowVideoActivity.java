@@ -8,7 +8,6 @@ import android.view.View;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.jakewharton.rxbinding3.view.RxView;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.Func;
@@ -17,7 +16,6 @@ import com.yc.mmrecover.view.adapters.GridVideoAdapter;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.concurrent.TimeUnit;
 
 
 public class ShowVideoActivity extends BaseShowActivity {
@@ -45,15 +43,7 @@ public class ShowVideoActivity extends BaseShowActivity {
 
     @Override
     public boolean filterExt(String path) {
-        String exts = "3gp,mp4,wmv,asf,rm,rmvb,mov,avi,dat,mpg,mpeg";
-        boolean flag = false;
-        for (String ext : exts.split(",")) {
-            if (path.contains("." + ext)) {
-                flag = true;
-                break;
-            }
-        }
-        return flag;
+        return true;
     }
 
     @Override
@@ -96,7 +86,7 @@ public class ShowVideoActivity extends BaseShowActivity {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (mIsScan) {
+                if (mIsOperate) {
                     return;
                 }
                 MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
@@ -112,7 +102,7 @@ public class ShowVideoActivity extends BaseShowActivity {
         mAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-                if (mIsScan) {
+                if (mIsOperate) {
                     return false;
                 }
                 Intent intent = new Intent(ShowVideoActivity.this, DetailVideoActivity.class);
