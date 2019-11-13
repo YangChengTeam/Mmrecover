@@ -90,7 +90,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="￥"
+                        android:text="¥"
                         android:textColor="@color/red_money"
                         android:textSize="16sp" />
 
@@ -194,7 +194,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="￥"
+                        android:text="¥"
                         android:textColor="@color/red_money"
                         android:textSize="16sp" />
 
