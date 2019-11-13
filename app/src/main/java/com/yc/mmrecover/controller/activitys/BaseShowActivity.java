@@ -2,7 +2,6 @@ package com.yc.mmrecover.controller.activitys;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
@@ -74,7 +73,7 @@ public abstract class BaseShowActivity extends BaseActivity {
     @BindView(R.id.gridView)
     RecyclerView recyclerView;
 
-    protected boolean mIsScan;
+    protected boolean mIsOperate;
     protected boolean mIsSelectAll;
     protected int mMaxProgress = 100;
 
@@ -88,45 +87,59 @@ public abstract class BaseShowActivity extends BaseActivity {
         mAdapter = initAdapter();
 
         RxView.clicks(mStartBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
-            if (!mIsScan) {
+            if (!mIsOperate) {
                 scan();
             }
         });
 
         RxView.clicks(mTvRecover).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
-            if (mIsScan) return;
+            if (mIsOperate) return;
+
+            mIsOperate = true;
+
             mRlMask.setVisibility(View.VISIBLE);
             mTvMask.setText("正在恢复" + initTitle());
-            File dir = new File(Environment.getExternalStorageDirectory() + "/" + initPath());
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            boolean flag = false;
-            for (MediaInfo mediaBean : BaseShowActivity.this.mMediaList) {
-                if (mediaBean.isSelect()) {
-                    File source = new File(mediaBean.getPath());
-                    File dest = new File(dir.getAbsolutePath() + "/" + mediaBean.getFileName());
-                    try {
-                        FileUtils.copyFile(source, dest);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        LogUtil.msg(initTitle() + "恢复错误->" + e.getMessage());
-                    }
-                    mediaBean.setSelect(false);
-                    flag = true;
+
+            TaskUtil.getImpl().runTask(() -> {
+                File dir = new File(Environment.getExternalStorageDirectory() + "/" + initPath());
+                if (!dir.exists()) {
+                    dir.mkdirs();
                 }
-            }
-            if (flag) {
-                mAdapter.notifyDataSetChanged();
-                start2RecoverActivity();
-            } else {
-                ToastUtil.toast2(BaseShowActivity.this, "请选择要恢复的" + initTitle());
-            }
-            mRlMask.setVisibility(View.GONE);
+
+                mRlMask.setTag(false);
+                for (MediaInfo mediaBean : BaseShowActivity.this.mMediaList) {
+                    if (mediaBean.isSelect()) {
+                        File source = new File(mediaBean.getPath());
+                        File dest = new File(dir.getAbsolutePath() + "/" + mediaBean.getFileName());
+                        try {
+                            FileUtils.copyFile(source, dest);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            LogUtil.msg(initTitle() + "恢复错误->" + e.getMessage());
+                        }
+                        mediaBean.setSelect(false);
+                        mRlMask.setTag(true);
+                    }
+                }
+
+                VUiKit.post(() -> {
+                    mIsOperate = false;
+                    if (Boolean.parseBoolean(mRlMask.getTag() + "")) {
+                        mAdapter.notifyDataSetChanged();
+                        start2RecoverActivity();
+                    } else {
+                        ToastUtil.toast2(BaseShowActivity.this, "请选择要恢复的" + initTitle());
+                    }
+                    mRlMask.setVisibility(View.GONE);
+
+                });
+
+            });
+
         });
 
         RxView.clicks(mDelBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
-            if (mIsScan) return;
+            if (mIsOperate) return;
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("温馨提示");
@@ -135,23 +148,29 @@ public abstract class BaseShowActivity extends BaseActivity {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     mRlMask.setVisibility(View.VISIBLE);
                     mTvMask.setText("正在删除" + initTitle());
-                    boolean flag = false;
-                    for (int j = 0; j < mMediaList.size(); j++) {
-                        MediaInfo mediaBean = mMediaList.get(j);
-                        if (mediaBean.isSelect()) {
-                            File source = new File(mediaBean.getPath());
-                            FileUtils.deleteQuietly(source);
-                            mMediaList.remove(mediaBean);
-                            flag = true;
+                    mRlMask.setTag(false);
+                    TaskUtil.getImpl().runTask(() -> {
+                        for (int j = 0; j < mMediaList.size(); j++) {
+                            MediaInfo mediaBean = mMediaList.get(j);
+                            if (mediaBean.isSelect()) {
+                                File source = new File(mediaBean.getPath());
+                                FileUtils.deleteQuietly(source);
+                                mMediaList.remove(mediaBean);
+                                mRlMask.setTag(true);
+                            }
                         }
-                    }
-                    if (flag) {
-                        ToastUtil.toast2(BaseShowActivity.this, initTitle() + "删除成功");
-                        mAdapter.notifyDataSetChanged();
-                    } else {
-                        ToastUtil.toast2(BaseShowActivity.this, "请选择要删除的" + initTitle());
-                    }
-                    mRlMask.setVisibility(View.GONE);
+
+                        VUiKit.post(() -> {
+                            mIsOperate = false;
+                            if (Boolean.parseBoolean(mRlMask.getTag() + "")) {
+                                ToastUtil.toast2(BaseShowActivity.this, initTitle() + "删除成功");
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                ToastUtil.toast2(BaseShowActivity.this, "请选择要删除的" + initTitle());
+                            }
+                            mRlMask.setVisibility(View.GONE);
+                        });
+                    });
                 }
             });
             builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -196,7 +215,7 @@ public abstract class BaseShowActivity extends BaseActivity {
         });
 
         RxView.clicks(mTvOperate).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
-            if (!mIsScan) {
+            if (!mIsOperate) {
                 if (mIsSelectAll) {
                     mIsSelectAll = false;
                     mTvOperate.setText("全选");
@@ -216,7 +235,6 @@ public abstract class BaseShowActivity extends BaseActivity {
     }
 
     private void initProgressBar() {
-        this.mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         BeanUtils.setFieldValue(this.mProgressBar, "mOnlyIndeterminate", new Boolean(false));
         this.mProgressBar.setIndeterminate(false);
         float[] fArr = new float[]{(float) ScreenUtil.dip2px(this, 7.0f), (float) ScreenUtil.dip2px(this, 7.0f), (float) ScreenUtil.dip2px(this, 7.0f), (float) ScreenUtil.dip2px(this, 7.0f), (float) ScreenUtil.dip2px(this, 7.0f), (float) ScreenUtil.dip2px(this, 7.0f), (float) ScreenUtil.dip2px(this, 7.0f), (float) ScreenUtil.dip2px(this, 7.0f)};
@@ -226,7 +244,6 @@ public abstract class BaseShowActivity extends BaseActivity {
         shapeDrawable = new ShapeDrawable(new RoundRectShape(fArr, null, null));
         shapeDrawable.getPaint().setColor(getResources().getColor(R.color.yellow_bk));
         this.mProgressBar.setBackground(shapeDrawable);
-        this.mProgressBar.setIndeterminateDrawable(getResources().getDrawable(17301613));
         this.mProgressBar.setMax(this.mMaxProgress);
         this.mProgressBar.setProgress(0);
     }
@@ -239,7 +256,7 @@ public abstract class BaseShowActivity extends BaseActivity {
             this.mAdapter.notifyDataSetChanged();
             mProgressBar.setProgress(this.mMediaList.size() % 100);
         } else {
-            this.mIsScan = false;
+            this.mIsOperate = false;
             this.mRlMask.setVisibility(View.GONE);
             this.mTvStatus.setText("扫描完成");
             this.mStartBtn.setImageDrawable(getResources().getDrawable(R.mipmap.image_start));
@@ -248,7 +265,7 @@ public abstract class BaseShowActivity extends BaseActivity {
     }
 
     protected void scan() {
-        this.mIsScan = true;
+        this.mIsOperate = true;
         this.mMediaList.clear();
         this.mAdapter.notifyDataSetChanged();
         this.mProgressBar.setProgress(0);

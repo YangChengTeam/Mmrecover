@@ -7,7 +7,6 @@ import android.view.View;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.jakewharton.rxbinding3.view.RxView;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.Func;
@@ -16,7 +15,6 @@ import com.yc.mmrecover.view.adapters.GridVideoAdapter;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.concurrent.TimeUnit;
 
 public class ShowImageActivity extends BaseShowActivity {
     @Override
@@ -35,7 +33,7 @@ public class ShowImageActivity extends BaseShowActivity {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (mIsScan) {
+                if (mIsOperate) {
                     return;
                 }
                 MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
@@ -51,7 +49,7 @@ public class ShowImageActivity extends BaseShowActivity {
         mAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-                if (mIsScan) {
+                if (mIsOperate) {
                     return false;
                 }
                 Intent intent = new Intent(ShowImageActivity.this, DetailImageActivty.class);
