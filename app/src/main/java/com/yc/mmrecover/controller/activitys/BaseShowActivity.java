@@ -117,7 +117,8 @@ public abstract class BaseShowActivity extends BaseActivity {
                 }
             }
             if (flag) {
-                startActivity(new Intent(BaseShowActivity.this, RecoverVideoActivity.class));
+                mAdapter.notifyDataSetChanged();
+                start2RecoverActivity();
             } else {
                 ToastUtil.toast2(BaseShowActivity.this, "请选择要恢复的" + initTitle());
             }
@@ -161,6 +162,10 @@ public abstract class BaseShowActivity extends BaseActivity {
             builder.show();
         });
 
+        RxView.clicks(mTvRecovered).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+            start2RecoverActivity();
+        });
+
         this.mTvRecover.setBackground(new BackgroundShape(this, 22, R.color.yellow_btn));
         this.mTvRecovered.setBackground(new BackgroundShape(this, 22, R.color.gray_button));
         this.mDelBtn.setBackground(new BackgroundShape(this, 22, R.color.red_word));
@@ -168,6 +173,8 @@ public abstract class BaseShowActivity extends BaseActivity {
         this.mMediaList = new ArrayList<>();
         scan();
     }
+
+    protected abstract void start2RecoverActivity();
 
     protected abstract String initTitle();
 
@@ -179,7 +186,6 @@ public abstract class BaseShowActivity extends BaseActivity {
     protected void setTitle(String title) {
         mTvTitle.setText(title);
     }
-
 
     private void initActionBar() {
         mTvOperate.setText("全选");
@@ -219,7 +225,7 @@ public abstract class BaseShowActivity extends BaseActivity {
         this.mProgressBar.setProgressDrawable(new ClipDrawable(shapeDrawable, 3, 1));
         shapeDrawable = new ShapeDrawable(new RoundRectShape(fArr, null, null));
         shapeDrawable.getPaint().setColor(getResources().getColor(R.color.yellow_bk));
-        this.mProgressBar.setBackgroundDrawable(shapeDrawable);
+        this.mProgressBar.setBackground(shapeDrawable);
         this.mProgressBar.setIndeterminateDrawable(getResources().getDrawable(17301613));
         this.mProgressBar.setMax(this.mMaxProgress);
         this.mProgressBar.setProgress(0);

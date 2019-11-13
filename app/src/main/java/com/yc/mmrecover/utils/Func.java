@@ -1,6 +1,9 @@
 package com.yc.mmrecover.utils;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class Func {
     public static String getSizeString(long j) {
@@ -34,5 +37,11 @@ public class Func {
     }
 
 
+    public static String formatData(String str, long j) {
+        if (j == 0) {
+            return "";
+        }
+        return new SimpleDateFormat(str, Locale.CHINA).format(new Date(j * 1000));
+    }
 
 }

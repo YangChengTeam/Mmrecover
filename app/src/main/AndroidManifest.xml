@@ -52,14 +52,18 @@
         <activity android:name=".controller.activitys.ShowImageActivity"></activity>
         <activity android:name=".controller.activitys.ShowVoiceActivity"></activity>
         <activity android:name=".controller.activitys.ShowVideoActivity"></activity>
+
         <activity android:name=".controller.activitys.DetailVideoActivity"></activity>
+        <activity android:name=".controller.activitys.DetailImageActivty"></activity>
+
 
         <activity android:name=".controller.activitys.RecoverVideoActivity"></activity>
-
-        <activity android:name=".controller.activitys.WebActivity"></activity>
         <activity android:name=".controller.activitys.RecoverImageActivity"></activity>
         <activity android:name=".controller.activitys.RecoverVoiceActivity"></activity>
         <activity android:name=".controller.activitys.RecoverFileActivity"></activity>
+
+        <activity android:name=".controller.activitys.WebActivity"></activity>
+
 
     </application>
 

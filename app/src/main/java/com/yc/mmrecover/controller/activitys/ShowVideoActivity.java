@@ -121,9 +121,10 @@ public class ShowVideoActivity extends BaseShowActivity {
                 return false;
             }
         });
+    }
 
-        RxView.clicks(mTvRecovered).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
-            startActivity(new Intent(ShowVideoActivity.this, RecoverVideoActivity.class));
-        });
+    @Override
+    protected void start2RecoverActivity() {
+        startActivity(new Intent(this, RecoverVideoActivity.class));
     }
 }

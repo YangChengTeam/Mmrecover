@@ -77,4 +77,10 @@ public class ShowFileActivity extends BaseShowActivity {
         mediaBean.setFileName(file2.getName());
         return mediaBean;
     }
+
+    @Override
+    protected void start2RecoverActivity() {
+
+    }
+
 }
