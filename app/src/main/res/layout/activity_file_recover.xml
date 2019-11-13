@@ -7,27 +7,27 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/black"
+        android:background="@color/gray_bk"
         android:orientation="vertical">
 
         <View
-            android:id="@+id/v_status_bar"
+            android:id="@id/v_status_bar"
             android:layout_width="fill_parent"
             android:layout_height="25.0dip"
             android:background="@color/blue" />
 
         <include layout="@layout/layout_title" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
+        <include layout="@layout/layout_note_info" />
 
-            <VideoView
-                android:id="@+id/video_view"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
-        </LinearLayout>
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@id/gridView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5.0dip"
+            android:horizontalSpacing="2.0dip"
+            android:numColumns="1"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="2.0dip" />
     </LinearLayout>
 </RelativeLayout>

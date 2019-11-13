@@ -27,6 +27,8 @@ public class PayActivity extends BaseActivity {
 
     @BindViews({R.id.rl_price1, R.id.rl_price2})
     public List<RelativeLayout> rlPrices;
+    @BindViews({R.id.tv_pay98_des, R.id.tv_pay28_des})
+    public List<TextView> tvPayDess;
 
     @BindView(R.id.tv_title)
     TextView tvTitle;
@@ -51,6 +53,11 @@ public class PayActivity extends BaseActivity {
     private int mPayType = 2;  //支付类型  2 微信  1 支付宝
     private boolean mIs98 = true; //是否为支付98元购买会员
     private boolean mIsRead = true; //我已阅读用户须知
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_pay;
+    }
 
 
     @OnClick({R.id.im_back, R.id.tv_pay, R.id.rl_pay_wx, R.id.rl_pay_ali, R.id.rl_price1, R.id.rl_price2, R.id.tv_note, R.id.ll_read})
@@ -78,14 +85,18 @@ public class PayActivity extends BaseActivity {
                 break;
             case R.id.rl_price1:  //98元会员框
                 PayActivity.this.mIs98 = true;
+
                 rlPrices.get(0).setBackground(new BackgroundShape(PayActivity.this, 6, R.color.white, 1, R.color.yellow_btn));
                 rlPrices.get(1).setBackground(new BackgroundShape(PayActivity.this, 6, R.color.white, 1, R.color.gray_bk2));
+
                 changeTvPayText(GlobalData.payCount3);
                 break;
             case R.id.rl_price2: //28元会员框
                 PayActivity.this.mIs98 = false;
+
                 rlPrices.get(0).setBackground(new BackgroundShape(PayActivity.this, 6, R.color.white, 1, R.color.gray_bk2));
                 rlPrices.get(1).setBackground(new BackgroundShape(PayActivity.this, 6, R.color.white, 1, R.color.yellow_btn));
+
                 changeTvPayText(GlobalData.payCount2);
                 break;
             case R.id.tv_note: //用户须知
@@ -108,14 +119,10 @@ public class PayActivity extends BaseActivity {
 
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_pay;
-    }
-
-    @Override
     protected void initViews() {
         tvTitle.setText("订单支付");
         tvPay.setBackground(new BackgroundShape(this, 22, R.color.yellow_btn));
+
 
         initPayNum();
 
@@ -123,10 +130,17 @@ public class PayActivity extends BaseActivity {
         tvNote.getPaint().setAntiAlias(true);
         tvNote.setText(Html.fromHtml("《会员须知》"));
 
+        tvPayDess.get(0).setBackgroundDrawable(new BackgroundShape(this, 8, R.color.red_case));
+        tvPayDess.get(1).setBackgroundDrawable(new BackgroundShape(this, 8, R.color.red_case));
+
+        rlPrices.get(0).setBackgroundDrawable(new BackgroundShape(this, 50, R.color.white, 3, R.color.yellow_btn));
+        rlPrices.get(1).setBackgroundDrawable(new BackgroundShape(this, 50, R.color.white, 3, R.color.gray_bk2));
     }
 
 
     private void initPayNum() {
+
+
         StringBuilder stringBuilder;
         if (GlobalData.vipType == 2) {
             findViewById(R.id.rl_price2).setVisibility(View.GONE);
@@ -141,17 +155,14 @@ public class PayActivity extends BaseActivity {
 
         stringBuilder = new StringBuilder();
         stringBuilder.append(GlobalData.payCount2);
-        stringBuilder.append("元");
         tv28.setText(stringBuilder.toString());
         stringBuilder = new StringBuilder();
         stringBuilder.append(GlobalData.payCount3);
-        stringBuilder.append("元");
         tv98.setText(stringBuilder.toString());
 
         changeTvPayText(GlobalData.payCount3);
 
-        rlPrices.get(0).setBackgroundDrawable(new BackgroundShape(this, 6, R.color.white, 1, R.color.yellow_btn));
-        rlPrices.get(1).setBackgroundDrawable(new BackgroundShape(this, 6, R.color.white, 1, R.color.gray_bk2));
+
         StringBuilder stringBuilder2 = new StringBuilder();
         stringBuilder2.append("GlobalData.vipType = ");
         stringBuilder2.append(GlobalData.vipType);
