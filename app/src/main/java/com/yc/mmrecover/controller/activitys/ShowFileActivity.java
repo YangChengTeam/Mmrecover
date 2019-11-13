@@ -29,7 +29,7 @@ public class ShowFileActivity extends BaseShowActivity {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (mIsScan) {
+                if (mIsOperate) {
                     return;
                 }
                 MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
