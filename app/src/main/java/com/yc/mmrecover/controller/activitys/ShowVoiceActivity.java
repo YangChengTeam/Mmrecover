@@ -1,11 +1,17 @@
 package com.yc.mmrecover.controller.activitys;
 
+import android.content.Intent;
+import android.util.Log;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.MediaInfo;
+import com.yc.mmrecover.utils.Func;
+import com.yc.mmrecover.utils.GridSpacingItemDecoration;
 import com.yc.mmrecover.view.adapters.GridVideoAdapter;
+import com.yc.mmrecover.view.adapters.GridVoiceAdapter;
 
 import java.io.File;
 
@@ -19,6 +25,7 @@ public class ShowVoiceActivity extends BaseShowActivity {
     protected void initViews() {
         super.initViews();
         GridLayoutManager layoutManage = new GridLayoutManager(this, 4);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(4, getResources().getDimensionPixelSize(R.dimen.padding_middle), true));
         recyclerView.setLayoutManager(layoutManage);
         recyclerView.setAdapter(this.mAdapter);
     }
@@ -35,22 +42,35 @@ public class ShowVoiceActivity extends BaseShowActivity {
 
     @Override
     public BaseQuickAdapter initAdapter() {
-        return new GridVideoAdapter(null);
+        return new GridVoiceAdapter(null);
     }
 
     @Override
     public boolean filterExt(String path) {
-        return false;
+        path.contains(".amr");
+        return true;
     }
 
     @Override
-    public MediaInfo getMediaInfo(File file) {
-        return null;
+    public MediaInfo getMediaInfo(File file2) {
+        long length = file2.length();
+        String absolutePath = file2.getAbsolutePath();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("scan voice = ");
+        stringBuilder.append(absolutePath);
+        Log.d("ssssss", "getMediaInfo: " + stringBuilder.toString());
+        MediaInfo mediaBean = new MediaInfo();
+        mediaBean.setLastModifyTime((int) (file2.lastModified() / 1000));
+        mediaBean.setPath(absolutePath);
+        mediaBean.setSize(length);
+        mediaBean.setStrSize(Func.getSizeString(length));
+        mediaBean.setFileName(file2.getName());
+        return mediaBean;
     }
 
     @Override
     protected void start2RecoverActivity() {
-
+        startActivity(new Intent(this, RecoverVoiceActivity.class));
     }
 
 }

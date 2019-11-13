@@ -1,17 +1,14 @@
 package com.yc.mmrecover.controller.activitys;
 
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.util.Log;
 
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.Func;
-import com.yc.mmrecover.utils.GridSpacingItemDecoration;
-import com.yc.mmrecover.view.adapters.GridVideoAdapter;
 import com.yc.mmrecover.view.adapters.VerticalFileAdapter;
 
 import java.io.File;
@@ -68,7 +65,6 @@ public class ShowFileActivity extends BaseShowActivity {
         stringBuilder.append(", ");
         stringBuilder.append(file2.getName());
         Log.d("ssssss", "getMediaInfo: " + stringBuilder.toString());
-//        log.d(stringBuilder.toString());
         MediaInfo mediaBean = new MediaInfo();
         mediaBean.setLastModifyTime((int) (file2.lastModified() / 1000));
         mediaBean.setPath(absolutePath);
@@ -80,7 +76,7 @@ public class ShowFileActivity extends BaseShowActivity {
 
     @Override
     protected void start2RecoverActivity() {
-
+        startActivity(new Intent(this, RecoverFileActivity.class));
     }
 
 }
