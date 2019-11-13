@@ -46,7 +46,6 @@
         <activity android:name=".controller.activitys.FeedbackActivity"></activity>
         <activity android:name=".controller.activitys.HelpActivity"></activity>
         <activity android:name=".controller.activitys.PayActivity"></activity>
-        <activity android:name=".controller.activitys.SearchActivity"></activity>
 
 
         <activity android:name=".controller.activitys.ShowFileActivity"></activity>

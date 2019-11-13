@@ -1,10 +1,14 @@
 package com.yc.mmrecover.controller.activitys;
 
+import android.graphics.BitmapFactory;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.MediaInfo;
+import com.yc.mmrecover.utils.Func;
+import com.yc.mmrecover.utils.GridSpacingItemDecoration;
 import com.yc.mmrecover.view.adapters.GridVideoAdapter;
 
 import java.io.File;
@@ -19,6 +23,7 @@ public class ShowImageActivity extends BaseShowActivity {
     protected void initViews() {
         super.initViews();
         GridLayoutManager layoutManage = new GridLayoutManager(this, 4);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(4, getResources().getDimensionPixelSize(R.dimen.padding_middle), true));
         recyclerView.setLayoutManager(layoutManage);
         recyclerView.setAdapter(this.mAdapter);
     }
@@ -30,7 +35,7 @@ public class ShowImageActivity extends BaseShowActivity {
 
     @Override
     protected String initPath() {
-        return null;
+        return "/数据恢复助手/微信图片恢复/";
     }
 
     @Override
@@ -40,11 +45,26 @@ public class ShowImageActivity extends BaseShowActivity {
 
     @Override
     public boolean filterExt(String path) {
-        return false;
+        return true;
     }
 
     @Override
     public MediaInfo getMediaInfo(File file) {
-        return null;
+        MediaInfo mediaBean = new MediaInfo();
+        String absolutePath = file.getAbsolutePath();
+        long length = file.length();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(absolutePath, options);
+        if (options.outWidth > 0 && options.outHeight > 0 && options.outMimeType != null && options.outMimeType.toLowerCase().contains("image") && !options.outMimeType.toLowerCase().contains("webp")) {
+            mediaBean.setLastModifyTime((int) (file.lastModified() / 1000));
+            mediaBean.setPath(absolutePath);
+            mediaBean.setSize(length);
+            mediaBean.setStrSize(Func.getSizeString(length));
+            mediaBean.setWidth(options.outWidth);
+            mediaBean.setHeight(options.outHeight);
+            mediaBean.setFileName(file.getName());
+        }
+        return mediaBean;
     }
 }
