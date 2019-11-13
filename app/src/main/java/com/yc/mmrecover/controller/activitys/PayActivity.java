@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,9 +15,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yc.mmrecover.R;
+import com.yc.mmrecover.model.bean.BroadcastInfo;
 import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.utils.BackgroundShape;
+import com.yc.mmrecover.view.wdiget.VTextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -38,6 +43,8 @@ public class PayActivity extends BaseActivity {
     TextView tvNote;
     @BindView(R.id.im_read)
     ImageView imRead;
+    @BindView(R.id.tv_broadcast)
+    VTextView broadcastVTextView;
     @BindViews({R.id.im_wx_select, R.id.im_ali_select})
     List<ImageView> ivPayTypes;
 //    @BindViews({R.id.rl_pay_wx, R.id.rl_pay_wx})
@@ -47,6 +54,8 @@ public class PayActivity extends BaseActivity {
     TextView tv28;
     @BindView(R.id.tv_98)
     TextView tv98;
+
+    private String[][] tmpBroadcastInfo;
 
 
     private String TAG = "mmrecover_log_PayActivity";
@@ -86,17 +95,15 @@ public class PayActivity extends BaseActivity {
             case R.id.rl_price1:  //98元会员框
                 PayActivity.this.mIs98 = true;
 
-                rlPrices.get(0).setBackground(new BackgroundShape(PayActivity.this, 6, R.color.white, 1, R.color.yellow_btn));
-                rlPrices.get(1).setBackground(new BackgroundShape(PayActivity.this, 6, R.color.white, 1, R.color.gray_bk2));
-
+                rlPrices.get(0).setBackground(new BackgroundShape(PayActivity.this, 50, R.color.white, 10, R.color.yellow_btn));
+                rlPrices.get(1).setBackground(new BackgroundShape(PayActivity.this, 50, R.color.white, 10, R.color.gray_bk2));
                 changeTvPayText(GlobalData.payCount3);
                 break;
             case R.id.rl_price2: //28元会员框
                 PayActivity.this.mIs98 = false;
 
-                rlPrices.get(0).setBackground(new BackgroundShape(PayActivity.this, 6, R.color.white, 1, R.color.gray_bk2));
-                rlPrices.get(1).setBackground(new BackgroundShape(PayActivity.this, 6, R.color.white, 1, R.color.yellow_btn));
-
+                rlPrices.get(0).setBackground(new BackgroundShape(PayActivity.this, 50, R.color.white, 10, R.color.gray_bk2));
+                rlPrices.get(1).setBackground(new BackgroundShape(PayActivity.this, 50, R.color.white, 10, R.color.yellow_btn));
                 changeTvPayText(GlobalData.payCount2);
                 break;
             case R.id.tv_note: //用户须知
@@ -133,14 +140,69 @@ public class PayActivity extends BaseActivity {
         tvPayDess.get(0).setBackgroundDrawable(new BackgroundShape(this, 8, R.color.red_case));
         tvPayDess.get(1).setBackgroundDrawable(new BackgroundShape(this, 8, R.color.red_case));
 
-        rlPrices.get(0).setBackgroundDrawable(new BackgroundShape(this, 50, R.color.white, 3, R.color.yellow_btn));
-        rlPrices.get(1).setBackgroundDrawable(new BackgroundShape(this, 50, R.color.white, 3, R.color.gray_bk2));
+        rlPrices.get(0).setBackgroundDrawable(new BackgroundShape(this, 50, R.color.white, 10, R.color.yellow_btn));
+        rlPrices.get(1).setBackgroundDrawable(new BackgroundShape(this, 50, R.color.white, 10, R.color.gray_bk2));
+
+        initBoradInfo();
+    }
+
+    private void initBoradInfo() {
+        String[][] r1 = new String[15][];
+        r1[0] = new String[]{"华为Mate8用户", "恢复微信聊天记录", "9分钟前"};
+        r1[1] = new String[]{"红米Note8用户", "恢复微信视频", "7分钟前"};
+        r1[2] = new String[]{"华为P9用户", "恢复46张微信照片", "13分钟前"};
+        r1[3] = new String[]{"华为Mate7用户", "恢复微信聊天记录", "26分钟前"};
+        r1[4] = new String[]{"小米4A用户", "恢复微信聊天记录", "16分钟前"};
+        r1[5] = new String[]{"一加5t用户", "恢复微信聊天记录", "6分钟前"};
+        r1[6] = new String[]{"荣耀畅玩4X用户", "恢复微信聊天记录", "8分钟前"};
+        r1[7] = new String[]{"OPPOA57用户", "恢复16张微信照片", "15分钟前"};
+        r1[8] = new String[]{"红米Note3用户", "恢复微信聊天记录", "25分钟前"};
+        r1[9] = new String[]{"华为畅享8用户", "恢复18张微信照片", "5分钟前"};
+        r1[10] = new String[]{"红米Note4用户", "恢复微信聊天记录", "32分钟前"};
+        r1[11] = new String[]{"VivoX9用户", "恢复微信视频", "15分钟前"};
+        r1[12] = new String[]{"魅族Note9用户", "恢复微信聊天记录", "16分钟前"};
+        r1[13] = new String[]{"OPPOA5用户", "恢复132张微信照片", "12分钟前"};
+        r1[14] = new String[]{"OPPOR17用户", "恢复微信聊天记录", "3分钟前"};
+        tmpBroadcastInfo = r1;
+
+        List arrayList = new ArrayList();
+        for (int i = 0; i < this.tmpBroadcastInfo.length; i++) {
+            BroadcastInfo broadcastInfo = new BroadcastInfo();
+            broadcastInfo.setUserName(this.tmpBroadcastInfo[i][0]);
+            broadcastInfo.setContent(this.tmpBroadcastInfo[i][1]);
+            broadcastInfo.setTime(this.tmpBroadcastInfo[i][2]);
+            arrayList.add(broadcastInfo);
+        }
+
+        this.broadcastVTextView.setText(14.0f, 5, getResources().getColor(R.color.black));
+        this.broadcastVTextView.setTextStillTime(5000);
+        this.broadcastVTextView.setAnimTime(500);
+        this.broadcastVTextView.startAutoScroll();
+
+        ArrayList list = new ArrayList();
+        for (int i = 0; i < arrayList.size(); i++) {
+            StringBuilder stringBuilder2 = new StringBuilder();
+            stringBuilder2.append(((BroadcastInfo) arrayList.get(i)).getUserName());
+            stringBuilder2.append(" ");
+            stringBuilder2.append(((BroadcastInfo) arrayList.get(i)).getContent());
+            stringBuilder2.append("   ");
+            stringBuilder2.append(((BroadcastInfo) arrayList.get(i)).getTime());
+            CharSequence stringBuilder3 = stringBuilder2.toString();
+            StringBuilder stringBuilder4 = new StringBuilder();
+            stringBuilder4.append("content = ");
+            stringBuilder4.append(stringBuilder3);
+            int length = ((BroadcastInfo) arrayList.get(i)).getUserName().length() + 1;
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuilder3);
+            spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.blue_word)), 0, length, 34);
+            Log.d(TAG, "initBoradInfo: stringBuilder3 "+stringBuilder3);
+            Log.d(TAG, "initBoradInfo: stringBuilder4 "+stringBuilder4);
+            list.add(spannableStringBuilder);
+        }
+        this.broadcastVTextView.setTextList(list);
     }
 
 
     private void initPayNum() {
-
-
         StringBuilder stringBuilder;
         if (GlobalData.vipType == 2) {
             findViewById(R.id.rl_price2).setVisibility(View.GONE);
