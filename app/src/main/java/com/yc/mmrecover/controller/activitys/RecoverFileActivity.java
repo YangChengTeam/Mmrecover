@@ -1,8 +1,12 @@
 package com.yc.mmrecover.controller.activitys;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -78,8 +82,14 @@ public class RecoverFileActivity extends BaseRecoverActivity {
             }
         }
         try {
+            Uri uri;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                uri = getImageContentUri(context, new File(path));
+            } else {
+                uri = Uri.fromFile(new File(path));
+            }
             //设置intent的data和Type属性
-            Uri uri = FileProvider.getUriForFile(context, "com.yc.mmrecover.myFileProvider", new File(path));
+//            Uri uri = FileProvider.getUriForFile(context, "com.yc.mmrecover.myFileProvider", new File(path));
             intent.setDataAndType(uri, type);
             //跳转
             context.startActivity(intent);
@@ -90,12 +100,41 @@ public class RecoverFileActivity extends BaseRecoverActivity {
         }
     }
 
+    /**
+     * 转换 content:// uri
+     */
+    public static Uri getImageContentUri(Context context, File imageFile) {
+        String filePath = imageFile.getAbsolutePath();
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Images.Media._ID},
+                MediaStore.Images.Media.DATA + "=? ",
+                new String[]{filePath}, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor
+                    .getColumnIndex(MediaStore.MediaColumns._ID));
+            Uri baseUri = Uri.parse("content://media/external/images/media");
+            return Uri.withAppendedPath(baseUri, "" + id);
+        } else {
+            if (imageFile.exists()) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DATA, filePath);
+                return context.getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            } else {
+                return null;
+            }
+        }
+    }
+
     //建立一个文件类型与文件后缀名的匹配表
     private final String[][] MATCH_ARRAY = {
             //{后缀名，    文件类型}
             {".doc", "application/msword"},
+//            {".docx", "application/msword"},
             {".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
-            {".xls", "application/vnd.ms-excel application/x-excel"},
+            {".xls", "application/vnd.ms-excel"},
             {".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
             {".txt", "text/plain"},
             {".pptx", "tapplication/vnd.openxmlformats-officedocument.presentationml.presentation"},
