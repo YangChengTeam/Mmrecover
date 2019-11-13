@@ -12,7 +12,7 @@ import butterknife.BindView;
 
 public class DetailVideoActivity extends BaseActivity {
     private MediaInfo mediaInfo;
-    
+
     @BindView(R.id.video_view)
     VideoView mVideoView;
 

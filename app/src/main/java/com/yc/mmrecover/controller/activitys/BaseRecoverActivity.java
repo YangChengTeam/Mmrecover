@@ -28,17 +28,17 @@ public abstract class BaseRecoverActivity extends BaseActivity {
     protected List<MediaInfo> mMediaList;
 
     public abstract String initTitle();
+
     public abstract String initPath();
 
     @Override
     protected void initViews() {
         initTitle("已恢复的" + initTitle());
-        mTvNote.setText("视频存储在：" + initPath());
+        mTvNote.setText(initTitle() + "存储在：" + initPath());
 
         this.mMediaList = new ArrayList<>();
         scanDisk(Environment.getExternalStorageDirectory() + "/" + initPath());
     }
-
 
 
     private void scanDisk(String str) {

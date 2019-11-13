@@ -48,4 +48,10 @@ public class ShowFileActivity extends BaseShowActivity {
     public MediaInfo getMediaInfo(File file) {
         return null;
     }
+
+    @Override
+    protected void start2RecoverActivity() {
+
+    }
+
 }
