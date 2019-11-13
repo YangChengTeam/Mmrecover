@@ -1,7 +1,10 @@
 package com.yc.mmrecover.controller.activitys;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -11,7 +14,10 @@ import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.view.adapters.VerticalFileAdapter;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
+import java.io.Serializable;
 
 public class ShowFileActivity extends BaseShowActivity {
     @Override
@@ -25,6 +31,25 @@ public class ShowFileActivity extends BaseShowActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(this.mAdapter);
+
+
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                MediaInfo mediaInfo = mMediaList.get(position);
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    String[] tmps = mediaInfo.getFileName().split(".");
+                    intent.setDataAndType(Uri.fromFile(new File(mediaInfo.getPath())), "application/txt");
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    // no Activity to handle this kind of files
+                }
+            }
+        });
+
+
     }
 
     @Override
