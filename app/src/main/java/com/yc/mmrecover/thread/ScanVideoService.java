@@ -20,6 +20,10 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 public class ScanVideoService extends IntentService {
+    public static boolean isServiceRun() {
+        return mIsServiceRun;
+    }
+
     private static boolean mIsServiceRun;
 
     public ScanVideoService() {

@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.jakewharton.rxbinding3.view.RxView;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.eventbus.VideoEventBusMessage;
 import com.yc.mmrecover.model.bean.MediaInfo;
@@ -17,6 +18,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 
 public class ShowVideoActivity extends BaseShowActivity {
 
@@ -63,6 +65,18 @@ public class ShowVideoActivity extends BaseShowActivity {
                 return false;
             }
         });
+
+        RxView.clicks(mTvRecover).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+
+        });
+
+        RxView.clicks(mTvRecovered).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+            startActivity(new Intent(ShowVideoActivity.this, RecoverVideoActivity.class));
+        });
+
+        RxView.clicks(mDelBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+
+        });
     }
 
     @Override
@@ -77,9 +91,7 @@ public class ShowVideoActivity extends BaseShowActivity {
             this.setTitle("全部视频(" + this.mMediaList.size() + ")");
             this.mAdapter.setNewData(this.mMediaList);
             this.mAdapter.notifyDataSetChanged();
-            if (this.mMediaList.size() < this.mMaxProgress) {
-                this.mProgressBar.setProgress(this.mMediaList.size());
-            }
+            this.mProgressBar.setProgress(this.mMediaList.size() % 100);
         } else {
             stop();
         }

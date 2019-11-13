@@ -76,11 +76,6 @@ public abstract class BaseShowActivity extends BaseActivity {
     protected List<MediaInfo> mMediaList;
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void initViews() {
         initActionBar();
         initProgressBar();
@@ -91,21 +86,9 @@ public abstract class BaseShowActivity extends BaseActivity {
             }
         });
 
-        RxView.clicks(mTvRecover).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
-
-        });
-
-        RxView.clicks(mTvRecovered).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
-
-        });
-
-        RxView.clicks(mDelBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
-
-        });
-
-        this.mTvRecover.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.yellow_btn));
-        this.mTvRecovered.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.gray_button));
-        this.mDelBtn.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.red_word));
+        this.mTvRecover.setBackground(new BackgroundShape(this, 22, R.color.yellow_btn));
+        this.mTvRecovered.setBackground(new BackgroundShape(this, 22, R.color.gray_button));
+        this.mDelBtn.setBackground(new BackgroundShape(this, 22, R.color.red_word));
         this.mMediaList = new ArrayList<>();
         initData();
         scan();
@@ -121,31 +104,31 @@ public abstract class BaseShowActivity extends BaseActivity {
         mTvTitle.setText(title);
     }
 
+
     private void initActionBar() {
         mTvOperate.setText("全选");
         setTitle("全部" + title);
+
         RxView.clicks(mBackBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
             finish();
         });
 
-        mTvOperate.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                if (!mIsScan) {
-                    if (mIsSelectAll) {
-                        mIsSelectAll = false;
-                        mTvOperate.setText("全选");
-                        for (MediaInfo select : mMediaList) {
-                            select.setSelect(false);
-                        }
-                    } else {
-                        mIsSelectAll = true;
-                        mTvOperate.setText("取消全选");
-                        for (MediaInfo select : mMediaList) {
-                            select.setSelect(true);
-                        }
+        RxView.clicks(mTvOperate).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+            if (!mIsScan) {
+                if (mIsSelectAll) {
+                    mIsSelectAll = false;
+                    mTvOperate.setText("全选");
+                    for (MediaInfo select : mMediaList) {
+                        select.setSelect(false);
                     }
-                    mAdapter.notifyDataSetChanged();
+                } else {
+                    mIsSelectAll = true;
+                    mTvOperate.setText("取消全选");
+                    for (MediaInfo select : mMediaList) {
+                        select.setSelect(true);
+                    }
                 }
+                mAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -181,7 +164,6 @@ public abstract class BaseShowActivity extends BaseActivity {
     protected void stop() {
         this.mIsScan = false;
         this.mRlMask.setVisibility(View.GONE);
-        ScanVideoService.stopService();
         this.mTvStatus.setText("扫描完成");
         this.mStartBtn.setImageDrawable(getResources().getDrawable(R.mipmap.image_start));
         this.mProgressBar.setProgress(mMaxProgress);

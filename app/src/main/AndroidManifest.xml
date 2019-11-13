@@ -48,6 +48,7 @@
         <activity android:name=".controller.activitys.ShowVoiceActivity"></activity>
         <activity android:name=".controller.activitys.ShowVideoActivity"></activity>
         <activity android:name=".controller.activitys.DetailVideoActivity"></activity>
+        <activity android:name=".controller.activitys.RecoverVideoActivity"></activity>
         <service android:name=".thread.ScanVideoService"></service>
 
         <activity android:name=".controller.activitys.WebActivity"></activity>
