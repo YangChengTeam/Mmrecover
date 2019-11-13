@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding3.view.RxView;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.BroadcastInfo;
+import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.view.wdiget.VTextView;
 
 import java.util.ArrayList;
@@ -21,6 +22,12 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivity {
+    @BindView(R.id.tv_percent)
+    TextView tvPercent;
+
+    @BindView(R.id.tv_size)
+    TextView tvSize;
+
     @BindView(R.id.gl_container)
     GridLayout gridLayout;
 
@@ -42,13 +49,17 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        RxView.clicks(myBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v)->{
-                startActivity(new Intent(MainActivity.this, MyActivity.class));
+        RxView.clicks(myBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+            startActivity(new Intent(MainActivity.this, MyActivity.class));
         });
+
+        tvSize.setText(Func.getUsedInternalMemorySize(this) + "/" + Func.getInternalMemorySize(this));
+        tvPercent.setText(Func.getUsedMemoryPresent() + "");
 
         initBoradInfo();
         initGridLayout();
     }
+
 
     private void initBoradInfo() {
         String[][] r1 = new String[15][];
@@ -112,8 +123,8 @@ public class MainActivity extends BaseActivity {
             layoutParams.columnSpec = GridLayout.spec(i % 3, 1.0f);
             View homeButton = getHomeButton(this.btnTextList[i], this.btnImageList[i]);
             homeButton.setTag(i);
-            RxView.clicks(homeButton).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v)->{
-                switch (Integer.valueOf(homeButton.getTag().toString())){
+            RxView.clicks(homeButton).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+                switch (Integer.valueOf(homeButton.getTag().toString())) {
                     case 0:
                         break;
                     case 1:
