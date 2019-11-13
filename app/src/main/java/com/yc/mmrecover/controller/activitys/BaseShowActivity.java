@@ -110,7 +110,7 @@ public abstract class BaseShowActivity extends BaseActivity {
                         FileUtils.copyFile(source, dest);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        LogUtil.msg(initTitle() + "视频恢复错误->" + e.getMessage());
+                        LogUtil.msg(initTitle() + "恢复错误->" + e.getMessage());
                     }
                     mediaBean.setSelect(false);
                     flag = true;
@@ -228,7 +228,7 @@ public abstract class BaseShowActivity extends BaseActivity {
     private void notifyDataSetChanged(MediaInfo mediaInfo) {
         if (mediaInfo != null) {
             this.mMediaList.add(mediaInfo);
-            this.setTitle("全部视频(" + this.mMediaList.size() + ")");
+            this.setTitle("全部" + initTitle() + "(" + this.mMediaList.size() + ")");
             this.mAdapter.setNewData(this.mMediaList);
             this.mAdapter.notifyDataSetChanged();
             mProgressBar.setProgress(this.mMediaList.size() % 100);
