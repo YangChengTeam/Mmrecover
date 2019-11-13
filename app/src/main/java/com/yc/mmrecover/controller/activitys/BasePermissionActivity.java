@@ -1,15 +1,15 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.Toast;
 
-
-import com.yc.mmrecover.utils.PermissionHelpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +34,6 @@ public abstract class BasePermissionActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void initViews() {
-
-    }
-
     /**
      * ----------非常重要----------
      * <p>
@@ -51,30 +46,22 @@ public abstract class BasePermissionActivity extends BaseActivity {
      */
     @TargetApi(23)
     private void checkAndRequestPermission() {
-        boolean obtainMust = PermissionHelpUtils.checkMustPermissions(this);
-        if (obtainMust) {
+        if (checkMustPermissions(this)) {
             onRequestPermissionSuccess();
         } else {
-            List<String> allPermissions = new ArrayList<>();
-            List<String> mustPermissions = PermissionHelpUtils.getMustPermissions();
-            if (mustPermissions != null && mustPermissions.size() > 0) {
-                allPermissions.addAll(mustPermissions);
-            }
-            List<String> notMustPermissions = PermissionHelpUtils.getNotMustPermissions();
-            if (notMustPermissions != null && notMustPermissions.size() > 0) {
-                allPermissions.addAll(notMustPermissions);
-            }
+            List<String> mustPermissions = getMustPermissions();
             // 请求所缺少的权限，在onRequestPermissionsResult中再看是否获得权限，如果获得权限就可以调用SDK，否则不要调用SDK。
-            String[] requestPermissions = new String[allPermissions.size()];
-            allPermissions.toArray(requestPermissions);
+            String[] requestPermissions = new String[mustPermissions.size()];
+            mustPermissions.toArray(requestPermissions);
             requestPermissions(requestPermissions, 1024);
         }
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1024 && PermissionHelpUtils.checkMustPermissions(this)) {
+        if (requestCode == 1024 && checkMustPermissions(this)) {
             onRequestPermissionSuccess();
         } else {
             onRequestPermissionError();
@@ -86,6 +73,32 @@ public abstract class BasePermissionActivity extends BaseActivity {
             finish();
         }
     }
+
+    /**
+     * 校验必须权限是否授权
+     */
+    @TargetApi(23)
+    public boolean checkMustPermissions(Context context) {
+        List<String> mustPermissions = getMustPermissions();
+        if (mustPermissions == null || mustPermissions.size() == 0) {
+            return true;
+        }
+        List<String> lackedPermission = new ArrayList<>();
+        for (String permissions : mustPermissions) {
+            if (!(context.checkSelfPermission(permissions) == PackageManager.PERMISSION_GRANTED)) {
+                lackedPermission.add(permissions);
+            }
+        }
+        if (0 == lackedPermission.size()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 需要请求的权限
+     */
+    protected abstract List<String> getMustPermissions();
 
     /**
      * 权限请求失败的回调函数

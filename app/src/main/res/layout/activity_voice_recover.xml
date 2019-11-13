@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/gray_bk"
+        android:orientation="vertical">
+
+        <View
+            android:id="@id/v_status_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="25.0dip"
+            android:background="@color/blue" />
+
+        <include layout="@layout/layout_title" />
+
+        <include layout="@layout/layout_note_info" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@id/gridView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5.0dip"
+            android:horizontalSpacing="2.0dip"
+            android:numColumns="4"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="2.0dip" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@id/rl_mask"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/black_trans2"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@id/ll_play"
+        android:layout_width="312.0dip"
+        android:layout_height="125.0dip"
+        android:layout_centerInParent="true"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="13.0dip"
+            android:text="正在为您播放微信语音..."
+            android:textColor="@color/blue_word"
+            android:textSize="16.0sp" />
+
+        <ProgressBar
+            android:id="@id/voice_progress_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="9.0dip"
+            android:layout_marginLeft="15.0dip"
+            android:layout_marginTop="28.0dip"
+            android:layout_marginRight="15.0dip" />
+
+        <TextView
+            android:id="@id/tv_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20.0dip"
+            android:text="退出播放"
+            android:textColor="@color/blue_word"
+            android:textSize="16.0sp" />
+    </LinearLayout>
+</RelativeLayout>
