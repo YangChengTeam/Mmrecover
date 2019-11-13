@@ -1,10 +1,7 @@
 package com.yc.mmrecover.view.adapters;
 
-import android.widget.ImageView;
-
 import androidx.annotation.Nullable;
 
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yc.mmrecover.R;

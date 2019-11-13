@@ -1,5 +1,11 @@
 package com.yc.mmrecover.utils;
 
+import android.content.Context;
+import android.os.Build;
+import android.os.Environment;
+import android.os.StatFs;
+import android.text.format.Formatter;
+
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,5 +49,41 @@ public class Func {
         }
         return new SimpleDateFormat(str, Locale.CHINA).format(new Date(j * 1000));
     }
+
+    public static String getUsedInternalMemorySize(Context context) {
+        StatFs statFs = new StatFs(Environment.getDataDirectory().getPath());
+        long j = 0;
+        long blockCountLong = Build.VERSION.SDK_INT >= 18 ? statFs.getBlockCountLong() - statFs.getAvailableBlocksLong() : 0;
+        if (Build.VERSION.SDK_INT >= 18) {
+            j = statFs.getBlockSizeLong();
+        }
+        return Formatter.formatFileSize(context, blockCountLong * j);
+    }
+
+    public static String getInternalMemorySize(Context context) {
+        StatFs statFs = new StatFs(Environment.getDataDirectory().getPath());
+        long j = 0;
+        long blockSizeLong = Build.VERSION.SDK_INT >= 18 ? statFs.getBlockSizeLong() : 0;
+        if (Build.VERSION.SDK_INT >= 18) {
+            j = statFs.getBlockCountLong();
+        }
+        return Formatter.formatFileSize(context, j * blockSizeLong);
+    }
+
+    public static int getUsedMemoryPresent() {
+        long blockCountLong;
+        long blockCountLong2;
+        StatFs statFs = new StatFs(Environment.getDataDirectory().getPath());
+        if (Build.VERSION.SDK_INT >= 18) {
+            blockCountLong = statFs.getBlockCountLong() - statFs.getAvailableBlocksLong();
+            blockCountLong2 = statFs.getBlockCountLong();
+        } else {
+            blockCountLong = 0;
+            blockCountLong2 = 1;
+        }
+        return (int) ((blockCountLong * 100) / blockCountLong2);
+    }
+
+
 
 }
