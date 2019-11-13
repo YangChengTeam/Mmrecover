@@ -8,7 +8,7 @@ import com.yc.mmrecover.R;
 
 import butterknife.BindView;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BasePermissionActivity {
 
     @BindView(R.id.tv_app_name)
     TextView appNameTextView;
@@ -20,6 +20,11 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
+
+    }
+
+    @Override
+    protected void onRequestPermissionSuccess() {
         VUiKit.postDelayed(900, () -> {
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
             finish();

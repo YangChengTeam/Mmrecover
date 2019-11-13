@@ -20,7 +20,7 @@
 
         <include layout="@layout/layout_note_info" />
 
-        <GridView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/gridView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
