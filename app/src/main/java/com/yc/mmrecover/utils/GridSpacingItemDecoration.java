@@ -12,9 +12,7 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
     private int spacing;
     private boolean includeEdge;
 
-    /**
-     * 从哪个位置开始设置间距，有的宫格视图有头视图，如果把头视图也算在内的话，计算间距的时候会导致布局有问题
-     */
+
     private int startFrom;
 
     public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
@@ -39,7 +37,7 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
             return;
         }
 
-        // position - startFrom排除不考虑的位置这样算才正确
+        // position - startFrom 排除不考虑的位置这样算才正确
         position = position - startFrom;
         int column = position % spanCount; // item column
 

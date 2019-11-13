@@ -94,14 +94,16 @@ public class PayActivity extends BaseActivity {
                 break;
             case R.id.rl_price1:  //98元会员框
                 PayActivity.this.mIs98 = true;
-                rlPrices.get(0).setBackgroundDrawable(new BackgroundShape(PayActivity.this, 50, R.color.white, 10, R.color.yellow_btn));
-                rlPrices.get(1).setBackgroundDrawable(new BackgroundShape(PayActivity.this, 50, R.color.white, 10, R.color.gray_bk2));
+
+                rlPrices.get(0).setBackground(new BackgroundShape(PayActivity.this, 50, R.color.white, 10, R.color.yellow_btn));
+                rlPrices.get(1).setBackground(new BackgroundShape(PayActivity.this, 50, R.color.white, 10, R.color.gray_bk2));
                 changeTvPayText(GlobalData.payCount3);
                 break;
             case R.id.rl_price2: //28元会员框
                 PayActivity.this.mIs98 = false;
-                rlPrices.get(0).setBackgroundDrawable(new BackgroundShape(PayActivity.this, 50, R.color.white, 10, R.color.gray_bk2));
-                rlPrices.get(1).setBackgroundDrawable(new BackgroundShape(PayActivity.this, 50, R.color.white, 10, R.color.yellow_btn));
+
+                rlPrices.get(0).setBackground(new BackgroundShape(PayActivity.this, 50, R.color.white, 10, R.color.gray_bk2));
+                rlPrices.get(1).setBackground(new BackgroundShape(PayActivity.this, 50, R.color.white, 10, R.color.yellow_btn));
                 changeTvPayText(GlobalData.payCount2);
                 break;
             case R.id.tv_note: //用户须知
@@ -126,7 +128,7 @@ public class PayActivity extends BaseActivity {
     @Override
     protected void initViews() {
         tvTitle.setText("订单支付");
-        tvPay.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.yellow_btn));
+        tvPay.setBackground(new BackgroundShape(this, 22, R.color.yellow_btn));
 
 
         initPayNum();

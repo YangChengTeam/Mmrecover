@@ -2,12 +2,12 @@ package com.yc.mmrecover.controller.activitys;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yc.mmrecover.R;
-import com.yc.mmrecover.eventbus.VideoEventBusMessage;
+import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.view.adapters.GridVideoAdapter;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import java.io.File;
 
 public class ShowFileActivity extends BaseShowActivity {
     @Override
@@ -25,13 +25,27 @@ public class ShowFileActivity extends BaseShowActivity {
     }
 
     @Override
-    protected void initData() {
-        this.mAdapter = new GridVideoAdapter(null);
+    protected String initTitle() {
+        return "文件";
     }
 
+    @Override
+    protected String initPath() {
+        return null;
+    }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(VideoEventBusMessage event) {
+    @Override
+    public BaseQuickAdapter initAdapter() {
+        return new GridVideoAdapter(null);
+    }
 
+    @Override
+    public boolean filterExt(String path) {
+        return false;
+    }
+
+    @Override
+    public MediaInfo getMediaInfo(File file) {
+        return null;
     }
 }

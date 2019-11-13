@@ -1,25 +1,23 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
+import android.text.TextUtils;
 import android.view.View;
-
-import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.jakewharton.rxbinding3.view.RxView;
 import com.yc.mmrecover.R;
-import com.yc.mmrecover.eventbus.VideoEventBusMessage;
 import com.yc.mmrecover.model.bean.MediaInfo;
-import com.yc.mmrecover.thread.ScanVideoService;
+import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.utils.GridSpacingItemDecoration;
-import com.yc.mmrecover.utils.BackgroundShape;
 import com.yc.mmrecover.view.adapters.GridVideoAdapter;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
+import java.io.File;
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 
 
 public class ShowVideoActivity extends BaseShowActivity {
@@ -31,11 +29,65 @@ public class ShowVideoActivity extends BaseShowActivity {
     }
 
     @Override
+    protected String initTitle() {
+        return "视频";
+    }
+
+    @Override
+    protected String initPath() {
+        return "/数据恢复助手/微信视频恢复/";
+    }
+
+    @Override
+    public BaseQuickAdapter initAdapter() {
+        return new GridVideoAdapter(null);
+    }
+
+    @Override
+    public boolean filterExt(String path) {
+        String exts = "3gp,mp4,wmv,asf,rm,rmvb,mov,avi,dat,mpg,mpeg";
+        boolean flag = false;
+        for (String ext : exts.split(",")) {
+            if (path.contains("." + ext)) {
+                flag = true;
+                break;
+            }
+        }
+        return flag;
+    }
+
+    @Override
+    public MediaInfo getMediaInfo(File file) {
+        MediaInfo mediaBean = new MediaInfo();
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        try {
+            String absolutePath = file.getAbsolutePath();
+            long length = file.length();
+            mediaMetadataRetriever.setDataSource(absolutePath);
+            Object extractMetadata = mediaMetadataRetriever.extractMetadata(19);
+            Object extractMetadata2 = mediaMetadataRetriever.extractMetadata(18);
+            Object extractMetadata3 = mediaMetadataRetriever.extractMetadata(9);
+            int parseInt = TextUtils.isEmpty(extractMetadata + "") ? 0 : Integer.parseInt(extractMetadata + "");
+            int parseInt2 = TextUtils.isEmpty(extractMetadata2 + "") ? 0 : Integer.parseInt(extractMetadata2 + "");
+            if ((TextUtils.isEmpty(extractMetadata3 + "") ? 0 : Integer.parseInt(extractMetadata3 + "")) > 1000 && parseInt2 > 0 && parseInt > 0) {
+                mediaBean.setLastModifyTime((int) (file.lastModified() / 1000));
+                mediaBean.setPath(absolutePath);
+                mediaBean.setSize(length);
+                mediaBean.setStrSize(Func.getSizeString(length));
+                mediaBean.setWidth(parseInt2);
+                mediaBean.setHeight(parseInt);
+                mediaBean.setFileName(file.getName());
+            }
+            mediaMetadataRetriever.release();
+        } catch (Exception unused) {
+            mediaMetadataRetriever.release();
+        }
+        return mediaBean;
+    }
+
+    @Override
     protected void initViews() {
-        this.initTitle("视频");
-
         super.initViews();
-
         GridLayoutManager layoutManage = new GridLayoutManager(this, 4);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(4, getResources().getDimensionPixelSize(R.dimen.padding_middle), true));
         recyclerView.setLayoutManager(layoutManage);
@@ -70,32 +122,8 @@ public class ShowVideoActivity extends BaseShowActivity {
             }
         });
 
-    }
-
-
-    @Override
-    protected void initData() {
-        this.mAdapter = new GridVideoAdapter(null);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(VideoEventBusMessage event) {
-        if (event.getMediaInfo() != null) {
-            this.mMediaList.add(event.getMediaInfo());
-            this.setTitle("全部视频(" + this.mMediaList.size() + ")");
-            this.mAdapter.setNewData(this.mMediaList);
-            this.mAdapter.notifyDataSetChanged();
-            if (this.mMediaList.size() < this.mMaxProgress) {
-                this.mProgressBar.setProgress(this.mMediaList.size());
-            }
-        } else {
-            stop();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ScanVideoService.stopService();
+        RxView.clicks(mTvRecovered).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+            startActivity(new Intent(ShowVideoActivity.this, RecoverVideoActivity.class));
+        });
     }
 }

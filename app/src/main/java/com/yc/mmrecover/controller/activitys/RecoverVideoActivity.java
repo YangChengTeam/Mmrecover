@@ -1,15 +1,51 @@
 package com.yc.mmrecover.controller.activitys;
 
-import com.yc.mmrecover.R;
+import android.content.Intent;
+import android.view.View;
 
-public class RecoverVideoActivity extends BaseActivity {
+import androidx.recyclerview.widget.GridLayoutManager;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.yc.mmrecover.R;
+import com.yc.mmrecover.model.bean.MediaInfo;
+import com.yc.mmrecover.utils.GridSpacingItemDecoration;
+import com.yc.mmrecover.view.adapters.GridVideoAdapter;
+
+import java.io.Serializable;
+
+public class RecoverVideoActivity extends BaseRecoverActivity {
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_video_recover;
     }
 
     @Override
-    protected void initViews() {
+    public String initTitle() {
+        return "视频";
+    }
 
+    @Override
+    public String initPath() {
+        return "数据恢复助手/微信视频恢复/";
+    }
+
+    @Override
+    protected void initViews() {
+        super.initViews();
+        this.mAdapter = new GridVideoAdapter(this.mMediaList);
+        GridLayoutManager layoutManage = new GridLayoutManager(this, 4);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(4, getResources().getDimensionPixelSize(R.dimen.padding_middle), true));
+        recyclerView.setLayoutManager(layoutManage);
+        recyclerView.setAdapter(this.mAdapter);
+
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(RecoverVideoActivity.this, DetailVideoActivity.class);
+                intent.putExtra("info", (Serializable) (MediaInfo) adapter.getData().get(position));
+                RecoverVideoActivity.this.startActivity(intent);
+            }
+        });
     }
 }
