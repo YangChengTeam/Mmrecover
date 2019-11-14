@@ -1,19 +1,14 @@
 package com.yc.mmrecover.utils;
 
-import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.PowerManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
-import net.lingala.zip4j.util.InternalZipConstants;
+import com.alibaba.fastjson.JSON;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,7 +18,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
@@ -130,7 +124,7 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
         }
         File file = new File(str);
         if (file.exists()) {
-            str = str.substring(str.lastIndexOf(InternalZipConstants.ZIP_FILE_SEPARATOR) + 1);
+            str = str.substring(str.lastIndexOf("/") + 1);
             StringBuilder stringBuilder2 = new StringBuilder();
             stringBuilder2.append("str = ");
             stringBuilder2.append(str);
@@ -152,15 +146,14 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
                 Response execute = build.newCall(new Request.Builder().url("http://www.fulmz.com/v1/uploadFile").post(addFormDataPart.build()).build()).execute();
                 if (execute.isSuccessful()) {
                     str = execute.body().string();
-                    Gson gson = new Gson();
-                    hashMap = (Map) gson.fromJson(str, Map.class);
+                    hashMap = (Map) JSON.parseObject(str, Map.class);
                     String str2 = (String) hashMap.get("success");
                     StringBuilder stringBuilder4 = new StringBuilder();
                     stringBuilder4.append("msg = ");
                     stringBuilder4.append(hashMap.get("msg"));
                     Log.d(TAG, "onPostExecute: stringBuilder.toString() 88" + stringBuilder4.toString());
                     if (str2.equals("1")) {
-                        ObjResponseVo objResponseVo = (ObjResponseVo) gson.fromJson(str, ObjResponseVo.class);
+                        ObjResponseVo objResponseVo = (ObjResponseVo) JSON.parseObject(str, ObjResponseVo.class);
                         byte[] bArr = new byte[1024];
                         StringBuilder stringBuilder5 = new StringBuilder();
                         stringBuilder5.append(mDomain);
