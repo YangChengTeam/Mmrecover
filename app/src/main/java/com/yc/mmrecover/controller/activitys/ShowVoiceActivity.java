@@ -13,13 +13,15 @@ import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.utils.GridSpacingItemDecoration;
-import com.yc.mmrecover.view.adapters.GridVideoAdapter;
+import com.yc.mmrecover.utils.PlayVoiceTask;
 import com.yc.mmrecover.view.adapters.GridVoiceAdapter;
 
 import java.io.File;
-import java.io.Serializable;
 
 public class ShowVoiceActivity extends BaseShowActivity {
+
+    private PlayVoiceTask mPlayTask;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_voice_show;
@@ -55,7 +57,8 @@ public class ShowVoiceActivity extends BaseShowActivity {
                 if (mIsOperate) {
                     return false;
                 }
-
+                ShowVoiceActivity.this.mPlayTask = new PlayVoiceTask();
+                ShowVoiceActivity.this.mPlayTask.execute(new String[]{((MediaInfo) ShowVoiceActivity.this.mMediaList.get(position)).getPath()});
                 return false;
             }
         });
@@ -79,6 +82,7 @@ public class ShowVoiceActivity extends BaseShowActivity {
     @Override
     public boolean filterExt(String path) {
         return path.endsWith(".amr");
+
     }
 
     @Override

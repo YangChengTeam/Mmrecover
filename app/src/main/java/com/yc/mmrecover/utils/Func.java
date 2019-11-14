@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.text.format.Formatter;
-import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
@@ -15,12 +14,11 @@ import com.kk.securityhttp.domain.GoagalInfo;
 import com.kk.utils.ToastUtil;
 
 import java.io.File;
+import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import static com.kk.utils.security.Md5.md5;
 
 public class Func {
     public static String getSizeString(long j) {
@@ -93,6 +91,25 @@ public class Func {
             blockCountLong2 = 1;
         }
         return (int) ((blockCountLong * 100) / blockCountLong2);
+    }
+    public static String md5(String str) {
+        if (str == null) {
+            return "";
+        }
+        try {
+            byte[] digest = MessageDigest.getInstance("MD5").digest(str.getBytes("UTF-8"));
+            StringBuilder stringBuilder = new StringBuilder(digest.length * 2);
+            for (byte b : digest) {
+                int i = b & 255;
+                if (i < 16) {
+                    stringBuilder.append("0");
+                }
+                stringBuilder.append(Integer.toHexString(i));
+            }
+            return stringBuilder.toString();
+        } catch (Throwable e) {
+            throw new RuntimeException("Huh, MD5 should be supported?", e);
+        }
     }
 
 
