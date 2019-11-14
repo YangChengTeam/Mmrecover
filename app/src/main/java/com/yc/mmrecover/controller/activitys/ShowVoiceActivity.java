@@ -13,13 +13,15 @@ import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.utils.GridSpacingItemDecoration;
-import com.yc.mmrecover.view.adapters.GridVideoAdapter;
+import com.yc.mmrecover.utils.PlayVoiceTask;
 import com.yc.mmrecover.view.adapters.GridVoiceAdapter;
 
 import java.io.File;
-import java.io.Serializable;
 
 public class ShowVoiceActivity extends BaseShowActivity {
+
+    private PlayVoiceTask mPlayTask;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_voice_show;
@@ -31,7 +33,7 @@ public class ShowVoiceActivity extends BaseShowActivity {
         GridLayoutManager layoutManage = new GridLayoutManager(this, 4);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(4, getResources().getDimensionPixelSize(R.dimen.padding_middle), true));
         recyclerView.setLayoutManager(layoutManage);
-        recyclerView.setAdapter(this.mAdapter);
+//        recyclerView.setAdapter(this.mAdapter);
 
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -53,9 +55,37 @@ public class ShowVoiceActivity extends BaseShowActivity {
             @Override
             public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
                 if (mIsOperate) {
+//                    Toast.makeText(ShowVoiceActivity.this, "请等待扫描完成", Toast.LENGTH_SHORT).show();
                     return false;
                 }
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("long click = ");
+                stringBuilder.append(position);
+                Log.d("sssss", "onItemLongClick: " + stringBuilder.toString());
+                stringBuilder = new StringBuilder();
+                stringBuilder.append("getPath = ");
+                stringBuilder.append(((MediaInfo) ShowVoiceActivity.this.mMediaList.get(position)).getPath());
+                Log.d("sssss", "onItemLongClick:22222 " + stringBuilder.toString());
+//                if (GlobalData.vipType == 1) {
+//                    Intent intent = new Intent(ShowVoiceActivity.this, PayActivity.class);
+//                    intent.putExtra("sta_type", 5003);
+//                    ShowVoiceActivity.this.startActivity(intent);
+//                } else {
+                ShowVoiceActivity.this.mPlayTask = new PlayVoiceTask(new PlayVoiceTask.PlayCallback() {
+                    public void onStart(int i) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        stringBuilder.append("onStart = ");
+                        stringBuilder.append(i);
+                        Log.d("sssss", "onStart: stringBuilder.toString() " + stringBuilder.toString());
+//                            ShowVoiceActivity.this.showPlayLayout((i / 100) + 1);
+                    }
 
+                    public void onStop() {
+                        Log.d("sssss", "onStop: ");
+                    }
+                });
+                ShowVoiceActivity.this.mPlayTask.execute(new String[]{((MediaInfo) ShowVoiceActivity.this.mMediaList.get(position)).getPath()});
+//                }
                 return false;
             }
         });
@@ -78,12 +108,14 @@ public class ShowVoiceActivity extends BaseShowActivity {
 
     @Override
     public boolean filterExt(String path) {
-        path.contains(".amr");
-        return true;
+        return path.contains(".amr");
     }
 
     @Override
     public MediaInfo getMediaInfo(File file2) {
+        if (file2 != null) {
+            return new MediaInfo();
+        }
         long length = file2.length();
         String absolutePath = file2.getAbsolutePath();
         StringBuilder stringBuilder = new StringBuilder();
@@ -102,6 +134,7 @@ public class ShowVoiceActivity extends BaseShowActivity {
     @Override
     protected void start2RecoverActivity() {
         startActivity(new Intent(this, RecoverVoiceActivity.class));
+        finish();
     }
 
 }

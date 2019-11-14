@@ -11,12 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yc.mmrecover.R;
-import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.view.adapters.VerticalFileAdapter;
 
 import java.io.File;
