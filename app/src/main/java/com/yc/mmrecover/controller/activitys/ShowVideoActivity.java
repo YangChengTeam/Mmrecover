@@ -105,9 +105,11 @@ public class ShowVideoActivity extends BaseShowActivity {
                 if (mIsOperate) {
                     return false;
                 }
-                Intent intent = new Intent(ShowVideoActivity.this, DetailVideoActivity.class);
-                intent.putExtra("info", (Serializable) (MediaInfo) adapter.getData().get(position));
-                ShowVideoActivity.this.startActivity(intent);
+                MediaInfo mediaInfo = (MediaInfo)  adapter.getData().get(position);
+                DetailVideoActivity.startDetailVideoActivity(ShowVideoActivity.this,mediaInfo.getPath());
+//                Intent intent = new Intent(ShowVideoActivity.this, DetailVideoActivity.class);
+//                intent.putExtra("info", (Serializable) (MediaInfo) adapter.getData().get(position));
+//                ShowVideoActivity.this.startActivity(intent);
                 return false;
             }
         });

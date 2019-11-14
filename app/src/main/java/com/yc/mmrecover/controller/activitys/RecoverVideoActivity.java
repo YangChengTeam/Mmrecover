@@ -42,9 +42,11 @@ public class RecoverVideoActivity extends BaseRecoverActivity {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(RecoverVideoActivity.this, DetailVideoActivity.class);
-                intent.putExtra("info", (Serializable) (MediaInfo) adapter.getData().get(position));
-                RecoverVideoActivity.this.startActivity(intent);
+                MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
+                DetailVideoActivity.startDetailVideoActivity(RecoverVideoActivity.this, mediaInfo.getPath());
+//                Intent intent = new Intent(RecoverVideoActivity.this, DetailVideoActivity.class);
+//                intent.putExtra("info", (Serializable) (MediaInfo) adapter.getData().get(position));
+//                RecoverVideoActivity.this.startActivity(intent);
             }
         });
     }

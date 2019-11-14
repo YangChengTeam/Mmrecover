@@ -46,7 +46,9 @@ public class RecoverVoiceActivity extends BaseRecoverActivity {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                RecoverVoiceActivity.this.mPlayTask = new PlayVoiceTask();
+
+//                startActivity(new Intent(RecoverVoiceActivity.this, DetailVideoActivity.class));
+                RecoverVoiceActivity.this.mPlayTask = new PlayVoiceTask(RecoverVoiceActivity.this);
                 RecoverVoiceActivity.this.mPlayTask.execute(new String[]{((MediaInfo) RecoverVoiceActivity.this.mMediaList.get(position)).getPath()});
             }
         });
