@@ -11,8 +11,6 @@ import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.GridSpacingItemDecoration;
 import com.yc.mmrecover.view.adapters.GridVideoAdapter;
 
-import java.io.Serializable;
-
 public class RecoverVideoActivity extends BaseRecoverActivity {
 
     @Override
@@ -43,10 +41,9 @@ public class RecoverVideoActivity extends BaseRecoverActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
-                DetailVideoActivity.startDetailVideoActivity(RecoverVideoActivity.this, mediaInfo.getPath());
-//                Intent intent = new Intent(RecoverVideoActivity.this, DetailVideoActivity.class);
-//                intent.putExtra("info", (Serializable) (MediaInfo) adapter.getData().get(position));
-//                RecoverVideoActivity.this.startActivity(intent);
+                Intent intent = new Intent(RecoverVideoActivity.this, DetailVoiceActivity.class);
+                intent.putExtra("info",  (MediaInfo) adapter.getData().get(position));
+                RecoverVideoActivity.this.startActivity(intent);
             }
         });
     }

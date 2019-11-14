@@ -49,4 +49,5 @@ dependencies {
     implementation files('libs/zip4j-1.3.2.jar')
     implementation 'com.fulongbin.silk_v3_decoder:decoder:0.9.3'
 
+    implementation 'top.zibin:Luban:1.1.3'
 }

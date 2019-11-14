@@ -24,7 +24,7 @@ public class SplashActivity extends BasePermissionActivity {
 
     @Override
     protected void initViews() {
-
+        checkAndRequestPermission();
     }
 
     @Override

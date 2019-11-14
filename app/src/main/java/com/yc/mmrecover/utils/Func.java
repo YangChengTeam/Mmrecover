@@ -125,14 +125,22 @@ public class Func {
         intent.setAction(Intent.ACTION_VIEW);
 
         String[][] MATCH_ARRAY = {
-                {".doc", "application/msword"},
-                {".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
-                {".xls", "application/vnd.ms-excel"},
-                {".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
                 {".txt", "text/plain"},
-                {".pptx", "tapplication/vnd.openxmlformats-officedocument.presentationml.presentation"},
-                {".ppt", "application/vnd.ms-powerpoint"},
+                {".doc", "text/plain"},
+                {".docx", "text/plain"},
+                {".xls", "text/plain"},
+                {".xlsx", "text/plain"},
+                {".pptx", "text/plain"},
+                {".ppt", "text/plain"},
                 {".xml", "text/plain"},
+
+//                 {".doc", "application/msword"},
+//                {".docx",  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
+//                {".xls",  "application/vnd.ms-excel"},
+//                {".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
+//                {".pptx", "tapplication/vnd.openxmlformats-officedocument.presentationml.presentation"},
+//                {".ppt",   "application/vnd.ms-powerpoint"},
+//                {".xml",  "text/plain"},
         };
         String type = "";
         for (int i = 0; i < MATCH_ARRAY.length; i++) {

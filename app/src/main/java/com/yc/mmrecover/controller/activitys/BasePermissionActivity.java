@@ -22,18 +22,6 @@ public abstract class BasePermissionActivity extends BaseActivity {
 
     private String TAG = "GameSdkLog";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        // 如果targetSDKVersion >= 23，就要申请好权限。如果您的App没有适配到Android6.0（即targetSDKVersion < 23），那么只需要在这里直接调用fetchSplashAD接口。
-        if (Build.VERSION.SDK_INT >= 23) {
-            checkAndRequestPermission();
-        } else {
-            onRequestPermissionSuccess();
-        }
-    }
-
     /**
      * ----------非常重要----------
      * <p>
@@ -45,16 +33,20 @@ public abstract class BasePermissionActivity extends BaseActivity {
      * 注意：下面的`checkSelfPermission`和`requestPermissions`方法都是在Android6.0的SDK中增加的API，如果您的App还没有适配到Android6.0以上，则不需要调用这些方法，直接调用广点通SDK即可。
      */
     @TargetApi(23)
-    private void checkAndRequestPermission() {
-        if (checkMustPermissions(this)) {
+    public void checkAndRequestPermission() {
+        if (Build.VERSION.SDK_INT < 23) {
             onRequestPermissionSuccess();
-        } else {
-            List<String> mustPermissions = getMustPermissions();
-            // 请求所缺少的权限，在onRequestPermissionsResult中再看是否获得权限，如果获得权限就可以调用SDK，否则不要调用SDK。
-            String[] requestPermissions = new String[mustPermissions.size()];
-            mustPermissions.toArray(requestPermissions);
-            requestPermissions(requestPermissions, 1024);
+            return;
         }
+        if (checkMustPermissions(this)) {  //权限都有了
+            onRequestPermissionSuccess();
+            return;
+        }
+        List<String> mustPermissions = getMustPermissions();
+        // 请求所缺少的权限，在onRequestPermissionsResult中再看是否获得权限，如果获得权限就可以调用SDK，否则不要调用SDK。
+        String[] requestPermissions = new String[mustPermissions.size()];
+        mustPermissions.toArray(requestPermissions);
+        requestPermissions(requestPermissions, 1024);
     }
 
 
@@ -78,7 +70,7 @@ public abstract class BasePermissionActivity extends BaseActivity {
      * 校验必须权限是否授权
      */
     @TargetApi(23)
-    public boolean checkMustPermissions(Context context) {
+    private boolean checkMustPermissions(Context context) {
         List<String> mustPermissions = getMustPermissions();
         if (mustPermissions == null || mustPermissions.size() == 0) {
             return true;

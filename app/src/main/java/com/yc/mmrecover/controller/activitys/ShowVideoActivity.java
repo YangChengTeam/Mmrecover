@@ -15,7 +15,6 @@ import com.yc.mmrecover.utils.GridSpacingItemDecoration;
 import com.yc.mmrecover.view.adapters.GridVideoAdapter;
 
 import java.io.File;
-import java.io.Serializable;
 
 
 public class ShowVideoActivity extends BaseShowActivity {
@@ -105,11 +104,10 @@ public class ShowVideoActivity extends BaseShowActivity {
                 if (mIsOperate) {
                     return false;
                 }
-                MediaInfo mediaInfo = (MediaInfo)  adapter.getData().get(position);
-                DetailVideoActivity.startDetailVideoActivity(ShowVideoActivity.this,mediaInfo.getPath());
-//                Intent intent = new Intent(ShowVideoActivity.this, DetailVideoActivity.class);
-//                intent.putExtra("info", (Serializable) (MediaInfo) adapter.getData().get(position));
-//                ShowVideoActivity.this.startActivity(intent);
+                MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
+                Intent intent = new Intent(ShowVideoActivity.this, DetailVideoActivity.class);
+                intent.putExtra("info", mediaInfo);
+                ShowVideoActivity.this.startActivity(intent);
                 return false;
             }
         });

@@ -31,6 +31,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -158,19 +159,19 @@ public abstract class BaseShowActivity extends BaseActivity {
                     mTvMask.setText("正在删除" + initTitle());
                     mRlMask.setTag(false);
                     TaskUtil.getImpl().runTask(() -> {
+                        List<MediaInfo> removeList = new ArrayList<>();
                         for (int j = 0; j < mMediaList.size(); j++) {
                             MediaInfo mediaBean = mMediaList.get(j);
                             if (mediaBean.isSelect()) {
                                 File source = new File(mediaBean.getPath());
                                 FileUtils.deleteQuietly(source);
-                                mMediaList.remove(mediaBean);
+                                removeList.add(mediaBean);
+                                mediaBean.setSelect(false);
                                 mRlMask.setTag(true);
                             }
-
                         }
-                        for (int j = 0; j < mMediaList.size(); j++) {
-                            MediaInfo mediaBean = mMediaList.get(j);
-                            mediaBean.setSelect(false);
+                        for (int j = 0; j < removeList.size(); j++) {
+                            mMediaList.remove(removeList.get(j));
                         }
 
                         VUiKit.post(() -> {

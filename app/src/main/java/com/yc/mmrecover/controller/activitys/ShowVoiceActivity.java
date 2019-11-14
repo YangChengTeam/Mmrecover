@@ -1,26 +1,21 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yc.mmrecover.R;
-import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.utils.GridSpacingItemDecoration;
-import com.yc.mmrecover.utils.PlayVoiceTask;
 import com.yc.mmrecover.view.adapters.GridVoiceAdapter;
 
 import java.io.File;
 
 public class ShowVoiceActivity extends BaseShowActivity {
 
-    private PlayVoiceTask mPlayTask;
 
     @Override
     protected int getLayoutId() {
@@ -57,8 +52,7 @@ public class ShowVoiceActivity extends BaseShowActivity {
                 if (mIsOperate) {
                     return false;
                 }
-                ShowVoiceActivity.this.mPlayTask = new PlayVoiceTask(ShowVoiceActivity.this);
-                ShowVoiceActivity.this.mPlayTask.execute(new String[]{((MediaInfo) ShowVoiceActivity.this.mMediaList.get(position)).getPath()});
+
                 return false;
             }
         });

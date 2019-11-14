@@ -1,5 +1,6 @@
 package com.yc.mmrecover.controller.activitys;
 
+import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -13,11 +14,14 @@ import com.yc.mmrecover.R;
 import com.yc.mmrecover.utils.BackgroundShape;
 import com.yc.mmrecover.utils.Func;
 
+import java.util.Arrays;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class MyActivity extends BaseActivity {
+public class MyActivity extends BasePermissionActivity {
 
     @BindView(R.id.im_head)
     ImageView ivHead;
@@ -27,7 +31,7 @@ public class MyActivity extends BaseActivity {
     TextView tvCode;
     @BindView(R.id.tv_copy)
     TextView tvCopy;
-    
+
     @OnClick({R.id.ll_contact, R.id.ll_help, R.id.ll_about, R.id.tv_copy, R.id.im_back})
     void onViewClick(View view) {
         switch (view.getId()) {
@@ -43,13 +47,7 @@ public class MyActivity extends BaseActivity {
                 Toast.makeText(MyActivity.this, "机器码已复制到剪贴板", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.ll_contact:
-                Intent intent = new Intent(MyActivity.this, WebActivity.class);
-                intent.putExtra("web_title", "意见反馈");
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append("http://wxgj.wuhanup.com/feedback.html?device_id=");
-                stringBuilder.append(Func.getMachineCode(MyActivity.this));
-                intent.putExtra("web_url", stringBuilder.toString());
-                startActivity(intent);
+                checkAndRequestPermission();
                 break;
             case R.id.ll_help:
                 Intent intent2 = new Intent(this, WebActivity.class);
@@ -75,5 +73,22 @@ public class MyActivity extends BaseActivity {
         tvCode.setText(Func.getMachineCode(MyActivity.this));
 
 
+    }
+
+    @Override
+    protected List<String> getMustPermissions() {
+        return Arrays.asList(Manifest.permission.CAMERA);
+    }
+
+    @Override
+    protected void onRequestPermissionSuccess() {
+        Intent intent = new Intent(MyActivity.this, WebActivity.class);
+        intent.putExtra("web_title", "意见反馈");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("http://wxapp.leshu.com/home/enquiry?device_id=");
+//        stringBuilder.append("http://wxgj.wuhanup.com/feedback.html?device_id=");
+        stringBuilder.append(Func.getMachineCode(MyActivity.this));
+        intent.putExtra("web_url", stringBuilder.toString());
+        startActivity(intent);
     }
 }
