@@ -26,11 +26,27 @@ public class DetailVideoActivity extends BaseActivity {
         initTitle("视频播放");
         this.mediaInfo = (MediaInfo) getIntent().getSerializableExtra("info");
         this.mVideoView.setVideoURI(Uri.parse(this.mediaInfo.getPath()));
-        this.mVideoView.setMediaController(new MediaController(this));
+
+        MediaController mediaController = new MediaController(this) {
+            @Override
+            public void show() {
+                super.show(0);
+            }
+        };
+        this.mVideoView.setMediaController(mediaController);
         this.mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             public void onPrepared(MediaPlayer mediaPlayer) {
                 DetailVideoActivity.this.mVideoView.start();
+                mediaController.show();
             }
         });
+
+        this.mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mediaController.show();
+            }
+        });
+
     }
 }
