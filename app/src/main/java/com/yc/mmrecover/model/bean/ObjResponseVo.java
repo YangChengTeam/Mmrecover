@@ -1,8 +1,5 @@
 package com.yc.mmrecover.model.bean;
 
-/**
- * Created by caokun on 2019/11/14 14:03.
- */
 
 public class ObjResponseVo {
 
@@ -20,20 +17,4 @@ public class ObjResponseVo {
     public String msg;
     public String success;
 
-
-    /*public class ObjResponseVo<T> {
-        private String msg;
-        private T obj;
-        private String success;
-
-        public ObjResponseVo(String str, String str2, T t) {
-            this.success = str;
-            this.msg = str2;
-            this.obj = t;
-        }
-
-        public T getObj() {
-            return this.obj;
-        }
-    }*/
 }
