@@ -80,6 +80,14 @@ public abstract class BaseShowActivity extends BaseActivity {
     protected BaseQuickAdapter mAdapter;
     protected List<MediaInfo> mMediaList;
 
+    private boolean isDestory = false;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isDestory = true;
+    }
+
     @Override
     protected void initViews() {
         initActionBar();
@@ -101,7 +109,6 @@ public abstract class BaseShowActivity extends BaseActivity {
             mTvMask.setText("正在恢复" + initTitle());
 
             TaskUtil.getImpl().runTask(() -> {
-                //外存根目录  (Environment.getExternalStorageDirectory())
                 File dir = new File(Environment.getExternalStorageDirectory() + "/" + initPath());
                 if (!dir.exists()) {
                     dir.mkdirs();
@@ -159,6 +166,11 @@ public abstract class BaseShowActivity extends BaseActivity {
                                 mMediaList.remove(mediaBean);
                                 mRlMask.setTag(true);
                             }
+
+                        }
+                        for (int j = 0; j < mMediaList.size(); j++) {
+                            MediaInfo mediaBean = mMediaList.get(j);
+                            mediaBean.setSelect(false);
                         }
 
                         VUiKit.post(() -> {
@@ -288,26 +300,25 @@ public abstract class BaseShowActivity extends BaseActivity {
     public abstract MediaInfo getMediaInfo(File file);
 
     private void scanDisk(String str) {
-        new File(str).listFiles(new FilenameFilter() {
-            public boolean accept(File file, String str) {
-                File file2 = new File(file, str);
-                String absolutePath = file2.getAbsolutePath();
-                if (file2.isDirectory()) {
-                    scanDisk(absolutePath);
-                } else {
-                    if (filterExt(absolutePath)) {
-                        MediaInfo mediaInfo = getMediaInfo(file2);
-                        VUiKit.post(() -> {
-                            if (mediaInfo.getFileName() != null) {
-                                notifyDataSetChanged(mediaInfo);
-                            }
-                        });
-                    }
-                }
-                return false;
+        File[] files = new File(str).listFiles();
+        for (int i = 0; i < files.length; i++) {
+            if (isDestory) {
+                break;
             }
-        });
-
+            File file = files[i];
+            if (file.isDirectory()) {
+                scanDisk(file.getAbsolutePath());
+            } else {
+                if (filterExt(file.getAbsolutePath())) {
+                    MediaInfo mediaInfo = getMediaInfo(file);
+                    VUiKit.post(() -> {
+                        if (mediaInfo.getFileName() != null) {
+                            notifyDataSetChanged(mediaInfo);
+                        }
+                    });
+                }
+            }
+        }
     }
 
 

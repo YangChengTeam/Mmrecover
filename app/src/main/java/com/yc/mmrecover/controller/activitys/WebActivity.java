@@ -1,15 +1,9 @@
 package com.yc.mmrecover.controller.activitys;
 
-import com.yc.mmrecover.R;
-
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -19,7 +13,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import java.io.File;
+import com.yc.mmrecover.R;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -33,14 +27,12 @@ public class WebActivity extends BaseActivity {
 
     @BindView(R.id.web_view)
     WebView mWebView;
+
     @BindView(R.id.tv_title)
     TextView tvTitle;
 
-
     private String mTitle;
     private String mUrl;
-    private String TAG = "mmrecover_log_WebActivity";
-
 
     @OnClick({R.id.im_back})
     void onViewClick(View view) {
@@ -56,26 +48,11 @@ public class WebActivity extends BaseActivity {
         return R.layout.activity_web;
     }
 
-    private void initIntent() {
-        this.mTitle = getIntent().getStringExtra("web_title");
-        this.mUrl = getIntent().getStringExtra("web_url");
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("webTitle = ");
-        stringBuilder.append(this.mTitle);
-        Log.d(TAG, "initViews: " + stringBuilder.toString());
-        stringBuilder = new StringBuilder();
-        stringBuilder.append("webUrl = ");
-        stringBuilder.append(this.mUrl);
-        Log.d(TAG, "initViews: " + stringBuilder.toString());
-    }
-
-
     @Override
     protected void initViews() {
 
-        initIntent();
-
+        this.mTitle = getIntent().getStringExtra("web_title");
+        this.mUrl = getIntent().getStringExtra("web_url");
         tvTitle.setText(mTitle);
 
         this.mWebView.getSettings().setJavaScriptEnabled(true);

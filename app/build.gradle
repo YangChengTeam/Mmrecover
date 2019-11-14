@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.yc.mmrecover"
-        minSdkVersion 19
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -24,6 +24,10 @@ android {
 }
 
 dependencies {
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -39,10 +43,10 @@ dependencies {
     implementation 'com.jakewharton.rxbinding3:rxbinding-core:3.0.0-alpha2'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
     implementation 'com.wang.avi:library:2.1.3'
     implementation files('libs/commons-io-2.6.jar')
     implementation files('libs/zip4j-1.3.2.jar')
+    implementation 'com.fulongbin.silk_v3_decoder:decoder:0.9.3'
+
 }

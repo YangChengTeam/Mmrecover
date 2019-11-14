@@ -1,6 +1,7 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 
@@ -10,6 +11,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.model.bean.MediaInfo;
+import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.utils.GridSpacingItemDecoration;
 import com.yc.mmrecover.utils.PlayVoiceTask;
 import com.yc.mmrecover.view.adapters.GridVoiceAdapter;
@@ -48,8 +50,8 @@ public class RecoverVoiceActivity extends BaseRecoverActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
 
 //                startActivity(new Intent(RecoverVoiceActivity.this, DetailVideoActivity.class));
-                RecoverVoiceActivity.this.mPlayTask = new PlayVoiceTask(RecoverVoiceActivity.this);
-                RecoverVoiceActivity.this.mPlayTask.execute(new String[]{((MediaInfo) RecoverVoiceActivity.this.mMediaList.get(position)).getPath()});
+//                RecoverVoiceActivity.this.mPlayTask = new PlayVoiceTask(RecoverVoiceActivity.this);
+//                RecoverVoiceActivity.this.mPlayTask.execute(new String[]{((MediaInfo) RecoverVoiceActivity.this.mMediaList.get(position)).getPath()});
             }
         });
     }

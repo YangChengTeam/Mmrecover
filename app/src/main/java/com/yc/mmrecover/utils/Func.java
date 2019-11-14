@@ -10,6 +10,7 @@ import android.text.format.Formatter;
 
 import androidx.core.content.FileProvider;
 
+import com.fulongbin.decoder.Silk;
 import com.kk.securityhttp.domain.GoagalInfo;
 import com.kk.utils.ToastUtil;
 
@@ -19,6 +20,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
 
 public class Func {
     public static String getSizeString(long j) {
@@ -92,6 +94,7 @@ public class Func {
         }
         return (int) ((blockCountLong * 100) / blockCountLong2);
     }
+
     public static String md5(String str) {
         if (str == null) {
             return "";
@@ -150,13 +153,15 @@ public class Func {
     }
 
     public static String getMachineCode(Context context) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(GoagalInfo.get().uuid);
-        stringBuilder.append(Build.SERIAL);
-        stringBuilder.append("mmrecovery");
-        return md5(stringBuilder.toString()).substring(12);
+        StringBuilder codeBuilder = new StringBuilder();
+        codeBuilder.append(GoagalInfo.get().uuid);
+        codeBuilder.append(Build.SERIAL);
+        codeBuilder.append("mmrecovery");
+        return md5(codeBuilder.toString()).substring(12);
     }
 
-
+    public static boolean amr2mp3(String dest, String source) {
+        return Silk.convertSilkToMp3(dest, source);
+    }
 
 }
