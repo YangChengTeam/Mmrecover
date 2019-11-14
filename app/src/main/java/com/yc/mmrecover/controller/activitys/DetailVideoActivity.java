@@ -1,5 +1,7 @@
 package com.yc.mmrecover.controller.activitys;
 
+import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.widget.MediaController;
@@ -11,10 +13,20 @@ import com.yc.mmrecover.model.bean.MediaInfo;
 import butterknife.BindView;
 
 public class DetailVideoActivity extends BaseActivity {
-    private MediaInfo mediaInfo;
 
     @BindView(R.id.video_view)
     VideoView mVideoView;
+
+    public static void startDetailVideoActivity(Context context, String path) {
+        startDetailVideoActivity(context, path, false);
+    }
+
+    public static void startDetailVideoActivity(Context context, String path, boolean isShowBar) {
+        Intent intent = new Intent(context, DetailVideoActivity.class);
+        intent.putExtra("path", path);
+        intent.putExtra("isShowBar", isShowBar);
+        context.startActivity(intent);
+    }
 
     @Override
     protected int getLayoutId() {
@@ -24,8 +36,6 @@ public class DetailVideoActivity extends BaseActivity {
     @Override
     protected void initViews() {
         initTitle("视频播放");
-        this.mediaInfo = (MediaInfo) getIntent().getSerializableExtra("info");
-        this.mVideoView.setVideoURI(Uri.parse(this.mediaInfo.getPath()));
 
         MediaController mediaController = new MediaController(this) {
             @Override
@@ -33,6 +43,10 @@ public class DetailVideoActivity extends BaseActivity {
                 super.show(0);
             }
         };
+        Intent intent = getIntent();
+        String path = intent.getStringExtra("path");
+
+        this.mVideoView.setVideoURI(Uri.parse(path));
         this.mVideoView.setMediaController(mediaController);
         this.mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             public void onPrepared(MediaPlayer mediaPlayer) {
@@ -47,6 +61,5 @@ public class DetailVideoActivity extends BaseActivity {
                 mediaController.show();
             }
         });
-
     }
 }

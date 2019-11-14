@@ -1,5 +1,6 @@
 package com.yc.mmrecover.utils;
 
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -9,6 +10,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.yc.mmrecover.controller.activitys.DetailVideoActivity;
+import com.yc.mmrecover.controller.activitys.RecoverVideoActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,6 +37,11 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
     private MediaPlayer mMediaPlayer;
     private static String TAG = "sssss_log_PlayVoiceTask";
 
+    private Context mContext;
+
+    public PlayVoiceTask(Context context) {
+        mContext = context;
+    }
 
     public class ObjResponseVo<T> {
         private String msg;
@@ -69,7 +77,8 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
             String url = split[split.length - 1];
             String netUrl = mDomain.concat("/upload/amr/").concat(url);
             Log.d(TAG, "onPostExecute: netUrl " + netUrl);
-            playNetVoice(netUrl);
+            DetailVideoActivity.startDetailVideoActivity(mContext, netUrl, true);
+//            playNetVoice(netUrl);
         }
 
     }

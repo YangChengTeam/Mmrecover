@@ -72,7 +72,6 @@ public class MyActivity extends BaseActivity {
     @Override
     protected void initViews() {
         tvCopy.setBackground(new BackgroundShape(this, 14, R.color.gray_button));
-        // TODO add 机器码
         tvCode.setText(Func.getMachineCode(MyActivity.this));
 
 
