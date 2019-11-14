@@ -19,7 +19,7 @@ public class VerticalFileAdapter extends BaseQuickAdapter<MediaInfo, BaseViewHol
 
     @Override
     protected void convert(BaseViewHolder helper, MediaInfo item) {
-        helper.setText(R.id.tv_time2, Func.formatData("yyyy/MM/dd HH:mm:ss", item.getLastModifyTime()));
+        helper.setText(R.id.tv_time2, Func.formatData("yyyy/MM/dd HH:mm:ss", item.getLastModifyTime()) + "   " + Func.getSizeString(item.getSize()));
         helper.setText(R.id.tv_name, item.getFileName());
         helper.setVisible(R.id.im_select, item.isSelect());
     }
