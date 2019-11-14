@@ -1,6 +1,8 @@
 package com.yc.mmrecover.controller.activitys;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 
@@ -12,7 +14,10 @@ import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.view.adapters.VerticalFileAdapter;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
+import java.io.Serializable;
 
 public class ShowFileActivity extends BaseShowActivity {
     @Override
@@ -26,6 +31,7 @@ public class ShowFileActivity extends BaseShowActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(this.mAdapter);
+
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -72,21 +78,15 @@ public class ShowFileActivity extends BaseShowActivity {
     }
 
     @Override
-    public MediaInfo getMediaInfo(File file2) {
-        long length = file2.length();
-        String absolutePath = file2.getAbsolutePath();
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("ScanDocService absolutePath = ");
-        stringBuilder.append(absolutePath);
-        stringBuilder.append(", ");
-        stringBuilder.append(file2.getName());
-        Log.d("ssssss", "getMediaInfo: " + stringBuilder.toString());
+    public MediaInfo getMediaInfo(File file) {
+        long length = file.length();
+        String absolutePath = file.getAbsolutePath();
         MediaInfo mediaBean = new MediaInfo();
-        mediaBean.setLastModifyTime((int) (file2.lastModified() / 1000));
+        mediaBean.setLastModifyTime((int) (file.lastModified() / 1000));
         mediaBean.setPath(absolutePath);
         mediaBean.setSize(length);
         mediaBean.setStrSize(Func.getSizeString(length));
-        mediaBean.setFileName(file2.getName());
+        mediaBean.setFileName(file.getName());
         return mediaBean;
     }
 

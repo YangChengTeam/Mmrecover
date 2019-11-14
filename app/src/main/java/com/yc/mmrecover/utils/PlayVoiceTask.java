@@ -1,9 +1,13 @@
 package com.yc.mmrecover.utils;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.PowerManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -15,6 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,10 +37,9 @@ import okhttp3.Response;
 
 public class PlayVoiceTask extends AsyncTask<String, String, String> {
     private static final String mDomain = "http://www.fulmz.com";
-    private static boolean mIsPlaying;
-    private PlayCallback mCallback;
     private MediaPlayer mMediaPlayer;
     private static String TAG = "sssss_log_PlayVoiceTask";
+
 
     public class ObjResponseVo<T> {
         private String msg;
@@ -53,19 +57,10 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
         }
     }
 
-    public interface PlayCallback {
-        void onStart(int i);
-
-        void onStop();
-    }
-
-    public PlayVoiceTask(PlayCallback playCallback) {
-        this.mCallback = playCallback;
-    }
 
     protected String doInBackground(String... strArr) {
         String amr2mp3 = amr2mp3(strArr[0]);
-        Log.d(TAG, "doInBackground: end amr2mp3 "+amr2mp3);
+        Log.d(TAG, "doInBackground: end amr2mp3 " + amr2mp3);
         return amr2mp3;
     }
 
@@ -75,20 +70,64 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
         stringBuilder.append("onPostExecute result = ");
         stringBuilder.append(str);
         Log.d(TAG, "onPostExecute: stringBuilder.toString() " + stringBuilder.toString());
-        playVoice(str);
+        if (!TextUtils.isEmpty(str)) {
+            String[] split = str.split("./");
+            String url = split[split.length - 1];
+            String netUrl = mDomain.concat("/upload/amr/").concat(url);
+            Log.d(TAG, "onPostExecute: netUrl " + netUrl);
+            playNetVoice(netUrl);
+        }
+
+    }
+
+    private void playNetVoice(String path) {
+        if (mMediaPlayer != null) {
+            return;
+        }
+        stopPlay();
+        if (TextUtils.isEmpty(path)) {
+            new NullPointerException("音乐path为空");
+            return;
+        }
+        try {
+            mMediaPlayer = new MediaPlayer();
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC); //设置音频流的类型。
+            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mMediaPlayer.start();
+                }
+            }); // 准备好
+            mMediaPlayer.setOnErrorListener(new OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mediaPlayer, int event, int extra) {
+                    String content = getErrorMessage(event);
+                    Log.d(TAG, "onError:  mp " + mediaPlayer + " extra " + extra + " event " + event + " content " + content);
+                    return false;
+                }
+            });
+            mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    stopPlay();
+                }
+            }); //播放完成事件监听器
+            Class<MediaPlayer> clazz = MediaPlayer.class;
+            Method method = clazz.getDeclaredMethod("setDataSource", String.class, Map.class);
+            Log.e(TAG, "playMusic: startPlay-->: ID: ,PATH:" + path);
+            method.invoke(mMediaPlayer, path, null);
+
+            mMediaPlayer.prepareAsync();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static String amr2mp3(String str) {
-        Log.d(TAG, "amr2mp3: 666666 str "+str);
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("amr2mp3 str = ");
-        stringBuilder.append(str);
-        Log.d(TAG, "onPostExecute: stringBuilder.toString() 222" + stringBuilder.toString());
         String replace = str.replace(".amr", ".mp3");
-//        if (new File(replace).exists()) {
-//            Log.d(TAG, "amr2mp3:  file exists replace "+replace);
-//            return replace;
-//        }
+        if (new File(replace).exists()) {
+            return replace;
+        }
         File file = new File(str);
         if (file.exists()) {
             str = str.substring(str.lastIndexOf(InternalZipConstants.ZIP_FILE_SEPARATOR) + 1);
@@ -113,10 +152,6 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
                 Response execute = build.newCall(new Request.Builder().url("http://www.fulmz.com/v1/uploadFile").post(addFormDataPart.build()).build()).execute();
                 if (execute.isSuccessful()) {
                     str = execute.body().string();
-                    StringBuilder stringBuilder3 = new StringBuilder();
-                    stringBuilder3.append("result = ");
-                    stringBuilder3.append(str);
-                    Log.d(TAG, "onPostExecute: stringBuilder.toString() 66" + stringBuilder3.toString());
                     Gson gson = new Gson();
                     hashMap = (Map) gson.fromJson(str, Map.class);
                     String str2 = (String) hashMap.get("success");
@@ -157,25 +192,9 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
                 e.printStackTrace();
             }
         }
-        Log.d(TAG, "amr2mp3: 666666 replace "+replace);
         return replace;
     }
 
-    public int getVoiceMiSecond(String str) {
-        if (TextUtils.isEmpty(str)) {
-            return 0;
-        }
-        str = amr2mp3(str);
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        mediaPlayer.reset();
-        try {
-            mediaPlayer.setDataSource(str);
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return mediaPlayer.getDuration();
-    }
 
     public void stopPlay() {
         if (this.mMediaPlayer != null) {
@@ -187,74 +206,10 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        mIsPlaying = false;
-    }
-
-    private void playVoice(String str) {
-        if (!mIsPlaying) {
-            mIsPlaying = true;
-            this.mMediaPlayer = new MediaPlayer();
-            try {
-                if (this.mMediaPlayer.isPlaying()) {
-                    this.mMediaPlayer.pause();
-                    this.mMediaPlayer.seekTo(0);
-//                    this.mMediaPlayer.stop();
-                    this.mMediaPlayer.release();
-                }
-                this.mMediaPlayer.reset();
-                this.mMediaPlayer.setDataSource(str);
-
-                if (this.mCallback != null) {
-                    this.mCallback.onStart(this.mMediaPlayer.getDuration());
-                }
-                Log.d(TAG, "playVoice: mMediaPlayer.getDuration() "+mMediaPlayer.getDuration());
-                this.mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        Log.d(TAG, "onCompletion: onCompletion= 播放结束 ");
-                        PlayVoiceTask.mIsPlaying = false;
-                        if (PlayVoiceTask.this.mCallback != null) {
-                            PlayVoiceTask.this.mCallback.onStop();
-                        }
-                    }
-                });
-                this.mMediaPlayer.setOnErrorListener(new OnErrorListener() {
-                    public boolean onError(MediaPlayer mediaPlayer, int event, int extra) {
-                        String content = getErrorMessage(event);
-                        Log.d(TAG, "onError: onError= 播放出错 ");
-                        Log.d(TAG, "onError:  mp " + mediaPlayer + " extra " + extra + " event " + event + " content " + content);
-                        PlayVoiceTask.mIsPlaying = false;
-                        if (PlayVoiceTask.this.mCallback != null) {
-                            PlayVoiceTask.this.mCallback.onStop();
-                        }
-                        return false;
-                    }
-                });
-                mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        PlayVoiceTask.this.mMediaPlayer.start();
-                    }
-                });
-                this.mMediaPlayer.prepareAsync();
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append("getVoiceSecond getDuration=");
-                stringBuilder.append(this.mMediaPlayer.getDuration());
-                Log.d(TAG, "playVoice: 96  stringBuilder.toString() " + stringBuilder.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (this.mMediaPlayer.isPlaying()) {
-                    this.mMediaPlayer.stop();
-                    this.mMediaPlayer.release();
-                }
-                if (this.mCallback != null) {
-                    this.mCallback.onStop();
-                }
-                Log.d(TAG, "playVoice: 播放异常  e " + e.toString());
-                mIsPlaying = false;
-            }
+            this.mMediaPlayer.reset();
         }
     }
+
 
     private String getErrorMessage(int event) {
         String content = "播放失败，未知错误";
