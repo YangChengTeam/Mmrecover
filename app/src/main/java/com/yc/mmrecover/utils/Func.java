@@ -1,15 +1,26 @@
 package com.yc.mmrecover.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.text.format.Formatter;
+import android.widget.Toast;
 
+import androidx.core.content.FileProvider;
+
+import com.kk.securityhttp.domain.GoagalInfo;
+import com.kk.utils.ToastUtil;
+
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import static com.kk.utils.security.Md5.md5;
 
 public class Func {
     public static String getSizeString(long j) {
@@ -82,6 +93,51 @@ public class Func {
             blockCountLong2 = 1;
         }
         return (int) ((blockCountLong * 100) / blockCountLong2);
+    }
+
+
+    public static void openFile(Context context, String path) {
+        if (path == null)
+            return;
+
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(Intent.ACTION_VIEW);
+
+        String[][] MATCH_ARRAY = {
+                {".doc", "application/msword"},
+                {".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
+                {".txt", "text/plain"},
+                {".pptx", "tapplication/vnd.openxmlformats-officedocument.presentationml.presentation"},
+                {".ppt", "application/vnd.ms-powerpoint"},
+                {".xml", "text/plain"},
+        };
+        String type = "";
+        for (int i = 0; i < MATCH_ARRAY.length; i++) {
+            if (path.contains(MATCH_ARRAY[i][0])) {
+                type = MATCH_ARRAY[i][1];
+                break;
+            }
+        }
+        try {
+            Uri uri = FileProvider.getUriForFile(context, "com.yc.mmrecover.myFileProvider", new File(path));
+            intent.setDataAndType(uri, type);
+
+            context.startActivity(intent);
+        } catch (Exception e) {
+            ToastUtil.toast2(context, "无法打开该格式文件!");
+            e.printStackTrace();
+        }
+    }
+
+    public static String getMachineCode(Context context) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(GoagalInfo.get().uuid);
+        stringBuilder.append(Build.SERIAL);
+        stringBuilder.append("mmrecovery");
+        return md5(stringBuilder.toString()).substring(12);
     }
 
 

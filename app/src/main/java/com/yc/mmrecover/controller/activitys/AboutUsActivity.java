@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kk.securityhttp.domain.GoagalInfo;
 import com.yc.mmrecover.R;
 
 import butterknife.BindView;
@@ -35,6 +36,6 @@ public class AboutUsActivity extends BaseActivity {
     @Override
     protected void initViews() {
         // TODO add 团队介绍
-        tvVersion.setText("团队介绍");
+        tvVersion.setText("版本:" + GoagalInfo.get().packageInfo.versionName);
     }
 }

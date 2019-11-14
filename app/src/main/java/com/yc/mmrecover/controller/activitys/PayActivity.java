@@ -28,8 +28,6 @@ import butterknife.BindViews;
 import butterknife.OnClick;
 
 public class PayActivity extends BaseActivity {
-
-
     @BindViews({R.id.rl_price1, R.id.rl_price2})
     public List<RelativeLayout> rlPrices;
     @BindViews({R.id.tv_pay98_des, R.id.tv_pay28_des})
@@ -109,7 +107,7 @@ public class PayActivity extends BaseActivity {
             case R.id.tv_note: //用户须知
                 Intent intent = new Intent(PayActivity.this, WebActivity.class);
                 intent.putExtra("web_title", "会员须知");
-                intent.putExtra("web_url", "http://wxapp.leshu.com/home/userNotice");
+                intent.putExtra("web_url", "http://wxgj.wuhanup.com/userNotice.html");
                 PayActivity.this.startActivity(intent);
                 break;
             case R.id.ll_read: //我已阅读用户须知
@@ -137,11 +135,11 @@ public class PayActivity extends BaseActivity {
         tvNote.getPaint().setAntiAlias(true);
         tvNote.setText(Html.fromHtml("《会员须知》"));
 
-        tvPayDess.get(0).setBackgroundDrawable(new BackgroundShape(this, 8, R.color.red_case));
-        tvPayDess.get(1).setBackgroundDrawable(new BackgroundShape(this, 8, R.color.red_case));
+        tvPayDess.get(0).setBackground(new BackgroundShape(this, 8, R.color.red_case));
+        tvPayDess.get(1).setBackground(new BackgroundShape(this, 8, R.color.red_case));
 
-        rlPrices.get(0).setBackgroundDrawable(new BackgroundShape(this, 50, R.color.white, 10, R.color.yellow_btn));
-        rlPrices.get(1).setBackgroundDrawable(new BackgroundShape(this, 50, R.color.white, 10, R.color.gray_bk2));
+        rlPrices.get(0).setBackground(new BackgroundShape(this, 50, R.color.white, 10, R.color.yellow_btn));
+        rlPrices.get(1).setBackground(new BackgroundShape(this, 50, R.color.white, 10, R.color.gray_bk2));
 
         initBoradInfo();
     }
@@ -194,8 +192,8 @@ public class PayActivity extends BaseActivity {
             int length = ((BroadcastInfo) arrayList.get(i)).getUserName().length() + 1;
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuilder3);
             spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.blue_word)), 0, length, 34);
-            Log.d(TAG, "initBoradInfo: stringBuilder3 "+stringBuilder3);
-            Log.d(TAG, "initBoradInfo: stringBuilder4 "+stringBuilder4);
+            Log.d(TAG, "initBoradInfo: stringBuilder3 " + stringBuilder3);
+            Log.d(TAG, "initBoradInfo: stringBuilder4 " + stringBuilder4);
             list.add(spannableStringBuilder);
         }
         this.broadcastVTextView.setTextList(list);
