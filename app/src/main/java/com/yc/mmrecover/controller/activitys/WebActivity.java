@@ -3,7 +3,6 @@ package com.yc.mmrecover.controller.activitys;
 import com.yc.mmrecover.R;
 
 import android.annotation.TargetApi;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -52,14 +51,6 @@ public class WebActivity extends BaseActivity {
         this.mTitle = getIntent().getStringExtra("web_title");
         this.mUrl = getIntent().getStringExtra("web_url");
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("webTitle = ");
-        stringBuilder.append(this.mTitle);
-        Log.d(TAG, "initViews: " + stringBuilder.toString());
-        stringBuilder = new StringBuilder();
-        stringBuilder.append("webUrl = ");
-        stringBuilder.append(this.mUrl);
-        Log.d(TAG, "initViews: " + stringBuilder.toString());
     }
 
 
