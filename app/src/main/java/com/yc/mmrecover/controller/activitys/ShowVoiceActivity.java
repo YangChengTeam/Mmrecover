@@ -78,24 +78,19 @@ public class ShowVoiceActivity extends BaseShowActivity {
 
     @Override
     public boolean filterExt(String path) {
-        path.contains(".amr");
-        return true;
+        return path.endsWith(".amr");
     }
 
     @Override
-    public MediaInfo getMediaInfo(File file2) {
-        long length = file2.length();
-        String absolutePath = file2.getAbsolutePath();
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("scan voice = ");
-        stringBuilder.append(absolutePath);
-        Log.d("ssssss", "getMediaInfo: " + stringBuilder.toString());
+    public MediaInfo getMediaInfo(File file) {
+        long length = file.length();
+        String absolutePath = file.getAbsolutePath();
         MediaInfo mediaBean = new MediaInfo();
-        mediaBean.setLastModifyTime((int) (file2.lastModified() / 1000));
+        mediaBean.setLastModifyTime((int) (file.lastModified() / 1000));
         mediaBean.setPath(absolutePath);
         mediaBean.setSize(length);
         mediaBean.setStrSize(Func.getSizeString(length));
-        mediaBean.setFileName(file2.getName());
+        mediaBean.setFileName(file.getName());
         return mediaBean;
     }
 

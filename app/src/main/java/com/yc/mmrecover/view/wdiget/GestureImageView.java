@@ -109,9 +109,6 @@ public class GestureImageView extends AppCompatImageView {
         setScaleType(ScaleType.MATRIX);
         setOnTouchListener(new OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {
-//                if (GlobalData.vipType == 1) {
-//                    return false;
-//                }
                 GestureImageView.this.mScaleDetector.onTouchEvent(motionEvent);
                 PointF pointF = new PointF(motionEvent.getX(), motionEvent.getY());
                 int action = motionEvent.getAction();
