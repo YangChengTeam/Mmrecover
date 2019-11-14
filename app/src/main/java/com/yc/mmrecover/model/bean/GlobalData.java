@@ -18,4 +18,5 @@ public class GlobalData {
     public static String payCount3 = "98";
     public static String payCount4 = "70";
     public static int vipType = 1;
+
 }

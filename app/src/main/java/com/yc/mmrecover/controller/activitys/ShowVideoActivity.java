@@ -106,7 +106,7 @@ public class ShowVideoActivity extends BaseShowActivity {
                     return false;
                 }
                 MediaInfo mediaInfo = (MediaInfo)  adapter.getData().get(position);
-                DetailVideoActivity.startDetailVideoActivity(ShowVideoActivity.this,mediaInfo.getPath());
+                DetailVideoActivity.startDetailVideoActivity(ShowVideoActivity.this,mediaInfo.getPath(),"视频播放");
 //                Intent intent = new Intent(ShowVideoActivity.this, DetailVideoActivity.class);
 //                intent.putExtra("info", (Serializable) (MediaInfo) adapter.getData().get(position));
 //                ShowVideoActivity.this.startActivity(intent);

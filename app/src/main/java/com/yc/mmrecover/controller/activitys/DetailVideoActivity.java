@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
 import com.yc.mmrecover.R;
+import com.yc.mmrecover.model.bean.MediaInfo;
 
 import butterknife.BindView;
 
@@ -16,16 +18,13 @@ public class DetailVideoActivity extends BaseActivity {
     @BindView(R.id.video_view)
     VideoView mVideoView;
 
-    public static void startDetailVideoActivity(Context context, String path) {
-        startDetailVideoActivity(context, path, false);
-    }
-
-    public static void startDetailVideoActivity(Context context, String path, boolean isShowBar) {
+    public static void startDetailVideoActivity(Context context, String path, String title) {
         Intent intent = new Intent(context, DetailVideoActivity.class);
         intent.putExtra("path", path);
-        intent.putExtra("isShowBar", isShowBar);
+        intent.putExtra("title", title);
         context.startActivity(intent);
     }
+
 
     @Override
     protected int getLayoutId() {
@@ -34,26 +33,34 @@ public class DetailVideoActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        initTitle("视频播放");
         Intent intent = getIntent();
         String path = intent.getStringExtra("path");
-        boolean isShowBar = intent.getBooleanExtra("isShowBar", false);
+        String title = intent.getStringExtra("title");
+        if (TextUtils.isEmpty(title)) {
+            title = "播放";
+        }
+        initTitle(title);
 
-        this.mVideoView.setVideoURI(Uri.parse(path));
         MediaController mediaController = new MediaController(this) {
             @Override
             public void show() {
-                if (isShowBar) {
-                    super.show(0);
-                } else {
-                    super.show();
-                }
+                super.show(0);
             }
         };
+
+
+        this.mVideoView.setVideoURI(Uri.parse(path));
         this.mVideoView.setMediaController(mediaController);
         this.mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             public void onPrepared(MediaPlayer mediaPlayer) {
                 DetailVideoActivity.this.mVideoView.start();
+                mediaController.show();
+            }
+        });
+
+        this.mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
                 mediaController.show();
             }
         });

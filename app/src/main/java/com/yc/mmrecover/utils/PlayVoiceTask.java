@@ -12,6 +12,7 @@ import android.util.Log;
 import com.alibaba.fastjson.JSON;
 import com.yc.mmrecover.controller.activitys.DetailVideoActivity;
 import com.yc.mmrecover.controller.activitys.RecoverVideoActivity;
+import com.yc.mmrecover.model.bean.ObjResponseVo;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,22 +44,6 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
         mContext = context;
     }
 
-    public class ObjResponseVo<T> {
-        private String msg;
-        private T obj;
-        private String success;
-
-        public ObjResponseVo(String str, String str2, T t) {
-            this.success = str;
-            this.msg = str2;
-            this.obj = t;
-        }
-
-        public T getObj() {
-            return this.obj;
-        }
-    }
-
 
     protected String doInBackground(String... strArr) {
         String amr2mp3 = amr2mp3(strArr[0]);
@@ -77,10 +62,86 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
             String url = split[split.length - 1];
             String netUrl = mDomain.concat("/upload/amr/").concat(url);
             Log.d(TAG, "onPostExecute: netUrl " + netUrl);
-            DetailVideoActivity.startDetailVideoActivity(mContext, netUrl, true);
+            DetailVideoActivity.startDetailVideoActivity(mContext, netUrl, "音频播放");
 //            playNetVoice(netUrl);
         }
 
+    }
+
+
+    public static String amr2mp3(String str) {
+        String replace = str.replace(".amr", ".mp3");
+        if (new File(replace).exists()) {
+            return replace;
+        }
+        File file = new File(str);
+        if (file.exists()) {
+            str = str.substring(str.lastIndexOf("/") + 1);
+            StringBuilder stringBuilder2 = new StringBuilder();
+            stringBuilder2.append("str = ");
+            stringBuilder2.append(str);
+            Log.d(TAG, "onPostExecute: stringBuilder.toString() 333" + stringBuilder2.toString());
+            stringBuilder2 = new StringBuilder();
+            stringBuilder2.append("f^#$2");
+            stringBuilder2.append(str);
+            stringBuilder2.append("32(&f");
+            String md5 = Func.md5(stringBuilder2.toString());
+            Map<String, String> hashMap = new HashMap();
+            hashMap.put("_model", "Amr");
+            hashMap.put("_key", md5);
+            OkHttpClient build = new Builder().connectTimeout(10, TimeUnit.SECONDS).writeTimeout(1, TimeUnit.MINUTES).readTimeout(1, TimeUnit.MINUTES).build();
+            MultipartBody.Builder addFormDataPart = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("file", str, RequestBody.create(MediaType.parse("application/octet-stream"), file));
+            for (Entry entry : hashMap.entrySet()) {
+                addFormDataPart.addFormDataPart((String) entry.getKey(), (String) entry.getValue());
+            }
+            try {
+                Response execute = build.newCall(new Request.Builder().url("http://www.fulmz.com/v1/uploadFile").post(addFormDataPart.build()).build()).execute();
+                if (execute.isSuccessful()) {
+                    str = execute.body().string();
+                    if (!TextUtils.isEmpty(str)) {
+                        ObjResponseVo objResponseVo = JSON.parseObject(str, ObjResponseVo.class);
+                        String obj = objResponseVo.obj;
+                        if (!TextUtils.isEmpty(obj)) {
+                            return obj;
+                        }
+                    }
+                    Log.d(TAG, "amr2mp3: str " + str);
+                    hashMap = (Map) JSON.parseObject(str, Map.class);
+                    String str2 = (String) hashMap.get("success");
+                    if (str2.equals("1")) {
+                        ObjResponseVo objResponseVo = (ObjResponseVo) JSON.parseObject(str, ObjResponseVo.class);
+                        byte[] bArr = new byte[1024];
+                        StringBuilder stringBuilder5 = new StringBuilder();
+                        stringBuilder5.append(mDomain);
+                        stringBuilder5.append(objResponseVo.obj);
+                        execute = build.newCall(new Request.Builder().url(stringBuilder5.toString()).get().build()).execute();
+                        File file2 = new File(replace);
+                        if (execute.body() == null) {
+                            return null;
+                        }
+                        InputStream byteStream = execute.body().byteStream();
+                        if (!file2.getParentFile().exists()) {
+                            file2.getParentFile().mkdirs();
+                        }
+                        FileOutputStream fileOutputStream = new FileOutputStream(file2);
+                        while (true) {
+                            int read = byteStream.read(bArr);
+                            if (read == -1) {
+                                break;
+                            }
+                            fileOutputStream.write(bArr, 0, read);
+                        }
+                        fileOutputStream.flush();
+                        byteStream.close();
+                        fileOutputStream.close();
+                        Log.d(TAG, "amr2mp3: write file end");
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return replace;
     }
 
     private void playNetVoice(String path) {
@@ -125,78 +186,6 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
             e.printStackTrace();
         }
     }
-
-    public static String amr2mp3(String str) {
-        String replace = str.replace(".amr", ".mp3");
-        if (new File(replace).exists()) {
-            return replace;
-        }
-        File file = new File(str);
-        if (file.exists()) {
-            str = str.substring(str.lastIndexOf("/") + 1);
-            StringBuilder stringBuilder2 = new StringBuilder();
-            stringBuilder2.append("str = ");
-            stringBuilder2.append(str);
-            Log.d(TAG, "onPostExecute: stringBuilder.toString() 333" + stringBuilder2.toString());
-            stringBuilder2 = new StringBuilder();
-            stringBuilder2.append("f^#$2");
-            stringBuilder2.append(str);
-            stringBuilder2.append("32(&f");
-            String md5 = Func.md5(stringBuilder2.toString());
-            Map<String, String> hashMap = new HashMap();
-            hashMap.put("_model", "Amr");
-            hashMap.put("_key", md5);
-            OkHttpClient build = new Builder().connectTimeout(10, TimeUnit.SECONDS).writeTimeout(1, TimeUnit.MINUTES).readTimeout(1, TimeUnit.MINUTES).build();
-            MultipartBody.Builder addFormDataPart = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("file", str, RequestBody.create(MediaType.parse("application/octet-stream"), file));
-            for (Entry entry : hashMap.entrySet()) {
-                addFormDataPart.addFormDataPart((String) entry.getKey(), (String) entry.getValue());
-            }
-            try {
-                Response execute = build.newCall(new Request.Builder().url("http://www.fulmz.com/v1/uploadFile").post(addFormDataPart.build()).build()).execute();
-                if (execute.isSuccessful()) {
-                    str = execute.body().string();
-                    hashMap = (Map) JSON.parseObject(str, Map.class);
-                    String str2 = (String) hashMap.get("success");
-                    StringBuilder stringBuilder4 = new StringBuilder();
-                    stringBuilder4.append("msg = ");
-                    stringBuilder4.append(hashMap.get("msg"));
-                    Log.d(TAG, "onPostExecute: stringBuilder.toString() 88" + stringBuilder4.toString());
-                    if (str2.equals("1")) {
-                        ObjResponseVo objResponseVo = (ObjResponseVo) JSON.parseObject(str, ObjResponseVo.class);
-                        byte[] bArr = new byte[1024];
-                        StringBuilder stringBuilder5 = new StringBuilder();
-                        stringBuilder5.append(mDomain);
-                        stringBuilder5.append(objResponseVo.getObj().toString());
-                        execute = build.newCall(new Request.Builder().url(stringBuilder5.toString()).get().build()).execute();
-                        File file2 = new File(replace);
-                        if (execute.body() == null) {
-                            return null;
-                        }
-                        InputStream byteStream = execute.body().byteStream();
-                        if (!file2.getParentFile().exists()) {
-                            file2.getParentFile().mkdirs();
-                        }
-                        FileOutputStream fileOutputStream = new FileOutputStream(file2);
-                        while (true) {
-                            int read = byteStream.read(bArr);
-                            if (read == -1) {
-                                break;
-                            }
-                            fileOutputStream.write(bArr, 0, read);
-                        }
-                        fileOutputStream.flush();
-                        byteStream.close();
-                        fileOutputStream.close();
-                        Log.d(TAG, "amr2mp3: write file end");
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return replace;
-    }
-
 
     public void stopPlay() {
         if (this.mMediaPlayer != null) {

@@ -57,7 +57,6 @@ public class ShowVoiceActivity extends BaseShowActivity {
                 if (mIsOperate) {
                     return false;
                 }
-//                startActivity(new Intent(ShowVoiceActivity.this, DetailVideoActivity.class));
                 ShowVoiceActivity.this.mPlayTask = new PlayVoiceTask(ShowVoiceActivity.this);
                 ShowVoiceActivity.this.mPlayTask.execute(new String[]{((MediaInfo) ShowVoiceActivity.this.mMediaList.get(position)).getPath()});
                 return false;

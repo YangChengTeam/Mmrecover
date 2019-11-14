@@ -3,14 +3,23 @@ package com.yc.mmrecover.controller.activitys;
 import com.yc.mmrecover.R;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -51,6 +60,14 @@ public class WebActivity extends BaseActivity {
         this.mTitle = getIntent().getStringExtra("web_title");
         this.mUrl = getIntent().getStringExtra("web_url");
 
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("webTitle = ");
+        stringBuilder.append(this.mTitle);
+        Log.d(TAG, "initViews: " + stringBuilder.toString());
+        stringBuilder = new StringBuilder();
+        stringBuilder.append("webUrl = ");
+        stringBuilder.append(this.mUrl);
+        Log.d(TAG, "initViews: " + stringBuilder.toString());
     }
 
 
@@ -74,6 +91,16 @@ public class WebActivity extends BaseActivity {
 
             public boolean shouldOverrideUrlLoading(WebView webView, String str) {
                 return super.shouldOverrideUrlLoading(webView, str);
+            }
+        });
+
+        this.mWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                Intent intentToPickPic = new Intent(Intent.ACTION_PICK, null);
+                intentToPickPic.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/jpeg");
+                startActivityForResult(intentToPickPic, 1);
+                return true;
             }
         });
     }
