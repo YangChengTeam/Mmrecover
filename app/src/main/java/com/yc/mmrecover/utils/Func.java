@@ -12,13 +12,31 @@ import androidx.core.content.FileProvider;
 
 import com.fulongbin.decoder.Silk;
 import com.kk.securityhttp.domain.GoagalInfo;
+import com.kk.utils.LogUtil;
 import com.kk.utils.ToastUtil;
+import com.kk.utils.security.Md5;
 
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteDatabaseHook;
+
+import org.kamranzafar.jtar.TarEntry;
+import org.kamranzafar.jtar.TarInputStream;
+import org.nick.abe.AndroidBackup;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 
@@ -126,21 +144,14 @@ public class Func {
 
         String[][] MATCH_ARRAY = {
                 {".txt", "text/plain"},
-                {".doc", "text/plain"},
-                {".docx", "text/plain"},
-                {".xls", "text/plain"},
-                {".xlsx", "text/plain"},
-                {".pptx", "text/plain"},
-                {".ppt", "text/plain"},
+                {".doc", "application/doc"},
+                {".docx", "application/doc"},
+                {".xls", "application/xls"},
+                {".xlsx", "application/xlsx"},
+                {".pptx", "application/ppt"},
+                {".ppt", "application/ppt"},
                 {".xml", "text/plain"},
-
-//                 {".doc", "application/msword"},
-//                {".docx",  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
-//                {".xls",  "application/vnd.ms-excel"},
-//                {".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
-//                {".pptx", "tapplication/vnd.openxmlformats-officedocument.presentationml.presentation"},
-//                {".ppt",   "application/vnd.ms-powerpoint"},
-//                {".xml",  "text/plain"},
+                {".pdf", "application/pdf"}
         };
         String type = "";
         for (int i = 0; i < MATCH_ARRAY.length; i++) {
@@ -171,5 +182,25 @@ public class Func {
     public static boolean amr2mp3(String dest, String source) {
         return Silk.convertSilkToMp3(dest, source);
     }
+
+    public static String getMixString(String str) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int length = str.length();
+        int i = 0;
+        for (int i2 = 0; i2 < length; i2++) {
+            if (i2 % 20 == 0) {
+                i = i2 + 1;
+            }
+            if (i2 == i) {
+                stringBuilder.append(str.charAt(i2));
+            } else {
+                stringBuilder.append("*");
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+
+
 
 }

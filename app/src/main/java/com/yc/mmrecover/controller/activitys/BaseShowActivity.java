@@ -23,15 +23,13 @@ import com.kk.utils.ToastUtil;
 import com.kk.utils.VUiKit;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.MediaInfo;
-import com.yc.mmrecover.utils.BackgroundShape;
+import com.yc.mmrecover.view.wdiget.BackgroundShape;
 import com.yc.mmrecover.utils.BeanUtils;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 

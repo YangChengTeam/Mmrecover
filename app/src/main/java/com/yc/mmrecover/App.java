@@ -1,7 +1,9 @@
 package com.yc.mmrecover;
 
+import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
 
@@ -11,8 +13,14 @@ import com.kk.securityhttp.net.contains.HttpConfig;
 import com.kk.utils.FileUtil;
 import com.kk.utils.LogUtil;
 import com.kk.utils.TaskUtil;
+import com.swift.sandhook.SandHook;
+import com.swift.sandhook.SandHookConfig;
+import com.swift.sandhook.xposedcompat.XposedCompat;
 import com.umeng.commonsdk.UMConfigure;
 import com.yc.mmrecover.model.bean.ChannelInfo;
+import com.yc.mmrecover.utils.Func;
+
+import net.sqlcipher.database.SQLiteDatabase;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 
 public class App extends MultiDexApplication {
 
@@ -41,6 +52,7 @@ public class App extends MultiDexApplication {
             @Override
             public void run() {
                 initHttpInfo();
+                SQLiteDatabase.loadLibs(getApplicationContext());
             }
         });
     }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@id/tv_time"
+        android:layout_width="136.0dip"
+        android:layout_height="30.0dip"
+        android:layout_centerHorizontal="true"
+        android:background="@color/gray_bk3"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="13.0sp" />
+
+    <TextView
+        android:id="@id/tv_system"
+        android:layout_width="wrap_content"
+        android:layout_height="30.0dip"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="@color/gray_word"
+        android:textSize="13.0sp" />
+</RelativeLayout>

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yc.mmrecover.R;
-import com.yc.mmrecover.utils.BackgroundShape;
+import com.yc.mmrecover.view.wdiget.BackgroundShape;
 import com.yc.mmrecover.utils.Func;
 
 import java.util.Arrays;
@@ -71,8 +71,6 @@ public class MyActivity extends BasePermissionActivity {
     protected void initViews() {
         tvCopy.setBackground(new BackgroundShape(this, 14, R.color.gray_button));
         tvCode.setText(Func.getMachineCode(MyActivity.this));
-
-
     }
 
     @Override

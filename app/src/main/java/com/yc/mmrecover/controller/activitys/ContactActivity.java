@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.GlobalData;
-import com.yc.mmrecover.utils.BackgroundShape;
+import com.yc.mmrecover.view.wdiget.BackgroundShape;
 
 import butterknife.BindView;
 import butterknife.OnClick;

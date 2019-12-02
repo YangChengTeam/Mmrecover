@@ -19,18 +19,19 @@ public class RecoverFileActivity extends BaseRecoverActivity {
 
     @Override
     public String initTitle() {
-        return "文件";
+        return "文档";
     }
 
     @Override
     public String initPath() {
-        return "数据恢复助手/微信文件恢复/";
+        return "数据恢复助手/微信文档恢复/";
     }
 
     @Override
     protected void initViews() {
         super.initViews();
         this.mAdapter = new VerticalFileAdapter(this.mMediaList);
+        ((VerticalFileAdapter) this.mAdapter).setShowSelect(false);
         LinearLayoutManager layoutManage = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManage);
         recyclerView.setAdapter(this.mAdapter);

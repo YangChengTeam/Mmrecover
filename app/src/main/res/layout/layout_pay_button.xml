@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/rl_buy"
+    android:layout_width="fill_parent"
+    android:layout_height="40.0dip"
+    android:background="@color/gray_bk3"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.0dip"
+        android:text="标红为被删除的消息，购买后即可查看被**覆盖的内容"
+        android:textColor="@color/blue_word"
+        android:textSize="12.0sp" />
+
+    <TextView
+        android:id="@id/tv_buy"
+        android:layout_width="50.0dip"
+        android:layout_height="20.0dip"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10.0dip"
+        android:gravity="center"
+        android:text="购买"
+        android:textColor="@color/white"
+        android:textSize="13.0sp" />
+</RelativeLayout>

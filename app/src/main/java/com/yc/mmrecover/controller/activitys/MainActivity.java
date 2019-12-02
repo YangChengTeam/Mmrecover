@@ -1,8 +1,10 @@
 package com.yc.mmrecover.controller.activitys;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
@@ -10,16 +12,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding3.view.RxView;
+import com.kk.utils.LogUtil;
+import com.kk.utils.TaskUtil;
+import com.kk.utils.ToastUtil;
+import com.swift.sandhook.xposedcompat.XposedCompat;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.BroadcastInfo;
 import com.yc.mmrecover.utils.Func;
+import com.yc.mmrecover.utils.MessageUtils;
 import com.yc.mmrecover.view.wdiget.VTextView;
 
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 
 public class MainActivity extends BaseActivity {
     @BindView(R.id.tv_percent)
@@ -58,8 +69,19 @@ public class MainActivity extends BaseActivity {
 
         initBoradInfo();
         initGridLayout();
-    }
 
+        TaskUtil.getImpl().runTask(() -> {
+            try {
+//                Func.changeMIUIBak2AndroidBak();
+             LogUtil.msg(MessageUtils.getWxAccountInfo()+"");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+
+    }
 
     private void initBoradInfo() {
         String[][] r1 = new String[15][];
@@ -126,6 +148,7 @@ public class MainActivity extends BaseActivity {
             RxView.clicks(homeButton).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
                 switch (Integer.valueOf(homeButton.getTag().toString())) {
                     case 0:
+                        startActivity(new Intent(MainActivity.this, MessageGuideActivity.class));
                         break;
                     case 1:
                         startActivity(new Intent(MainActivity.this, ShowVideoActivity.class));

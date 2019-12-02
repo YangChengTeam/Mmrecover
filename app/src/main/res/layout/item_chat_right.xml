@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="40.0dip">
+
+    <ImageView
+        android:id="@id/im_head"
+        android:layout_width="40.0dip"
+        android:layout_height="40.0dip"
+        android:layout_alignParentRight="true"
+        android:scaleType="fitXY" />
+
+    <TextView
+        android:id="@id/tv_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10.0dip"
+        android:layout_toLeftOf="@id/im_head"
+        android:background="@drawable/bg_self"
+        android:text="fsdfsdf"
+        android:textColor="@color/black_word"
+        android:textSize="15.0sp" />
+
+    <LinearLayout
+        android:id="@id/ll_voice"
+        android:layout_width="100.0dip"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10.0dip"
+        android:layout_toLeftOf="@id/im_head"
+        android:background="@drawable/bg_self"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0" />
+
+        <TextView
+            android:id="@id/tv_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_word"
+            android:textSize="12.0sp" />
+
+        <ImageView
+            android:layout_width="9.0dip"
+            android:layout_height="12.0dip"
+            android:layout_marginLeft="3.0dip"
+            android:scaleType="fitXY"
+            android:src="@mipmap/voice_green" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="150.0dip"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8.0dip"
+        android:layout_toLeftOf="@id/im_head">
+
+        <ImageView
+            android:id="@id/im_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:id="@id/im_video_mask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:scaleType="fitXY"
+            android:src="@mipmap/play"
+            android:visibility="gone" />
+    </RelativeLayout>
+</RelativeLayout>

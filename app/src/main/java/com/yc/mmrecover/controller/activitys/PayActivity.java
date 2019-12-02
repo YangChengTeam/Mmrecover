@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.BroadcastInfo;
 import com.yc.mmrecover.model.bean.GlobalData;
-import com.yc.mmrecover.utils.BackgroundShape;
+import com.yc.mmrecover.view.wdiget.BackgroundShape;
 import com.yc.mmrecover.view.wdiget.VTextView;
 
 import java.util.ArrayList;

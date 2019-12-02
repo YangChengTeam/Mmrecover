@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/gray_bk"
+        android:orientation="vertical">
+
+        <View
+            android:id="@id/v_status_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="25.0dip"
+            android:background="@color/blue" />
+
+        <include layout="@layout/layout_title" />
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="12.0dip">
+
+                    <TextView
+                        android:id="@id/tv_shuoming"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="点击“开始备份”后的操作说明"
+                        android:textColor="@color/gray_word"
+                        android:textSize="15.0sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2.0dip"
+                        android:text="之前没备份没有关系，按向导操作，都有可能恢复出来"
+                        android:textColor="@color/red_word2"
+                        android:textSize="14.0sp" />
+
+                    <TextView
+                        android:id="@id/tv_step"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="20.0dip"
+                        android:layout_marginTop="16.0dip"
+                        android:layout_marginRight="20.0dip"
+                        android:gravity="center"
+                        android:text="第一步"
+                        android:textColor="@color/blue"
+                        android:textSize="16.0sp" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="258.0dip"
+                    android:clipChildren="false">
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@id/view_pager"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="100.0dip"
+                        android:layout_marginRight="100.0dip"
+                        android:clipChildren="false" />
+
+                    <View
+                        android:id="@id/v_left"
+                        android:layout_width="100.0dip"
+                        android:layout_height="fill_parent" />
+
+                    <View
+                        android:id="@id/v_right"
+                        android:layout_width="100.0dip"
+                        android:layout_height="fill_parent"
+                        android:layout_alignParentRight="true" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@id/tv_backup_err"
+                    android:layout_width="328.0dip"
+                    android:layout_height="40.0dip"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:textColor="@color/blue_word"
+                    android:textSize="14.0sp"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@id/tv_backup"
+                    android:layout_width="328.0dip"
+                    android:layout_height="47.0dip"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="1.0dip"
+                    android:background="@color/yellow_btn"
+                    android:gravity="center"
+                    android:text="开始备份"
+                    android:textColor="@color/white"
+                    android:textSize="17.0sp" />
+
+                <TextView
+                    android:id="@id/tv_show_backup"
+                    android:layout_width="328.0dip"
+                    android:layout_height="47.0dip"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="26.0dip"
+                    android:background="@color/yellow_btn"
+                    android:gravity="center"
+                    android:text="我已备份好，查看微信消息"
+                    android:textColor="@color/white"
+                    android:textSize="17.0sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="14.0dip"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="17.0dip"
+                        android:layout_height="17.0dip"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/bk_help" />
+
+                    <TextView
+                        android:id="@id/tv_qa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4.0dip"
+                        android:text="常见问题" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</RelativeLayout>

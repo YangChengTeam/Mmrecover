@@ -51,12 +51,12 @@ public class ShowFileActivity extends BaseShowActivity {
 
     @Override
     protected String initTitle() {
-        return "文件";
+        return "文档";
     }
 
     @Override
     protected String initPath() {
-        return "/数据恢复助手/微信文件恢复/";
+        return "/数据恢复助手/微信文档恢复/";
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ShowFileActivity extends BaseShowActivity {
 
     @Override
     public boolean filterExt(String path) {
-        String exts = "doc,docx,xls,txt,xlsx,ppt,pptx,xml";
+        String exts = "doc,xls,txt,ppt,xml,pdf";
         boolean flag = false;
         for (String ext : exts.split(",")) {
             if (path.contains("." + ext)) {

@@ -1,13 +1,16 @@
 package com.yc.mmrecover.controller.activitys;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
 import com.fulongbin.decoder.Silk;
+import com.kk.utils.LogUtil;
 import com.kk.utils.ToastUtil;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.MediaInfo;
@@ -22,7 +25,7 @@ public class DetailVoiceActivity extends BaseActivity {
     VideoView mVideoView;
 
     private MediaInfo mediaInfo;
-
+    private MediaController mediaController;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_video_detail;
@@ -45,7 +48,7 @@ public class DetailVoiceActivity extends BaseActivity {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        path = dir.getAbsolutePath() + "/"+ mediaInfo.getFileName() + ".mp3";
+        path = dir.getAbsolutePath() + "/" + mediaInfo.getFileName() + ".mp3";
         if (new File(path).exists() || Silk.convertSilkToMp3(mediaInfo.getPath(), path)) {
             this.mVideoView.setVideoURI(Uri.fromFile(new File(path)));
             this.mVideoView.setMediaController(mediaController);
@@ -67,9 +70,14 @@ public class DetailVoiceActivity extends BaseActivity {
         }
     }
 
+
     @Override
-    public void onPause() {
-        super.onPause();
-        this.mVideoView.stopPlayback();
+    public void onStop() {
+        super.onStop();
+        if(this.mVideoView != null) {
+            this.mVideoView.pause();
+        }
     }
+
+
 }

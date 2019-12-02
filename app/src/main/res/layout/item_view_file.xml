@@ -13,7 +13,8 @@
             android:layout_width="17.0dip"
             android:layout_height="17.0dip"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="21.0dip">
+            android:layout_marginLeft="21.0dip"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="fill_parent"

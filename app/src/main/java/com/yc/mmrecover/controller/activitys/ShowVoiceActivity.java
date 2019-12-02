@@ -9,7 +9,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.Func;
-import com.yc.mmrecover.utils.GridSpacingItemDecoration;
+import com.yc.mmrecover.helper.GridSpacingItemDecoration;
 import com.yc.mmrecover.view.adapters.GridVoiceAdapter;
 
 import java.io.File;
@@ -52,7 +52,9 @@ public class ShowVoiceActivity extends BaseShowActivity {
                 if (mIsOperate) {
                     return false;
                 }
-
+                Intent intent = new Intent(ShowVoiceActivity.this, DetailVoiceActivity.class);
+                intent.putExtra("info", (MediaInfo) adapter.getData().get(position));
+                startActivity(intent);
                 return false;
             }
         });

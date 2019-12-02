@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.MediaInfo;
-import com.yc.mmrecover.utils.GridSpacingItemDecoration;
+import com.yc.mmrecover.helper.GridSpacingItemDecoration;
 import com.yc.mmrecover.view.adapters.GridVideoAdapter;
 
 import java.io.Serializable;

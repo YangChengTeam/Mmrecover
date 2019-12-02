@@ -9,10 +9,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding3.view.RxView;
 import com.kk.utils.LogUtil;
-import com.kk.utils.ToastUtil;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.MediaInfo;
-import com.yc.mmrecover.utils.BackgroundShape;
+import com.yc.mmrecover.view.wdiget.BackgroundShape;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.view.wdiget.GestureImageView;
 
