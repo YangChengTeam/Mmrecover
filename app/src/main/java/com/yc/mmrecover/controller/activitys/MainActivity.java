@@ -15,7 +15,6 @@ import com.jakewharton.rxbinding3.view.RxView;
 import com.kk.utils.LogUtil;
 import com.kk.utils.TaskUtil;
 import com.kk.utils.ToastUtil;
-import com.swift.sandhook.xposedcompat.XposedCompat;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.BroadcastInfo;
 import com.yc.mmrecover.utils.Func;
@@ -29,8 +28,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedHelpers;
+
 
 public class MainActivity extends BaseActivity {
     @BindView(R.id.tv_percent)
