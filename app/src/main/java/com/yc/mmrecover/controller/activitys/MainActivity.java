@@ -17,6 +17,7 @@ import com.kk.utils.TaskUtil;
 import com.kk.utils.ToastUtil;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.BroadcastInfo;
+import com.yc.mmrecover.model.bean.WxContactInfo;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.utils.MessageUtils;
 import com.yc.mmrecover.view.wdiget.VTextView;
@@ -70,9 +71,9 @@ public class MainActivity extends BaseActivity {
 
         TaskUtil.getImpl().runTask(() -> {
             try {
-//                Func.changeMIUIBak2AndroidBak();
-             LogUtil.msg(MessageUtils.getWxAccountInfo()+"");
-
+                for(WxContactInfo wxContactInfo : MessageUtils.getWxContactInfos()) {
+                    MessageUtils.getWxMsgInfos(wxContactInfo.getWxId());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

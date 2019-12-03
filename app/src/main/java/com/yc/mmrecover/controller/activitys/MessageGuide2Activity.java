@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding3.view.RxView;
 import com.yc.mmrecover.R;
+import com.yc.mmrecover.utils.MessageUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -23,7 +24,7 @@ public class MessageGuide2Activity extends BaseActivity {
     @Override
     protected void initViews() {
         RxView.clicks(backupBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
-            startActivity(new Intent(MessageGuide2Activity.this, MessageUserActivity.class));
+            MessageUtils.openBackup(MessageGuide2Activity.this);
         });
     }
 }
