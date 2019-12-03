@@ -90,7 +90,7 @@ public class MessageUtils {
     }
 
     private static String passphrase = "";
-    
+
     private static SQLiteDatabase getSQLiteDatabase(String path) {
         if (TextUtils.isEmpty(passphrase)) {
             passphrase = getMmDBKey();
@@ -195,7 +195,7 @@ public class MessageUtils {
         return wxContactInfos;
     }
 
-    public static List<WxChatMsgInfo> getWxMsgInfos(WxContactInfo info) {
+    public static List<WxChatMsgInfo> getWxMsgInfos(String uid) {
         List<WxChatMsgInfo> wxContactInfos = new ArrayList<>();
         try {
             SQLiteDatabase sqLiteDatabase = getSQLiteDatabase();
