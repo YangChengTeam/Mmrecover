@@ -1,5 +1,6 @@
 package com.yc.mmrecover.utils;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -10,8 +11,8 @@ import android.text.TextUtils;
 import com.kk.utils.LogUtil;
 import com.kk.utils.security.Md5;
 import com.yc.mmrecover.model.bean.GlobalData;
-import com.yc.mmrecover.model.bean.WxChatMsgInfo;
 import com.yc.mmrecover.model.bean.WxAccountInfo;
+import com.yc.mmrecover.model.bean.WxChatMsgInfo;
 import com.yc.mmrecover.model.bean.WxContactInfo;
 
 import net.sqlcipher.Cursor;
@@ -65,11 +66,15 @@ public class MessageUtils {
     }
 
     private static String getMmDBKey() {
-        String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/数据恢复助手";
-        return getMmDBKey(dir + "/apps/com.tencent.mm/r/MicroMsg/systemInfo.cfg", dir + "/apps/com.tencent.mm/r/MicroMsg/CompatibleInfo.cfg");
+        if (TextUtils.isEmpty(passphrase)) {
+            String root = getMicroMsgDir();
+            passphrase = getMmDBKey(root + "/systemInfo.cfg", root + "/CompatibleInfo.cfg");
+        }
+        return passphrase;
     }
 
     private static File dbFile = null;
+    private static List<File> dbFiles = new ArrayList<>();
 
     private static void getEnMicroMsgDb(String path) {
         File[] files = new File(path).listFiles();
@@ -80,24 +85,21 @@ public class MessageUtils {
                     getEnMicroMsgDb(file.getAbsolutePath());
                 } else {
                     if (file.getName().equals("EnMicroMsg.db")) {
-                        if (dbFile == null || dbFile.length() < file.length()) {
-                            dbFile = file;
-                        }
+                        dbFiles.add(file);
                     }
                 }
             }
         }
     }
 
-    private static String passphrase = "";
-
-    private static SQLiteDatabase getSQLiteDatabase(String path) {
-        if (TextUtils.isEmpty(passphrase)) {
-            passphrase = getMmDBKey();
+    private static List<File> getEnMicroMsgDb() {
+        if (dbFiles.size() == 0) {
+            getEnMicroMsgDb(getMicroMsgDir());
         }
-        LogUtil.msg("**********" + passphrase);
-        return SQLiteDatabase.openDatabase(path, passphrase, null, 16, new MySQLiteDatabaseHook());
+        return dbFiles;
     }
+
+    private static String passphrase = "";
 
     static class MySQLiteDatabaseHook implements SQLiteDatabaseHook {
         public void preKey(SQLiteDatabase sQLiteDatabase) {
@@ -111,25 +113,98 @@ public class MessageUtils {
         }
     }
 
+    private static String mmPath = "";
+
+    private static void getMMDir(String dir) {
+        File[] files = new File(dir).listFiles();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                File file = files[i];
+                if (file.isDirectory()) {
+                    if (file.getName().equals("com.tencent.mm")) {
+                        mmPath = file.getAbsolutePath();
+                        break;
+                    }
+                    getMMDir(file.getAbsolutePath());
+                }
+            }
+        }
+    }
+
+    private static String getMMDir() {
+        if (mmPath.isEmpty()) {
+            getMMDir(getAppStorageDir());
+        }
+        return mmPath;
+    }
+
+    private static String getExternalStorageDir() {
+        return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+
+    private static String getAppStorageDir() {
+        return getExternalStorageDir() + "/数据恢复助手";
+    }
+
+    private static String microMsgPath = "";
+
+    private static void getMicroMsgDir(String dir) {
+        File[] files = new File(dir).listFiles();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                File file = files[i];
+                if (file.isDirectory()) {
+                    if (file.getName().equals("MicroMsg")) {
+                        microMsgPath = file.getAbsolutePath();
+                        break;
+                    }
+                    getMicroMsgDir(file.getAbsolutePath());
+                }
+            }
+        }
+    }
+
+    private static String getMicroMsgDir() {
+        if (TextUtils.isEmpty(microMsgPath)) {
+            getMicroMsgDir(getMMDir());
+        }
+        return microMsgPath;
+    }
+
     private static SQLiteDatabase getSQLiteDatabase() throws IOException {
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/数据恢复助手" + "/apps/com.tencent.mm/r/MicroMsg";
+        String path = getMicroMsgDir();
         File microMsgDir = new File(path);
         if (!microMsgDir.exists()) {
             if (GlobalData.brand.equals("xiaomi")) {
                 changeMiuiBak2AndroidBak();
+            } else if (GlobalData.brand.equals("oppo")) {
+                String source = getExternalStorageDir() + "/backup/App/com.tencent.mm.tar";
+                unpackZip(source, getAppStorageDir());
             }
         }
-        getEnMicroMsgDb(path);
-        if (dbFile != null) {
-            return getSQLiteDatabase(dbFile.getAbsolutePath());
+        SQLiteDatabase sqLiteDatabase = null;
+        passphrase = getMmDBKey();
+        for (File file : getEnMicroMsgDb()) {
+            try {
+                sqLiteDatabase = SQLiteDatabase.openDatabase(file.getAbsolutePath(), passphrase, null, 16, new MySQLiteDatabaseHook());
+                if (sqLiteDatabase != null) {
+                    dbFile = file;
+                    break;
+                }
+            } catch (Exception e) {
+            }
         }
-        return null;
+        return sqLiteDatabase;
     }
 
     public static WxAccountInfo getWxAccountInfo() {
         WxAccountInfo wxAccountInfo = new WxAccountInfo();
         try {
             SQLiteDatabase sqLiteDatabase = getSQLiteDatabase();
+            if (sqLiteDatabase == null) {
+                LogUtil.msg("SQLiteDatabase is null");
+                return null;
+            }
             Cursor cursor = sqLiteDatabase.rawQuery("select id,value from userinfo where id in(2,4,6)", null);
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndex("id"));
@@ -154,6 +229,10 @@ public class MessageUtils {
         List<WxContactInfo> wxContactInfos = new ArrayList<>();
         try {
             SQLiteDatabase sqLiteDatabase = getSQLiteDatabase();
+            if (sqLiteDatabase == null) {
+                LogUtil.msg("SQLiteDatabase is null");
+                return null;
+            }
             Cursor cursor = sqLiteDatabase.rawQuery("select r.username,r.conRemark,r.nickname,r.quanPin,i.reserved1,i.reserved2,r.deleteFlag,max(m.createTime) as msgTime,m.content as msgContent,m.type as msgType,r.alias as alias,r.type  from rcontact r left join message m on r.username=m.talker left join img_flag i on r.username=i.username where r.username not like 'gh_%'and r.username not like 'gh_%'and r.type not in (33) and r.username !='filehelper' group by r.username order by r.quanPin asc", null);
             while (cursor.moveToNext()) {
                 WxContactInfo wxContactInfo = new WxContactInfo();
@@ -199,6 +278,10 @@ public class MessageUtils {
         List<WxChatMsgInfo> wxContactInfos = new ArrayList<>();
         try {
             SQLiteDatabase sqLiteDatabase = getSQLiteDatabase();
+            if (sqLiteDatabase == null) {
+                LogUtil.msg("SQLiteDatabase is null");
+                return null;
+            }
             Cursor cursor = sqLiteDatabase.rawQuery("select msgSvrId,type,talker,createTime,content,imgPath,isSend,msgSeq from message where talker = ?", new String[]{uid});
             while (cursor.moveToNext()) {
                 WxChatMsgInfo wxChatMsgInfo = new WxChatMsgInfo();
@@ -341,6 +424,7 @@ public class MessageUtils {
         stringBuilder3.append("</");
         stringBuilder3.append(str);
         stringBuilder3.append(">");
+
         str = (TextUtils.isEmpty(str2) || !str2.contains(stringBuilder2)) ? str2 : str2.substring(str2.indexOf(stringBuilder2) + stringBuilder2.length(), str2.indexOf(stringBuilder3.toString()));
         if (TextUtils.isEmpty(str2)) {
             str = "";
@@ -361,7 +445,6 @@ public class MessageUtils {
         stringBuilder.append(substring);
         return substring;
     }
-
 
     private static String getChangeContent(int i, String content) {
         StringBuilder stringBuilder;
@@ -454,16 +537,51 @@ public class MessageUtils {
     }
 
     public static void openBackup(Context context) {
-        Intent backupIntent = new Intent(Settings.ACTION_PRIVACY_SETTINGS);
-        context.startActivity(backupIntent);
+        Intent backupIntent = new Intent("android.intent.action.VIEW");
+        if (GlobalData.brand.equals("oppo")) {
+            try {
+                backupIntent.setComponent(new android.content.ComponentName("com.coloros.backuprestore", "com.coloros.backuprestore.activity.BootActivity"));
+                context.startActivity(backupIntent);
+            } catch (Exception ae) {
+                try {
+                    backupIntent.setComponent(new android.content.ComponentName("com.coloros.backuprestore", "com.coloros.backuprestore.BootActivity"));
+                    context.startActivity(backupIntent);
+                } catch (Exception e) {
+
+                }
+            }
+        } else if (GlobalData.brand.equals("xiaomi")) {
+            backupIntent.setComponent(new android.content.ComponentName("com.miui.backup", "com.miui.backup.BackupActivity"));
+            context.startActivity(backupIntent);
+        } else if (GlobalData.brand.equals("huawei") || GlobalData.brand.equals("honor")) {
+            backupIntent.setComponent(new android.content.ComponentName("com.huawei.KoBackup", "com.huawei.KoBackup.InitializeActivity"));
+            context.startActivity(backupIntent);
+        } else if (GlobalData.brand.equals("meizu")) {
+            if (Build.MODEL.toLowerCase().contains("m1 metal")) {
+                context.startActivity(new Intent("android.settings.INTERNAL_STORAGE_SETTINGS"));
+                return;
+            }
+            try {
+                Intent intent = new Intent("android.intent.action.VIEW");
+                intent.setComponent(new android.content.ComponentName("com.meizu.backup", "com.meizu.backup.ui.MainBackupAct"));
+                context.startActivity(intent);
+            } catch (ActivityNotFoundException unused) {
+                context.startActivity(new Intent("android.settings.INTERNAL_STORAGE_SETTINGS"));
+            }
+        } else {
+            try {
+                context.startActivity(new Intent(Settings.ACTION_PRIVACY_SETTINGS));
+            } catch (Exception e) {
+
+            }
+        }
     }
 
     private static void changeMiuiBak2AndroidBak() throws IOException {
-        String source = Environment.getExternalStorageDirectory().getAbsolutePath() + "/MIUI/backup/AllBackup";
-        String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/数据恢复助手";
+        String source = getExternalStorageDir() + "/MIUI/backup/AllBackup";
+        String dir = getAppStorageDir();
         String dest = dir + "/app.bak";
         String zip = dir + "/app.zip";
-
         File sourceFile = new File(source);
         if (!sourceFile.exists()) {
             return;

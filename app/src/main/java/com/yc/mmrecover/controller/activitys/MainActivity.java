@@ -71,9 +71,8 @@ public class MainActivity extends BaseActivity {
 
         TaskUtil.getImpl().runTask(() -> {
             try {
-                for(WxContactInfo wxContactInfo : MessageUtils.getWxContactInfos()) {
-                    MessageUtils.getWxMsgInfos(wxContactInfo.getWxId());
-                }
+              LogUtil.msg("-------------" +MessageUtils.getWxAccountInfo().toString());   ;
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
