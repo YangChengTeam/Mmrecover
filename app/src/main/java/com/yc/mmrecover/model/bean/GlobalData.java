@@ -11,7 +11,7 @@ public class GlobalData {
     public static String brand = null;
     public static String customer_qq = null;
     public static String customer_wx = null;
-    public static String hwBackupUrl = "http://tx.hddzz.leshu.com/soft/apk/huaweibackup.apk";
+    public static String hwBackupUrl = "http://wxgj.wuhanup.com/soft/huaweibackup.apk";
     public static boolean isNeedConnectPC = false;
     public static String microMsgPath = null;
     public static String payCount2 = "28";

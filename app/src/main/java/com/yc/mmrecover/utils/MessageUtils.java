@@ -172,8 +172,7 @@ public class MessageUtils {
     }
 
     private static SQLiteDatabase getSQLiteDatabase() throws IOException {
-        String path = getMicroMsgDir();
-        File microMsgDir = new File(path);
+        File microMsgDir = new File(getMicroMsgDir());
         if (!microMsgDir.exists()) {
             if (GlobalData.brand.equals("xiaomi")) {
                 changeMiuiBak2AndroidBak();
@@ -244,6 +243,7 @@ public class MessageUtils {
                 String alias = cursor.getString(cursor.getColumnIndex("alias"));
                 int type = cursor.getInt(cursor.getColumnIndex("type"));
                 String quanPin = cursor.getString(cursor.getColumnIndex("quanPin"));
+                String headPath = cursor.getString(cursor.getColumnIndex("reserved2"));
 
                 wxContactInfo.setUid(uid);
                 wxContactInfo.setLastTime((int) (msgTime / 1000));
@@ -251,8 +251,10 @@ public class MessageUtils {
 
                 String userHeadPath = getUserHeadPath(uid);
                 if (new File(userHeadPath).exists()) {
-                    wxContactInfo.setHeadPath(userHeadPath);
+                    headPath = userHeadPath;
                 }
+
+                wxContactInfo.setHeadPath(headPath);
 
                 String name = TextUtils.isEmpty(nickname) ? uid.contains("@chatroom") ? "历史群聊" : uid : nickname;
                 wxContactInfo.setName(name);
@@ -265,7 +267,9 @@ public class MessageUtils {
                 wxContactInfo.setContactType(type);
                 wxContactInfo.setQuanPin(quanPin);
 
-                wxContactInfos.add(wxContactInfo);
+                if (!TextUtils.isEmpty(name) && !name.startsWith("fake_")) {
+                    wxContactInfos.add(wxContactInfo);
+                }
             }
             sqLiteDatabase.close();
         } catch (IOException e) {

@@ -6,8 +6,8 @@ public class Config {
     public static final String INIT_URL = getBaseUrl() + "index/init";
 
     public static String getBaseUrl() {
-        String baseUrl = "http://tic.upkao.com/api/";
-        String debugBaseUrl = "http://120.76.202.236:1980/api/";
+        String baseUrl = "http://wxgj.wuhanup.com/api/";
+        String debugBaseUrl = "http://wxgj.wuhanup.com/api/";
         return (DEBUG ? debugBaseUrl : baseUrl);
     }
 
