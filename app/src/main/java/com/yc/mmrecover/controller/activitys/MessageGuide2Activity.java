@@ -2,8 +2,10 @@ package com.yc.mmrecover.controller.activitys;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
+import butterknife.OnCheckedChanged;
 import io.reactivex.functions.Consumer;
 import kotlin.Unit;
 
@@ -68,7 +71,6 @@ public class MessageGuide2Activity extends BaseActivity {
         initViewPage(getGuidImagePath());
 
 
-
         tvQa.getPaint().setFlags(8);
         tvQa.getPaint().setAntiAlias(true);
         tvQa.setText(Html.fromHtml("常见问题"));
@@ -80,7 +82,7 @@ public class MessageGuide2Activity extends BaseActivity {
         RxView.clicks(tvShowBackup).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
             startActivity(new Intent(MessageGuide2Activity.this, MessageUserActivity.class));
         });
-        RxView.clicks(tvQa).throttleFirst(200,TimeUnit.MILLISECONDS).subscribe((Consumer<? super Unit>) aVoid -> {
+        RxView.clicks(tvQa).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((Consumer<? super Unit>) aVoid -> {
             Intent intent = new Intent(MessageGuide2Activity.this, WebActivity.class);
             intent.putExtra("web_title", "帮助");
             intent.putExtra("web_url", "http://wxapp.leshu.com/home/help");
@@ -88,6 +90,29 @@ public class MessageGuide2Activity extends BaseActivity {
         });
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if ((TextUtils.equals("huawei", GlobalData.brand) || TextUtils.equals("honor", GlobalData.brand)) && !isInstallOldBackup()) {
+            tvBackupErr.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private boolean isInstallOldBackup() {
+        for (PackageInfo packageInfo : getPackageManager().getInstalledPackages(0)) {
+            if (TextUtils.equals(packageInfo.packageName, "com.huawei.KoBackup")) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("versionCode = ");
+                stringBuilder.append(packageInfo.versionCode);
+                Log.e("TAG", stringBuilder.toString());
+                if (packageInfo.versionCode == 80002301) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 
     private void initViewPage(final String[] strArr) {

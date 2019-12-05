@@ -1,6 +1,9 @@
 package com.yc.mmrecover.controller.fragments;
 
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -8,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding3.view.RxView;
 import com.kk.utils.TaskUtil;
 import com.kk.utils.VUiKit;
 import com.yc.mmrecover.R;
@@ -17,7 +21,9 @@ import com.yc.mmrecover.model.bean.WxContactInfo;
 import com.yc.mmrecover.utils.MessageUtils;
 import com.yc.mmrecover.view.adapters.WxContactAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,6 +46,7 @@ public class MsgContactFragment extends BaseFragment {
     private String mParent;
     private String mUid;
     private WxContactAdapter wxContactAdapter;
+    private List<WxContactInfo> wxContactInfos;
 
     @Override
     protected int getLayoutId() {
@@ -83,6 +90,67 @@ public class MsgContactFragment extends BaseFragment {
             }
 
         });
+        etContent.addTextChangedListener(new C08813());
+        RxView.clicks(imClose).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+            etContent.setText("");
+        });
+
+    }
+
+
+    private class C08813 implements TextWatcher {
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        C08813() {
+        }
+
+        public void afterTextChanged(Editable editable) {
+            if (TextUtils.isEmpty(editable.toString())) {
+                wxContactAdapter.setNewData(wxContactInfos);
+                return;
+            }
+            String obj = editable.toString();
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("afterTextChanged = ");
+            stringBuilder.append(obj);
+            Log.d("TAG", stringBuilder.toString());
+            List<WxContactInfo> arrayList = new ArrayList<>();
+
+            for (WxContactInfo wxContactBean : wxContactInfos) {
+                if (wxContactBean.getName().contains(obj)) {
+                    arrayList.add(wxContactBean);
+                } else if (isLetter(obj)) {
+                    obj = obj.toLowerCase();
+                    Object obj2 = null;
+                    int i = 0;
+                    int i2 = -1;
+                    Object obj3 = null;
+                    while (i < obj.length()) {
+                        int indexOf = wxContactBean.getQuanPin().indexOf(obj.charAt(i));
+                        if ((i == 0 && indexOf != 0) || indexOf <= i2) {
+                            break;
+                        }
+                        i++;
+                        i2 = indexOf;
+                        obj3 = 1;
+                    }
+                    obj2 = obj3;
+                    if (obj2 != null) {
+                        arrayList.add(wxContactBean);
+                    }
+                }
+            }
+            wxContactAdapter.setNewData(arrayList);
+        }
+    }
+
+
+    public boolean isLetter(String str) {
+        return str.matches("^[a-zA-Z]+$");
     }
 
 
@@ -101,7 +169,7 @@ public class MsgContactFragment extends BaseFragment {
         TaskUtil.getImpl().runTask(() -> {
 
 
-            List<WxContactInfo> wxContactInfos = MessageUtils.getWxContactInfos();
+            wxContactInfos = MessageUtils.getWxContactInfos();
             VUiKit.post(() -> {
                 this.mRlMask.setVisibility(View.GONE);
 

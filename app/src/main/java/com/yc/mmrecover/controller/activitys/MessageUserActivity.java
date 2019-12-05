@@ -45,8 +45,6 @@ public class MessageUserActivity extends BaseActivity {
         initTitle("微信账号");
 
 
-
-
         initRecyclerView();
         scan();
         initListener();
@@ -68,7 +66,6 @@ public class MessageUserActivity extends BaseActivity {
     private void initRecyclerView() {
         userRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
         wxAccountAdapter = new WxAccountAdapter(null);
         userRecyclerView.setAdapter(wxAccountAdapter);
         userRecyclerView.setHasFixedSize(true);
@@ -79,14 +76,14 @@ public class MessageUserActivity extends BaseActivity {
 
 
         this.mRlMask.setVisibility(View.VISIBLE);
-        this.mTvMask.setText("联系人扫描中");
+        this.mTvMask.setText("微信账号扫描中");
 
         TaskUtil.getImpl().runTask(() -> {
             List<WxAccountInfo> accountInfos = new ArrayList<>();
             WxAccountInfo wxAccountInfo = MessageUtils.getWxAccountInfo();
 
-            Log.e("TAG", "scan: " + wxAccountInfo);
-//            List<WxContactInfo> wxContactInfos = MessageUtils.getWxContactInfos();
+//            Log.e("TAG", "scan: " + wxAccountInfo);
+
             VUiKit.post(() -> {
                 this.mRlMask.setVisibility(View.GONE);
                 accountInfos.add(wxAccountInfo);
