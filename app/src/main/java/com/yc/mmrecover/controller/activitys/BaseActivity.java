@@ -1,6 +1,7 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +29,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         hideStatusBarBack();
 
         setContentView(getLayoutId());

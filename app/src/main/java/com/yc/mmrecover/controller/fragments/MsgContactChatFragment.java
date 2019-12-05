@@ -91,7 +91,7 @@ public class MsgContactChatFragment extends BaseFragment {
 
     private void scan() {
         this.mRlMask.setVisibility(View.VISIBLE);
-        this.tvMask.setText("聊天记录扫描中");
+        this.tvMask.setText("微信消息扫描中");
 
         TaskUtil.getImpl().runTask(() -> {
 
