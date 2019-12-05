@@ -7,6 +7,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_marginBottom="85.0dip"
         android:background="@color/gray_bk"
         android:orientation="vertical">
 
@@ -27,46 +28,45 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="17.0dip"
-                android:layout_marginRight="17.0dip"
-                android:text="检测到以下用户，点击即可查看聊天记录："
+                android:text="检测到以下备份数据，点击即可开始数据解析："
                 android:textColor="@color/gray_word2"
                 android:textSize="15.0sp" />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@id/user_recycler_view"
+            android:id="@id/list_view"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginLeft="17.0dip"
-            android:layout_marginRight="17.0dip" />
+            android:layout_height="wrap_content"
+            android:background="@color/white" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@id/rl_mask"
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/black_trans2">
+        android:layout_height="85.0dip"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray_bk"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@id/tv_backup1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20.0dip"
+            android:layout_marginTop="14.0dip"
+            android:layout_marginRight="20.0dip"
+            android:gravity="center"
+            android:text="如果没能生成备份数据，可以尝试"
+            android:textColor="@color/black_word"
+            android:textSize="15.0sp" />
+
+        <TextView
+            android:id="@id/tv_backup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical">
-
-            <com.wang.avi.AVLoadingIndicatorView
-                android:layout_width="30.0dip"
-                android:layout_height="30.0dip"
-                android:layout_gravity="center_horizontal"
-                app:indicatorColor="@color/white"
-                app:indicatorName="LineSpinFadeLoader" />
-
-            <TextView
-                android:id="@id/tv_wait"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3.0dip"
-                android:text="正在还原数据..."
-                android:textColor="@color/white" />
-        </LinearLayout>
-    </RelativeLayout>
+            android:layout_marginTop="14.0dip"
+            android:text="连接电脑备份（请点击）"
+            android:textColor="@color/blue_word"
+            android:textSize="17.0sp" />
+    </LinearLayout>
 </RelativeLayout>

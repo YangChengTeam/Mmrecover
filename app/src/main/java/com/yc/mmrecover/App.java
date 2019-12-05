@@ -41,12 +41,9 @@ public class App extends MultiDexApplication {
     }
 
     private void inits() {
-        TaskUtil.getImpl().runTask(new Runnable() {
-            @Override
-            public void run() {
-                initHttpInfo();
-                SQLiteDatabase.loadLibs(getApplicationContext());
-            }
+        TaskUtil.getImpl().runTask(() -> {
+            initHttpInfo();
+            SQLiteDatabase.loadLibs(getApplicationContext());
         });
     }
 

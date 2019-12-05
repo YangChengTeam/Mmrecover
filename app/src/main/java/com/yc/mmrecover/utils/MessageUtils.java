@@ -10,6 +10,7 @@ import android.text.TextUtils;
 
 import com.kk.utils.LogUtil;
 import com.kk.utils.security.Md5;
+import com.yc.mmrecover.constant.Config;
 import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.model.bean.WxAccountInfo;
 import com.yc.mmrecover.model.bean.WxChatMsgInfo;
@@ -217,12 +218,15 @@ public class MessageUtils {
             }
             wxAccountInfo.setHeadPath(getUserHeadPath(wxAccountInfo.getWxAccount()));
             wxAccountInfo.setParent(dbFile.getParentFile().getPath());
+            SpUtils.getInstance().putString(Config.HEAD_PATH, getUserHeadPath(wxAccountInfo.getWxAccount()));
             sqLiteDatabase.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return wxAccountInfo;
     }
+
+    private static List<WxContactInfo> mWxContactInfos;
 
     public static List<WxContactInfo> getWxContactInfos() {
         List<WxContactInfo> wxContactInfos = new ArrayList<>();
@@ -275,6 +279,8 @@ public class MessageUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        mWxContactInfos = wxContactInfos;
         return wxContactInfos;
     }
 
@@ -654,5 +660,19 @@ public class MessageUtils {
         tis.close();
     }
 
+    public static WxContactInfo getUserInfoById(String str) {
+
+        if (mWxContactInfos == null) {
+            mWxContactInfos = getWxContactInfos();
+        }
+        if (mWxContactInfos != null) {
+            for (WxContactInfo wxContactInfo : mWxContactInfos) {
+                if (TextUtils.equals(str, wxContactInfo.getUid())) {
+                    return wxContactInfo;
+                }
+            }
+        }
+        return null;
+    }
 
 }

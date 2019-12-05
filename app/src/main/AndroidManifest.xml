@@ -70,6 +70,9 @@
         <activity android:name=".controller.activitys.RecoverFileActivity"></activity>
 
         <activity android:name=".controller.activitys.WebActivity"></activity>
+        <activity android:name=".controller.activitys.ImagePageViewActivity" />
+        <activity android:name=".controller.activitys.MessageDetailActivity" />
+        <activity android:name=".controller.activitys.DetailUserActivity" />
 
         <provider
             android:authorities="com.yc.mmrecover.myFileProvider"

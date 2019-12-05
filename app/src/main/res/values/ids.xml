@@ -209,4 +209,5 @@
     <item name="view_pager" type="id" />
     <item name="voice_progress_bar" type="id" />
     <item name="web_view" type="id" />
+    <item name="user_recycler_view" type="id" />
 </resources>
