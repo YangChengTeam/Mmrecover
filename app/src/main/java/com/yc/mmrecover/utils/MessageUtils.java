@@ -544,22 +544,34 @@ public class MessageUtils {
         Intent backupIntent = new Intent("android.intent.action.VIEW");
         if (GlobalData.brand.equals("oppo")) {
             try {
-                backupIntent.setComponent(new android.content.ComponentName("com.coloros.backuprestore", "com.coloros.backuprestore.activity.BootActivity"));
+                backupIntent.setComponent(new android.content.ComponentName("com.coloros.backuprestore", "com.coloros.backuprestore.BootActivity"));
                 context.startActivity(backupIntent);
             } catch (Exception ae) {
                 try {
-                    backupIntent.setComponent(new android.content.ComponentName("com.coloros.backuprestore", "com.coloros.backuprestore.BootActivity"));
+                    backupIntent.setComponent(new android.content.ComponentName("com.coloros.backuprestore", "com.coloros.backuprestore.activity.BootActivity"));
                     context.startActivity(backupIntent);
                 } catch (Exception e) {
 
                 }
             }
         } else if (GlobalData.brand.equals("xiaomi")) {
-            backupIntent.setComponent(new android.content.ComponentName("com.miui.backup", "com.miui.backup.BackupActivity"));
-            context.startActivity(backupIntent);
+            try {
+                backupIntent.setComponent(new android.content.ComponentName("com.miui.backup", "com.miui.backup.BackupActivity"));
+                context.startActivity(backupIntent);
+            } catch (Exception e) {
+
+            }
         } else if (GlobalData.brand.equals("huawei") || GlobalData.brand.equals("honor")) {
-            backupIntent.setComponent(new android.content.ComponentName("com.huawei.KoBackup", "com.huawei.KoBackup.InitializeActivity"));
-            context.startActivity(backupIntent);
+            try {
+                backupIntent.setComponent(new android.content.ComponentName("com.huawei.KoBackup", "com.huawei.KoBackup.InitializeActivity"));
+                context.startActivity(backupIntent);
+            } catch (Exception ae) {
+                try {
+                    context.startActivity(new Intent(Settings.ACTION_PRIVACY_SETTINGS));
+                } catch (Exception e) {
+
+                }
+            }
         } else if (GlobalData.brand.equals("meizu")) {
             if (Build.MODEL.toLowerCase().contains("m1 metal")) {
                 context.startActivity(new Intent("android.settings.INTERNAL_STORAGE_SETTINGS"));
@@ -570,7 +582,11 @@ public class MessageUtils {
                 intent.setComponent(new android.content.ComponentName("com.meizu.backup", "com.meizu.backup.ui.MainBackupAct"));
                 context.startActivity(intent);
             } catch (ActivityNotFoundException unused) {
-                context.startActivity(new Intent("android.settings.INTERNAL_STORAGE_SETTINGS"));
+                try {
+                    context.startActivity(new Intent(Settings.ACTION_PRIVACY_SETTINGS));
+                } catch (Exception e) {
+
+                }
             }
         } else {
             try {
