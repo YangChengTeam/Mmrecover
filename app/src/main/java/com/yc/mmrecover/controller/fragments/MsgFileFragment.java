@@ -104,7 +104,7 @@ public class MsgFileFragment extends BaseScanFragment {
         mediaBean.setSize(length);
         mediaBean.setStrSize(Func.getSizeString(length));
         mediaBean.setFileName(file.getName());
-        return null;
+        return mediaBean;
     }
 
     @Override
