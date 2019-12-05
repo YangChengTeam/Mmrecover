@@ -550,11 +550,11 @@ public class MessageUtils {
         Intent backupIntent = new Intent("android.intent.action.VIEW");
         if (GlobalData.brand.equals("oppo")) {
             try {
-                backupIntent.setComponent(new android.content.ComponentName("com.coloros.backuprestore", "com.coloros.backuprestore.BootActivity"));
+                backupIntent.setComponent(new android.content.ComponentName("com.coloros.backuprestore", "com.coloros.backuprestore.activity.BootActivity"));
                 context.startActivity(backupIntent);
             } catch (Exception ae) {
                 try {
-                    backupIntent.setComponent(new android.content.ComponentName("com.coloros.backuprestore", "com.coloros.backuprestore.activity.BootActivity"));
+                    backupIntent.setComponent(new android.content.ComponentName("com.coloros.backuprestore", "com.coloros.backuprestore.BootActivity"));
                     context.startActivity(backupIntent);
                 } catch (Exception e) {
 
