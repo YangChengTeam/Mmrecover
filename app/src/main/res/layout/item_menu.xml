@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/ll_menu"
+    android:layout_width="0.0dip"
+    android:layout_height="fill_parent"
+    android:layout_weight="1.0"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@id/im_menu"
+        android:layout_width="25.0dip"
+        android:layout_height="20.0dip"
+        android:scaleType="fitXY"
+        android:src="@mipmap/msg_chat_select" />
+
+    <TextView
+        android:id="@id/tv_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5.0dip"
+        android:text="微信"
+        android:textColor="@color/gray_word"
+        android:textSize="12.0sp" />
+</LinearLayout>

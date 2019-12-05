@@ -56,4 +56,18 @@ public class WxAccountInfo {
         this.wxId = str;
     }
 
+
+
+
+    @Override
+    public String toString() {
+        return "WxAccountInfo{" +
+                "headPath='" + headPath + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", parent='" + parent + '\'' +
+                ", phone='" + phone + '\'' +
+                ", wxAccount='" + wxAccount + '\'' +
+                ", wxId='" + wxId + '\'' +
+                '}';
+    }
 }

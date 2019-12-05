@@ -4,6 +4,7 @@ public class Config {
     public static boolean DEBUG = false;
 
     public static final String INIT_URL = getBaseUrl() + "index/init";
+    public static final String HEAD_PATH = "head_path";
 
     public static String getBaseUrl() {
         String baseUrl = "http://wxgj.wuhanup.com/api/";

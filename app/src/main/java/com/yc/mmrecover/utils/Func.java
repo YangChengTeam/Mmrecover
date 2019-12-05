@@ -200,6 +200,20 @@ public class Func {
         return stringBuilder.toString();
     }
 
+    public static String makeStringHeadMix(String str) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int length = str.length();
+        int i = 0;
+        while (i < length) {
+            if (i == 0 || i == 1) {
+                stringBuilder.append(str.charAt(i));
+            } else {
+                stringBuilder.append("*");
+            }
+            i++;
+        }
+        return stringBuilder.toString();
+    }
 
 
 
