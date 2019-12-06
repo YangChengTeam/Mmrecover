@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity {
 
         TaskUtil.getImpl().runTask(() -> {
             try {
-              LogUtil.msg("-------------" +MessageUtils.getWxAccountInfo().toString());   ;
+                MessageUtils.unPackHuaweiBackup();
 
             } catch (Exception e) {
                 e.printStackTrace();

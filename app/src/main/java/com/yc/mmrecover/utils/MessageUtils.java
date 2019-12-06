@@ -28,6 +28,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -180,6 +181,9 @@ public class MessageUtils {
             } else if (GlobalData.brand.equals("oppo")) {
                 String source = getExternalStorageDir() + "/backup/App/com.tencent.mm.tar";
                 unpackZip(source, getAppStorageDir());
+            } else if (GlobalData.brand.equals("huawei") || GlobalData.brand.equals("honor")) {
+                unPackHuaweiBackup();
+
             }
         }
         SQLiteDatabase sqLiteDatabase = null;
@@ -292,12 +296,14 @@ public class MessageUtils {
                 LogUtil.msg("SQLiteDatabase is null");
                 return null;
             }
-            Cursor cursor = sqLiteDatabase.rawQuery("select msgSvrId,type,talker,createTime,content,imgPath,isSend,msgSeq from message where talker = ?", new String[]{uid});
+            Cursor cursor = sqLiteDatabase.rawQuery("select msgSvrId,type,talker,createTime,content,imgPath,isSend,msgSeq from message where talker = ? order by createTime asc", new String[]{uid});
+            int startTime = 0;
             while (cursor.moveToNext()) {
                 WxChatMsgInfo wxChatMsgInfo = new WxChatMsgInfo();
                 int type = cursor.getInt(cursor.getColumnIndex("type"));
                 String content = getChangeContent(type, cursor.getString(cursor.getColumnIndex("content")));
                 String imgPath = cursor.getString(cursor.getColumnIndex("imgPath"));
+                int createTime = cursor.getInt(cursor.getColumnIndex("createTime"));
                 switch (type) {
                     case 3:
                         wxChatMsgInfo.setImgPath(getChatImagePath(dbFile.getParentFile().getName(), imgPath));
@@ -315,10 +321,20 @@ public class MessageUtils {
                         break;
                 }
                 wxChatMsgInfo.setSend(cursor.getInt(cursor.getColumnIndex("isSend")) == 1 ? true : false);
+                wxChatMsgInfo.setType(cursor.getInt(cursor.getColumnIndex("isSend")) == 1 ? 1 : 0);
                 wxChatMsgInfo.setContent(content);
                 wxChatMsgInfo.setContentType(type);
                 wxChatMsgInfo.setHeadPath(getUserHeadPath(cursor.getString(cursor.getColumnIndex("talker"))));
-                wxChatMsgInfo.setTime(cursor.getInt(cursor.getColumnIndex("createTime")));
+                wxChatMsgInfo.setTime(createTime);
+
+                if (Math.abs(createTime - startTime) > 360000) {
+                    WxChatMsgInfo wxChatMsgTimeInfo = new WxChatMsgInfo();
+                    wxChatMsgTimeInfo.setType(2);
+                    wxChatMsgTimeInfo.setContent(Func.formatData("yyyy/MM/dd HH:mm", createTime / 1000));
+                    wxContactInfos.add(wxChatMsgTimeInfo);
+                }
+                startTime = createTime;
+
                 wxContactInfos.add(wxChatMsgInfo);
             }
             sqLiteDatabase.close();
@@ -603,6 +619,62 @@ public class MessageUtils {
         }
     }
 
+    private static File huaWeiBackupFile = null;
+
+    public static void unPackHuaweiBackup() throws IOException {
+        String source = getExternalStorageDir() + "/Huawei/Backup";
+
+        unPackHuaweiBackup(source);
+        if (huaWeiBackupFile != null) {
+            unPackHuaweiBackup2(huaWeiBackupFile.getAbsolutePath());
+        }
+
+    }
+
+    public static void unPackHuaweiBackup(String source) throws IOException {
+        File sourceFile = new File(source);
+        if (!sourceFile.exists()) {
+            return;
+        }
+        File[] files = sourceFile.listFiles();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
+                    unPackHuaweiBackup(files[i].getAbsolutePath());
+                } else {
+                    if (files[i].getAbsolutePath().endsWith("com.tencent.mm.db")) {
+                        huaWeiBackupFile = files[i];
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private static void unPackHuaweiBackup2(String str) throws IOException {
+        File file = new File(str);
+        if (file.exists()) {
+            SQLiteDatabase openDatabase = SQLiteDatabase.openDatabase(str, "", null, 16);
+            openDatabase.execSQL("drop table if exists need");
+            openDatabase.execSQL("create table if not exists need as select file_index,file_path from apk_file_info where file_path like '%user_%' or file_path like '%EnMicroMsg%' or file_path like '%systemInfo.cfg' or file_path like '%CompatibleInfo.cfg' or file_path like '%.tem' or file_path like '%IndexMicroMsg.db' or file_path like '%EnMicroMsg%' or file_path like '%FTS5IndexMicroMsg%' or file_path like '%app_brand_global_sp.xml'");
+            Cursor rawQuery = openDatabase.rawQuery("select n.file_path,d.* from apk_file_data d join need n on n.file_index=d.file_index order by d.file_index desc,d.data_index asc", null);
+            while (rawQuery.moveToNext()) {
+                String path = getAppStorageDir() + rawQuery.getString(rawQuery.getColumnIndex("file_path"));
+                byte[] blob = rawQuery.getBlob(rawQuery.getColumnIndex("file_data"));
+                File dataFile = new File(path);
+                if (!dataFile.getParentFile().exists()) {
+                    dataFile.getParentFile().mkdirs();
+                }
+                FileOutputStream fileOutputStream = new FileOutputStream(dataFile, true);
+                fileOutputStream.write(blob);
+                fileOutputStream.close();
+            }
+            rawQuery.close();
+            openDatabase.close();
+        }
+    }
+
+
     private static void changeMiuiBak2AndroidBak() throws IOException {
         String source = getExternalStorageDir() + "/MIUI/backup/AllBackup";
         String dir = getAppStorageDir();
@@ -625,7 +697,7 @@ public class MessageUtils {
             for (int i = 0; i < files.length; i++) {
                 File[] baks = files[i].listFiles();
                 for (File tmpbak : baks) {
-                    if (tmpbak.getAbsolutePath().endsWith(".bak")) {
+                    if (tmpbak.getAbsolutePath().contains("com.tencent.mm") && tmpbak.getAbsolutePath().endsWith(".bak")) {
                         if (bak != null && bak.length() < tmpbak.length()) {
                             bak = tmpbak;
                         }
@@ -643,6 +715,9 @@ public class MessageUtils {
             String password = System.getenv("ABE_PASSWD");
             AndroidBackup.extractAsTar(dest, zip, password, false);
             unpackZip(zip, dir);
+
+            destFile.delete();
+            new File(zip).delete();
         }
     }
 
