@@ -15,13 +15,19 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yc.mmrecover.R;
+import com.yc.mmrecover.controller.activitys.DetailVideoActivity;
 import com.yc.mmrecover.controller.activitys.MessageDetailActivity;
 import com.yc.mmrecover.controller.activitys.PayActivity;
 import com.yc.mmrecover.model.bean.GlobalData;
+import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.model.bean.WxChatMsgInfo;
+import com.yc.mmrecover.model.bean.WxContactInfo;
+import com.yc.mmrecover.utils.Func;
+import com.yc.mmrecover.utils.PlayVoiceTask;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -31,26 +37,9 @@ import androidx.recyclerview.widget.RecyclerView;
  * Created by suns  on 2019/12/4 14:44.
  */
 public class WxMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    /**
-     * Same as QuickAdapter#QuickAdapter(Context,int) but with
-     * some initialization data.
-     *
-     * @param
-     */
-//    public WxMsgAdapter(List<WxChatMsgInfo> data) {
-//        super(data);
-////        addItemType();
-//    }
 
-//    @Override
-//    protected void convert(BaseViewHolder helper, WxChatMsgInfo item) {
-//
-//    }
 
-    private static final int LOAD_NUM = 10;
-    public static final int TYPE_FRIEND = 1;
-    public static final int TYPE_ME = 0;
-    public static final int TYPE_TITLE = 2;
+
     private Context mContext;
     private List<WxChatMsgInfo> mDataList;
 
@@ -96,11 +85,13 @@ public class WxMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @NonNull
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+//        Log.e("TAG", "i::" + i);
+
         View inflate;
         this.mContext = viewGroup.getContext();
-        if (i == 1) {
+        if (getItemViewType(i) ==WxChatMsgInfo.TYPE_FRIEND ) {
             inflate = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_chat_left, viewGroup, false);
-        } else if (i != 0) {
+        } else if (getItemViewType(i) == WxChatMsgInfo.TYPE_TITLE) {
             return new TitleViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_chat_time, viewGroup, false));
         } else {
             inflate = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_chat_right, viewGroup, false);
@@ -114,14 +105,12 @@ public class WxMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TitleViewHolder titleViewHolder;
         if (getItemViewType(i) != 2) {
             ViewHolder viewHolder2 = (ViewHolder) viewHolder;
-            Glide.with(this.mContext).load(wxChatMsgInfo.getHeadPath()).error(R.mipmap.user_head).into(viewHolder2.im_head);
-            viewHolder2.im_head.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    Intent intent = new Intent(mContext, MessageDetailActivity.class);
-                    intent.putExtra("uid", (wxChatMsgInfo).getUid());
-                    intent.putExtra("is_from_chat", true);
-                    mContext.startActivity(intent);
-                }
+            Glide.with(this.mContext).load(wxChatMsgInfo.getHeadPath()).circleCrop().error(R.mipmap.user_head).into(viewHolder2.im_head);
+            viewHolder2.im_head.setOnClickListener(view -> {
+                Intent intent = new Intent(mContext, MessageDetailActivity.class);
+                intent.putExtra("uid", (wxChatMsgInfo).getUid());
+                intent.putExtra("is_from_chat", true);
+                mContext.startActivity(intent);
             });
             if (contentType == 3 || contentType == 43 || contentType == 47) {
                 viewHolder2.im_pic.setVisibility(View.VISIBLE);
@@ -131,17 +120,18 @@ public class WxMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     viewHolder2.im_video_mask.setVisibility(View.VISIBLE);
                     viewHolder2.im_pic.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View view) {
-//                            Intent intent = new Intent(mContext, DetailVideoActivity.class);
-//                            intent.putExtra("sta_type", 2008);
-//                            Serializable mediaBean = new MediaBean();
-//                            mediaBean.setPath(((ChatMsgBean) ChatMsgAdapter.this.mDataList.get(i)).getVideoPath());
-//                            intent.putExtra("image_info", mediaBean);
-//                            ChatMsgAdapter.this.mContext.startActivity(intent);
+                            Intent intent = new Intent(mContext, DetailVideoActivity.class);
+                            intent.putExtra("sta_type", 2008);
+                            MediaInfo mediaBean = new MediaInfo();
+                            mediaBean.setPath(WxMsgAdapter.this.mDataList.get(i).getVideoPath());
+                            intent.putExtra("image_info", mediaBean);
+                            mContext.startActivity(intent);
                         }
                     });
                     imgPath = wxChatMsgInfo.getVideoPath();
                 } else if (contentType == 3) {
                     viewHolder2.im_video_mask.setVisibility(View.GONE);
+                    String finalImgPath = imgPath;
                     viewHolder2.im_pic.setOnClickListener(view -> {
                         Intent intent = new Intent(mContext, MessageDetailActivity.class);
                         String imgPath1 = wxChatMsgInfo.getImgPath();
@@ -158,19 +148,19 @@ public class WxMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         BitmapFactory.Options options = new BitmapFactory.Options();
                         options.inJustDecodeBounds = true;
                         BitmapFactory.decodeFile(imgPath1, options);
-//                            Serializable mediaBean = new MediaBean();
-//                            mediaBean.setLastModifyTime((int) (file.lastModified() / 1000));
-//                            mediaBean.setPath(imgPath);
-//                            mediaBean.setSize(length);
-//                            mediaBean.setStrSize(Func.getSizeString(length));
+                        MediaInfo mediaBean = new MediaInfo();
+                        mediaBean.setLastModifyTime((int) (file.lastModified() / 1000));
+                        mediaBean.setPath(finalImgPath);
+                        mediaBean.setSize(length);
+                        mediaBean.setStrSize(Func.getSizeString(length));
                         StringBuilder stringBuilder3 = new StringBuilder();
                         stringBuilder3.append("getStrSize = ");
-//                            stringBuilder3.append(mediaBean.getStrSize());
+                        stringBuilder3.append(mediaBean.getStrSize());
                         Log.d("TAG", stringBuilder3.toString());
-//                            mediaBean.setWidth(options.outWidth);
-//                            mediaBean.setHeight(options.outHeight);
-//                            intent.putExtra("image_info", mediaBean);
-//                            ChatMsgAdapter.this.mContext.startActivity(intent);
+                        mediaBean.setWidth(options.outWidth);
+                        mediaBean.setHeight(options.outHeight);
+                        intent.putExtra("image_info", mediaBean);
+                        mContext.startActivity(intent);
                     });
                 } else {
                     viewHolder2.im_video_mask.setVisibility(View.GONE);
@@ -190,7 +180,7 @@ public class WxMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         mContext.startActivity(intent);
                         return;
                     }
-//                        new PlayVoiceTask(null).execute(new String[]{((ChatMsgBean) ChatMsgAdapter.this.mDataList.get(i)).getVoicePath()});
+                    new PlayVoiceTask(null).execute(WxMsgAdapter.this.mDataList.get(i).getVoicePath());
                 });
                 viewHolder2.tv_msg.setVisibility(View.GONE);
                 viewHolder2.im_pic.setVisibility(View.GONE);
@@ -207,17 +197,19 @@ public class WxMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 viewHolder2.im_pic.setVisibility(View.GONE);
                 viewHolder2.ll_voice.setVisibility(View.GONE);
             }
-        } else if (contentType == 10000 || contentType == 570425393) {
+        }
+        else if (contentType == 10000 || contentType == 570425393) {
             titleViewHolder = (TitleViewHolder) viewHolder;
             titleViewHolder.tv_system.setText(Html.fromHtml(wxChatMsgInfo.getContent()));
             titleViewHolder.tv_system.setVisibility(View.VISIBLE);
             titleViewHolder.tv_time.setVisibility(View.GONE);
-        } else {
-            titleViewHolder = (TitleViewHolder) viewHolder;
-            titleViewHolder.tv_time.setText(wxChatMsgInfo.getContent());
-            titleViewHolder.tv_system.setVisibility(View.GONE);
-            titleViewHolder.tv_time.setVisibility(View.VISIBLE);
         }
+//        else {
+//            titleViewHolder = (TitleViewHolder) viewHolder;
+//            titleViewHolder.tv_time.setText(wxChatMsgInfo.getContent());
+//            titleViewHolder.tv_system.setVisibility(View.GONE);
+//            titleViewHolder.tv_time.setVisibility(View.VISIBLE);
+//        }
     }
 
     public int getItemViewType(int i) {

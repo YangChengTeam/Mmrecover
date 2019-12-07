@@ -14,6 +14,8 @@ import com.yc.mmrecover.model.bean.WxContactInfo;
 import com.yc.mmrecover.utils.MessageUtils;
 import com.yc.mmrecover.view.adapters.WxContactAdapter;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -97,12 +99,25 @@ public class MsgContactChatFragment extends BaseFragment {
 
 
             List<WxContactInfo> wxContactInfos = MessageUtils.getWxContactInfos();
+            if (wxContactInfos != null)
+                Collections.sort(wxContactInfos, new C08783());
+
             VUiKit.post(() -> {
                 this.mRlMask.setVisibility(View.GONE);
 
                 wxContactAdapter.setNewData(wxContactInfos);
             });
         });
+    }
+
+    /* renamed from: com.recover.wechat.app.view.MsgContactChatFragment$3 */
+    class C08783 implements Comparator<WxContactInfo> {
+        C08783() {
+        }
+
+        public int compare(WxContactInfo wxContactBean, WxContactInfo wxContactBean2) {
+            return wxContactBean2.getLastTime() - wxContactBean.getLastTime();
+        }
     }
 
 

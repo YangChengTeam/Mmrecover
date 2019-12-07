@@ -32,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -215,6 +216,107 @@ public class Func {
         return stringBuilder.toString();
     }
 
+    public static void copyFile(String str, String str2) {
+
+        FileChannel fileChannel;
+        Throwable th;
+        File file = new File(str);
+        File file2 = new File(str2);
+        FileChannel fileChannel2 = null;
+        FileChannel channel;
+        try {
+            channel = new FileInputStream(file).getChannel();
+            try {
+                FileChannel channel2 = new FileOutputStream(file2).getChannel();
+                try {
+                    channel2.transferFrom(channel, 0, channel.size());
+                    if (channel != null) {
+                        try {
+                            channel.close();
+                        } catch (IOException e2) {
+                            e2.printStackTrace();
+                            return;
+                        }
+                    }
+                    if (channel2 != null) {
+                        channel2.close();
+                    }
+                } catch (IOException e3) {
+                    fileChannel = channel;
+                    channel = channel2;
+
+                    fileChannel2 = fileChannel;
+                    try {
+
+                        if (fileChannel2 != null) {
+                        }
+                        if (channel != null) {
+                        }
+                    } catch (Throwable th2) {
+                        th = th2;
+                        fileChannel = channel;
+                        channel = fileChannel2;
+                        fileChannel2 = fileChannel;
+                        if (channel != null) {
+                        }
+                        if (fileChannel2 != null) {
+                        }
+                        throw th;
+                    }
+                } catch (Throwable th3) {
+                    Throwable th4 = th3;
+                    fileChannel2 = channel2;
+                    th = th4;
+                    if (channel != null) {
+                    }
+                    if (fileChannel2 != null) {
+                    }
+                    throw th;
+                }
+            } catch (IOException e4) {
+
+                fileChannel = channel;
+                channel = null;
+                fileChannel2 = fileChannel;
+
+                if (fileChannel2 != null) {
+                    fileChannel2.close();
+                }
+                if (channel != null) {
+                    channel.close();
+                }
+            } catch (Throwable th5) {
+                th = th5;
+                if (channel != null) {
+                    try {
+                        channel.close();
+                    } catch (IOException e32) {
+                        e32.printStackTrace();
+                        throw th;
+                    }
+                }
+                if (fileChannel2 != null) {
+                    fileChannel2.close();
+                }
+                throw th;
+            }
+        } catch (IOException e5) {
+
+            channel = null;
+
+            if (fileChannel2 != null) {
+            }
+            if (channel != null) {
+            }
+        } catch (Throwable th6) {
+            th = th6;
+            channel = null;
+            if (channel != null) {
+            }
+            if (fileChannel2 != null) {
+            }
+        }
+    }
 
 
 }

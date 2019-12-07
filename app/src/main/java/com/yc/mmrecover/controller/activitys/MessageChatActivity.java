@@ -2,20 +2,22 @@ package com.yc.mmrecover.controller.activitys;
 
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.kk.utils.LogUtil;
 import com.kk.utils.TaskUtil;
 import com.kk.utils.VUiKit;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.constant.Config;
-import com.yc.mmrecover.model.bean.WxAccountInfo;
+import com.yc.mmrecover.model.bean.GlobalData;
+import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.model.bean.WxChatMsgInfo;
 import com.yc.mmrecover.utils.MessageUtils;
+import com.yc.mmrecover.utils.PlayVoiceTask;
 import com.yc.mmrecover.utils.SpUtils;
 import com.yc.mmrecover.view.adapters.WxMsgAdapterNew;
 
@@ -45,6 +47,10 @@ public class MessageChatActivity extends BaseActivity {
     private WxMsgAdapterNew mAdapter;
     private boolean mIsloading;
 
+    private Handler mTimeHandler = new Handler();
+    private Runnable runnableDelay = new C08421();
+
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_message_chat;
@@ -52,6 +58,8 @@ public class MessageChatActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
+
+
         Intent intent = getIntent();
         if (intent != null) {
             this.mFriendUid = intent.getStringExtra("uid");
@@ -60,8 +68,8 @@ public class MessageChatActivity extends BaseActivity {
             this.mUserName = intent.getStringExtra("name");
         }
 
-
-        Log.e("TAG", "initViews: " + mFriendUid);
+        initTitle(this.mUserName);
+//        Log.e("TAG", "initViews: " + mFriendUid);
         initRecyclerView();
         scan();
 
@@ -78,7 +86,81 @@ public class MessageChatActivity extends BaseActivity {
 //        textView.setBackgroundDrawable(new BackgroundShape(this, 3, C0810R.color.blue));
 //        textView.setOnClickListener(new C08443());
 
+//        initListener();
+    }
 
+    private void initListener() {
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            WxChatMsgInfo wxChatMsgInfo = mAdapter.getItem(position);
+            if (null != wxChatMsgInfo) {
+                if (wxChatMsgInfo.getType() == WxChatMsgInfo.TYPE_ME || wxChatMsgInfo.getType() == WxChatMsgInfo.TYPE_FRIEND) {
+                    if (view.getId() == R.id.im_head) {
+                        Intent intent = new Intent(MessageChatActivity.this, MessageDetailActivity.class);
+                        intent.putExtra("uid", wxChatMsgInfo.getUid());
+                        intent.putExtra("is_from_chat", true);
+                        startActivity(intent);
+                    }
+                    int contentType = wxChatMsgInfo.getContentType();
+                    if (contentType == 43) {
+                        if (view.getId() == R.id.im_pic) {
+                            Intent intent = new Intent(MessageChatActivity.this, DetailVideoActivity.class);
+                            intent.putExtra("sta_type", 2008);
+                            MediaInfo mediaBean = new MediaInfo();
+                            mediaBean.setPath(wxChatMsgInfo.getVideoPath());
+                            intent.putExtra("image_info", mediaBean);
+                            startActivity(intent);
+                        }
+
+                    } else if (contentType == 3) {
+//                        if (view.getId() == R.id.im_pic) {
+//
+//                            Intent intent = new Intent(MessageChatActivity.this, MessageDetailActivity.class);
+//                            String imgPath1 = wxChatMsgInfo.getImgPath();
+//                            StringBuilder stringBuilder = new StringBuilder();
+//                            stringBuilder.append("absolutePath = ");
+//                            stringBuilder.append(imgPath1);
+//                            Log.d("TAG", stringBuilder.toString());
+//                            File file = new File(imgPath1);
+//                            long length = file.length();
+//                            StringBuilder stringBuilder2 = new StringBuilder();
+//                            stringBuilder2.append("length = ");
+//                            stringBuilder2.append(length);
+//                            Log.d("TAG", stringBuilder2.toString());
+//                            BitmapFactory.Options options = new BitmapFactory.Options();
+//                            options.inJustDecodeBounds = true;
+//                            BitmapFactory.decodeFile(imgPath1, options);
+//                            MediaInfo mediaBean = new MediaInfo();
+//                            mediaBean.setLastModifyTime((int) (file.lastModified() / 1000));
+//                            mediaBean.setPath(wxChatMsgInfo.getVideoPath());
+//                            mediaBean.setSize(length);
+//                            mediaBean.setStrSize(Func.getSizeString(length));
+//                            StringBuilder stringBuilder3 = new StringBuilder();
+//                            stringBuilder3.append("getStrSize = ");
+//                            stringBuilder3.append(mediaBean.getStrSize());
+//                            Log.d("TAG", stringBuilder3.toString());
+//                            mediaBean.setWidth(options.outWidth);
+//                            mediaBean.setHeight(options.outHeight);
+//                            intent.putExtra("image_info", mediaBean);
+//                            startActivity(intent);
+//                        }
+                    } else if (contentType == 34) {
+                        if (view.getId() == R.id.ll_voice) {
+
+
+                            if (GlobalData.vipType == 1) {
+                                Intent intent = new Intent(MessageChatActivity.this, PayActivity.class);
+                                intent.putExtra("sta_type", 2007);
+                                startActivity(intent);
+                                return;
+                            }
+                            new PlayVoiceTask(null).execute(wxChatMsgInfo.getVoicePath());
+                        }
+                    }
+
+
+                }
+            }
+        });
     }
 
     private void scan() {
@@ -90,22 +172,41 @@ public class MessageChatActivity extends BaseActivity {
 
             List<WxChatMsgInfo> wxChatMsgInfos = MessageUtils.getWxMsgInfos(this.mFriendUid);
 
+//            List<WxChatMsgInfo>   wxChatMsgInfos = MessageUtils.fetchMessageInfo(this.mParent, this.mFriendUid, this.mUid, true);
+
             if (wxChatMsgInfos != null && wxChatMsgInfos.size() > 0) {
                 for (WxChatMsgInfo wxChatMsgInfo : wxChatMsgInfos) {
                     if (wxChatMsgInfo.isSend()) {
                         wxChatMsgInfo.setType(WxChatMsgInfo.TYPE_ME);
-                        wxChatMsgInfo.setHeadPath(SpUtils.getInstance().getString(Config.HEAD_PATH));
+//                        wxChatMsgInfo.setHeadPath(SpUtils.getInstance().getString(Config.HEAD_PATH));
                     } else {
                         wxChatMsgInfo.setType(WxChatMsgInfo.TYPE_FRIEND);
                     }
                 }
             }
-//            Log.e("TAG", "wxChatMsgInfos" + JSON.toJSONString(wxChatMsgInfos));
+            Log.e("TAG", "wxChatMsgInfos" + JSON.toJSONString(wxChatMsgInfos));
             VUiKit.post(() -> {
+                this.mIsloading = false;
                 this.mRlMask.setVisibility(View.GONE);
+                if (wxChatMsgInfos == null || wxChatMsgInfos.size() == 0) {
+                    tvEmpty.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+
                 mAdapter.setNewData(wxChatMsgInfos);
+                recyclerView.scrollToPosition(this.mAdapter.getItemCount() - 1);
+                this.mTimeHandler.postDelayed(this.runnableDelay, 500);
+
             });
         });
+    }
+
+    class C08421 implements Runnable {
+
+        public void run() {
+            recyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
+        }
     }
 
 

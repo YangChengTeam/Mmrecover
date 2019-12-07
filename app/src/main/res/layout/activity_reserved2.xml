@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="fitXY"
+        android:src="@mipmap/backup_bk" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <View
+            android:id="@id/v_status_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="25.0dip"
+            android:background="@color/blue" />
+
+        <ImageView
+            android:id="@id/im_back"
+            android:layout_width="57.0dip"
+            android:layout_height="57.0dip"
+            android:padding="19.0dip"
+            android:scaleType="fitXY"
+            android:src="@mipmap/img_back" />
+
+        <TextView
+            android:id="@id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5.0dip"
+            android:text="无法备份微信数据?"
+            android:textColor="@color/white"
+            android:textSize="32.0sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="2.0dip"
+            android:text="采用以下措施"
+            android:textColor="@color/white"
+            android:textSize="23.0sp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24.0dip"
+            android:layout_marginTop="48.0dip"
+            android:layout_marginRight="24.0dip"
+            android:background="@mipmap/backup_2"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@id/ll_step1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25.0dip"
+                android:layout_marginTop="33.0dip"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="13.0dip"
+                        android:layout_height="13.0dip"
+                        android:layout_gravity="center_vertical"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/backup_dot" />
+
+                    <TextView
+                        android:id="@id/tv_step1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="20.0dip"
+                        android:text="第一步"
+                        android:textColor="@color/blue2"
+                        android:textSize="16.0dip" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="1.0dip"
+                        android:layout_height="93.0dip"
+                        android:layout_marginLeft="6.0dip"
+                        android:layout_marginTop="2.0dip"
+                        android:background="@color/blue2" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="32.0dip"
+                        android:layout_marginTop="16.0dip"
+                        android:text="点击按钮卸载系统自带备份软件"
+                        android:textColor="@color/gray_word"
+                        android:textSize="13.0sp" />
+
+                    <TextView
+                        android:id="@id/tv_uninstall"
+                        android:layout_width="98.0dip"
+                        android:layout_height="26.0dip"
+                        android:layout_marginLeft="32.0dip"
+                        android:layout_marginTop="46.0dip"
+                        android:background="@color/yellow_btn"
+                        android:gravity="center"
+                        android:text="卸载备份软件"
+                        android:textColor="@color/white"
+                        android:textSize="13.0sp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@id/ll_step2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25.0dip"
+                android:layout_marginTop="3.0dip"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="13.0dip"
+                        android:layout_height="13.0dip"
+                        android:layout_gravity="center_vertical"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/backup_dot" />
+
+                    <TextView
+                        android:id="@id/tv_step2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="20.0dip"
+                        android:text="第二步"
+                        android:textColor="@color/blue2"
+                        android:textSize="16.0dip" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="1.0dip"
+                        android:layout_height="113.0dip"
+                        android:layout_marginLeft="6.0dip"
+                        android:layout_marginTop="2.0dip"
+                        android:background="@color/blue2" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="32.0dip"
+                        android:layout_marginTop="16.0dip"
+                        android:layout_marginRight="32.0dip"
+                        android:text="安装华为官方旧版备份软件"
+                        android:textColor="@color/gray_word"
+                        android:textSize="13.0sp" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="32.0dip"
+                        android:layout_marginTop="36.0dip"
+                        android:layout_marginRight="32.0dip"
+                        android:text="（安装完成后请勿更新！！！）"
+                        android:textColor="@color/red_word"
+                        android:textSize="13.0sp" />
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="32.0dip"
+                        android:layout_marginTop="69.0dip"
+                        android:layout_marginRight="35.0dip">
+
+                        <ProgressBar
+                            android:id="@id/progressBar"
+                            android:layout_width="fill_parent"
+                            android:layout_height="10.0dip"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="30.0dip"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@id/tv_percent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="30%"
+                            android:textColor="@color/gray_word"
+                            android:textSize="13.0sp"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@id/tv_install"
+                        android:layout_width="128.0dip"
+                        android:layout_height="26.0dip"
+                        android:layout_marginLeft="32.0dip"
+                        android:layout_marginTop="66.0dip"
+                        android:background="@color/yellow_btn"
+                        android:gravity="center"
+                        android:text="安装旧版备份软件"
+                        android:textColor="@color/white"
+                        android:textSize="13.0sp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@id/ll_step3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25.0dip"
+                android:layout_marginTop="3.0dip"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="13.0dip"
+                        android:layout_height="13.0dip"
+                        android:layout_gravity="center_vertical"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/backup_dot" />
+
+                    <TextView
+                        android:id="@id/tv_step3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="20.0dip"
+                        android:text="第三步"
+                        android:textColor="@color/blue2"
+                        android:textSize="16.0dip" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32.0dip"
+                    android:layout_marginTop="16.0dip"
+                    android:text="安装完成后，关闭该页，重新开始备份"
+                    android:textColor="@color/gray_word"
+                    android:textSize="13.0sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

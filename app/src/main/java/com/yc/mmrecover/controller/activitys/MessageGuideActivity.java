@@ -22,6 +22,8 @@ public class MessageGuideActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
+        initTitle("恢复微信消息");
+
         RxView.clicks(nextBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
             startActivity(new Intent(MessageGuideActivity.this, MessageGuide2Activity.class));
         });
