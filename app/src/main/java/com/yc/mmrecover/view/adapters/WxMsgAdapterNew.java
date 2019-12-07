@@ -2,8 +2,10 @@ package com.yc.mmrecover.view.adapters;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -42,18 +44,20 @@ public class WxMsgAdapterNew extends BaseMultiItemQuickAdapter<WxChatMsgInfo, Ba
     protected void convert(BaseViewHolder helper, WxChatMsgInfo item) {
         if (item != null) {
             switch (item.getType()) {
+
+
                 case WxChatMsgInfo.TYPE_ME:
                 case WxChatMsgInfo.TYPE_FRIEND:
                     helper.setText(R.id.tv_msg, item.getContent()).addOnClickListener(R.id.im_head);
-                    Glide.with(mContext).asBitmap().load(item.getHeadPath()).circleCrop().into((ImageView) helper.getView(R.id.im_head));
+                    Glide.with(mContext).asBitmap().load(item.getHeadPath()).error(R.mipmap.user_head).circleCrop().into((ImageView) helper.getView(R.id.im_head));
 
 
-                    helper.getView(R.id.im_head).setOnClickListener(view -> {
-                        Intent intent = new Intent(mContext, DetailUserActivity.class);
-                        intent.putExtra("uid", item.getUid());
-                        intent.putExtra("is_from_chat", true);
-                        mContext.startActivity(intent);
-                    });
+//                    helper.getView(R.id.im_head).setOnClickListener(view -> {
+//                        Intent intent = new Intent(mContext, DetailUserActivity.class);
+//                        intent.putExtra("uid", item.getUid());
+//                        intent.putExtra("is_from_chat", true);
+//                        mContext.startActivity(intent);
+//                    });
                     int contentType = item.getContentType();
 
                     if (contentType == 3 || contentType == 43 || contentType == 47) {
@@ -76,38 +80,38 @@ public class WxMsgAdapterNew extends BaseMultiItemQuickAdapter<WxChatMsgInfo, Ba
                             helper.setGone(R.id.im_video_mask, false)
                                     .addOnClickListener(R.id.im_pic);
                             Glide.with(mContext).asBitmap().load(item.getImgPath()).into((ImageView) helper.getView(R.id.im_pic));
-                            helper.getView(R.id.im_pic)
-//                            String finalImgPath = imgPath;
-                                    .setOnClickListener(view -> {
-                                        Intent intent = new Intent(mContext, DetailImageActivity.class);
-                                        String imgPath1 = item.getImgPath();
-                                        StringBuilder stringBuilder = new StringBuilder();
-                                        stringBuilder.append("absolutePath = ");
-                                        stringBuilder.append(imgPath1);
-                                        Log.d("TAG", stringBuilder.toString());
-                                        File file = new File(imgPath1);
-                                        long length = file.length();
-                                        StringBuilder stringBuilder2 = new StringBuilder();
-                                        stringBuilder2.append("length = ");
-                                        stringBuilder2.append(length);
-                                        Log.d("TAG", stringBuilder2.toString());
-                                        BitmapFactory.Options options = new BitmapFactory.Options();
-                                        options.inJustDecodeBounds = true;
-                                        BitmapFactory.decodeFile(imgPath1, options);
-                                        MediaInfo mediaBean = new MediaInfo();
-                                        mediaBean.setLastModifyTime((int) (file.lastModified() / 1000));
-                                        mediaBean.setPath(item.getImgPath());
-                                        mediaBean.setSize(length);
-                                        mediaBean.setStrSize(Func.getSizeString(length));
-                                        StringBuilder stringBuilder3 = new StringBuilder();
-                                        stringBuilder3.append("getStrSize = ");
-                                        stringBuilder3.append(mediaBean.getStrSize());
-                                        Log.d("TAG", stringBuilder3.toString());
-                                        mediaBean.setWidth(options.outWidth);
-                                        mediaBean.setHeight(options.outHeight);
-                                        intent.putExtra("image_info", mediaBean);
-                                        mContext.startActivity(intent);
-                                    });
+//                            helper.getView(R.id.im_pic)
+////                            String finalImgPath = imgPath;
+//                                    .setOnClickListener(view -> {
+//                                        Intent intent = new Intent(mContext, DetailImageActivity.class);
+//                                        String imgPath1 = item.getImgPath();
+//                                        StringBuilder stringBuilder = new StringBuilder();
+//                                        stringBuilder.append("absolutePath = ");
+//                                        stringBuilder.append(imgPath1);
+//                                        Log.d("TAG", stringBuilder.toString());
+//                                        File file = new File(imgPath1);
+//                                        long length = file.length();
+//                                        StringBuilder stringBuilder2 = new StringBuilder();
+//                                        stringBuilder2.append("length = ");
+//                                        stringBuilder2.append(length);
+//                                        Log.d("TAG", stringBuilder2.toString());
+//                                        BitmapFactory.Options options = new BitmapFactory.Options();
+//                                        options.inJustDecodeBounds = true;
+//                                        BitmapFactory.decodeFile(imgPath1, options);
+//                                        MediaInfo mediaBean = new MediaInfo();
+//                                        mediaBean.setLastModifyTime((int) (file.lastModified() / 1000));
+//                                        mediaBean.setPath(item.getImgPath());
+//                                        mediaBean.setSize(length);
+//                                        mediaBean.setStrSize(Func.getSizeString(length));
+//                                        StringBuilder stringBuilder3 = new StringBuilder();
+//                                        stringBuilder3.append("getStrSize = ");
+//                                        stringBuilder3.append(mediaBean.getStrSize());
+//                                        Log.d("TAG", stringBuilder3.toString());
+//                                        mediaBean.setWidth(options.outWidth);
+//                                        mediaBean.setHeight(options.outHeight);
+//                                        intent.putExtra("image_info", mediaBean);
+//                                        mContext.startActivity(intent);
+//                                    });
                         } else {
                             helper.setGone(R.id.im_video_mask, false);
                         }
@@ -153,9 +157,18 @@ public class WxMsgAdapterNew extends BaseMultiItemQuickAdapter<WxChatMsgInfo, Ba
                     break;
 
                 case WxChatMsgInfo.TYPE_TITLE:
-//                    helper.setText(R.id.tv_system, Html.fromHtml(item.getContent()))
-//                            .setGone(R.id.tv_system, true)
-//                            .setGone(R.id.tv_time, false);
+                    contentType = item.getContentType();
+                    if (contentType == 10000 || contentType == 570425393) {
+                        helper.setText(R.id.tv_system, Html.fromHtml(item.getContent()))
+                                .setGone(R.id.tv_system, true)
+                                .setGone(R.id.tv_time, false);
+                    } else {
+
+                        helper.setText(R.id.tv_time, Html.fromHtml(item.getContent()))
+                                .setGone(R.id.tv_system, false)
+                                .setGone(R.id.tv_time, true);
+                    }
+
 
                     break;
             }

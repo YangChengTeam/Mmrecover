@@ -14,7 +14,7 @@ public class WxChatMsgInfo implements MultiItemEntity {
     private String headPath;
     private String imgPath;
     private String name;
-    private int time;
+    private long time;
     private String tmpContent;
     private int type;
     private String uid;
@@ -82,11 +82,11 @@ public class WxChatMsgInfo implements MultiItemEntity {
         this.type = i;
     }
 
-    public int getTime() {
+    public long getTime() {
         return this.time;
     }
 
-    public void setTime(int i) {
+    public void setTime(long i) {
         this.time = i;
     }
 
@@ -133,5 +133,24 @@ public class WxChatMsgInfo implements MultiItemEntity {
     @Override
     public int getItemType() {
         return type;
+    }
+
+    @Override
+    public String toString() {
+        return "WxChatMsgInfo{" +
+                "content='" + content + '\'' +
+                ", contentType=" + contentType +
+                ", headPath='" + headPath + '\'' +
+                ", imgPath='" + imgPath + '\'' +
+                ", name='" + name + '\'' +
+                ", time=" + time +
+                ", tmpContent='" + tmpContent + '\'' +
+                ", type=" + type +
+                ", uid='" + uid + '\'' +
+                ", videoPath='" + videoPath + '\'' +
+                ", voicePath='" + voicePath + '\'' +
+                ", voiceSec=" + voiceSec +
+                ", isSend=" + isSend +
+                '}';
     }
 }

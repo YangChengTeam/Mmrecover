@@ -30,6 +30,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -184,6 +185,9 @@ public class MessageUtils {
             } else if (GlobalData.brand.equals("oppo")) {
                 String source = getExternalStorageDir() + "/backup/App/com.tencent.mm.tar";
                 unpackZip(source, getAppStorageDir());
+            } else if (GlobalData.brand.equals("huawei") || GlobalData.brand.equals("honor")) {
+                unPackHuaweiBackup();
+
             }
         }
         SQLiteDatabase sqLiteDatabase = null;
@@ -297,13 +301,18 @@ public class MessageUtils {
                 LogUtil.msg("SQLiteDatabase is null");
                 return null;
             }
-            Cursor cursor = sqLiteDatabase.rawQuery("select msgSvrId,type,talker,createTime,content,imgPath,isSend,msgSeq from message where talker = ?", new String[]{uid});
+
             String userId = SpUtils.getInstance().getString(Config.USER_ID);
+
+            Cursor cursor = sqLiteDatabase.rawQuery("select msgSvrId,type,talker,createTime,content,imgPath,isSend,msgSeq from message where talker = ? order by createTime asc", new String[]{uid});
+            long startTime = 0;
+
             while (cursor.moveToNext()) {
                 WxChatMsgInfo wxChatMsgInfo = new WxChatMsgInfo();
                 int type = cursor.getInt(cursor.getColumnIndex("type"));
                 String content = getChangeContent(type, cursor.getString(cursor.getColumnIndex("content")));
                 String imgPath = cursor.getString(cursor.getColumnIndex("imgPath"));
+                long createTime = cursor.getLong(cursor.getColumnIndex("createTime"));
                 switch (type) {
                     case 3:
                         wxChatMsgInfo.setImgPath(getChatImagePath(dbFile.getParentFile().getName(), imgPath));
@@ -320,11 +329,13 @@ public class MessageUtils {
                     default:
                         break;
                 }
+
                 int isSend = cursor.getInt(cursor.getColumnIndex("isSend"));
                 wxChatMsgInfo.setSend(isSend == 1);
+                wxChatMsgInfo.setType(isSend == 1 ? 0 : 1);
                 wxChatMsgInfo.setContent(content);
                 wxChatMsgInfo.setContentType(type);
-                wxChatMsgInfo.setTime(cursor.getInt(cursor.getColumnIndex("createTime")));
+                wxChatMsgInfo.setTime(createTime);
                 if (isSend == 1) {
                     wxChatMsgInfo.setUid(userId);
                     wxChatMsgInfo.setHeadPath(SpUtils.getInstance().getString(Config.HEAD_PATH));
@@ -332,6 +343,15 @@ public class MessageUtils {
                     wxChatMsgInfo.setUid(cursor.getString(cursor.getColumnIndex("talker")));
                     wxChatMsgInfo.setHeadPath(getUserHeadPath(cursor.getString(cursor.getColumnIndex("talker"))));
                 }
+
+                if (Math.abs(createTime - startTime) > 360000) {
+                    WxChatMsgInfo wxChatMsgTimeInfo = new WxChatMsgInfo();
+                    wxChatMsgTimeInfo.setType(2);
+                    wxChatMsgTimeInfo.setContent(Func.formatData("yyyy/MM/dd HH:mm", createTime / 1000));
+                    wxContactInfos.add(wxChatMsgTimeInfo);
+                }
+                startTime = createTime;
+
 
                 wxContactInfos.add(wxChatMsgInfo);
             }
@@ -575,11 +595,23 @@ public class MessageUtils {
                 }
             }
         } else if (GlobalData.brand.equals("xiaomi")) {
-            backupIntent.setComponent(new android.content.ComponentName("com.miui.backup", "com.miui.backup.BackupActivity"));
-            context.startActivity(backupIntent);
+            try {
+                backupIntent.setComponent(new android.content.ComponentName("com.miui.backup", "com.miui.backup.BackupActivity"));
+                context.startActivity(backupIntent);
+            } catch (Exception e) {
+
+            }
         } else if (GlobalData.brand.equals("huawei") || GlobalData.brand.equals("honor")) {
-            backupIntent.setComponent(new android.content.ComponentName("com.huawei.KoBackup", "com.huawei.KoBackup.InitializeActivity"));
-            context.startActivity(backupIntent);
+            try {
+                backupIntent.setComponent(new android.content.ComponentName("com.huawei.KoBackup", "com.huawei.KoBackup.InitializeActivity"));
+                context.startActivity(backupIntent);
+            } catch (Exception ae) {
+                try {
+                    context.startActivity(new Intent(Settings.ACTION_PRIVACY_SETTINGS));
+                } catch (Exception e) {
+
+                }
+            }
         } else if (GlobalData.brand.equals("meizu")) {
             if (Build.MODEL.toLowerCase().contains("m1 metal")) {
                 context.startActivity(new Intent("android.settings.INTERNAL_STORAGE_SETTINGS"));
@@ -590,7 +622,11 @@ public class MessageUtils {
                 intent.setComponent(new android.content.ComponentName("com.meizu.backup", "com.meizu.backup.ui.MainBackupAct"));
                 context.startActivity(intent);
             } catch (ActivityNotFoundException unused) {
-                context.startActivity(new Intent("android.settings.INTERNAL_STORAGE_SETTINGS"));
+                try {
+                    context.startActivity(new Intent(Settings.ACTION_PRIVACY_SETTINGS));
+                } catch (Exception e) {
+
+                }
             }
         } else if (GlobalData.brand.equals("vivo")) {
             MessageGuide2Activity.startActivityForPackage(context, "com.bbk.cloud", "com.bbk.cloud.activities.BBKCloudHomeScreen");
@@ -602,6 +638,62 @@ public class MessageUtils {
             }
         }
     }
+
+    private static File huaWeiBackupFile = null;
+
+    public static void unPackHuaweiBackup() throws IOException {
+        String source = getExternalStorageDir() + "/Huawei/Backup";
+
+        unPackHuaweiBackup(source);
+        if (huaWeiBackupFile != null) {
+            unPackHuaweiBackup2(huaWeiBackupFile.getAbsolutePath());
+        }
+
+    }
+
+    public static void unPackHuaweiBackup(String source) throws IOException {
+        File sourceFile = new File(source);
+        if (!sourceFile.exists()) {
+            return;
+        }
+        File[] files = sourceFile.listFiles();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
+                    unPackHuaweiBackup(files[i].getAbsolutePath());
+                } else {
+                    if (files[i].getAbsolutePath().endsWith("com.tencent.mm.db")) {
+                        huaWeiBackupFile = files[i];
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private static void unPackHuaweiBackup2(String str) throws IOException {
+        File file = new File(str);
+        if (file.exists()) {
+            SQLiteDatabase openDatabase = SQLiteDatabase.openDatabase(str, "", null, 16);
+            openDatabase.execSQL("drop table if exists need");
+            openDatabase.execSQL("create table if not exists need as select file_index,file_path from apk_file_info where file_path like '%user_%' or file_path like '%EnMicroMsg%' or file_path like '%systemInfo.cfg' or file_path like '%CompatibleInfo.cfg' or file_path like '%.tem' or file_path like '%IndexMicroMsg.db' or file_path like '%EnMicroMsg%' or file_path like '%FTS5IndexMicroMsg%' or file_path like '%app_brand_global_sp.xml'");
+            Cursor rawQuery = openDatabase.rawQuery("select n.file_path,d.* from apk_file_data d join need n on n.file_index=d.file_index order by d.file_index desc,d.data_index asc", null);
+            while (rawQuery.moveToNext()) {
+                String path = getAppStorageDir() + rawQuery.getString(rawQuery.getColumnIndex("file_path"));
+                byte[] blob = rawQuery.getBlob(rawQuery.getColumnIndex("file_data"));
+                File dataFile = new File(path);
+                if (!dataFile.getParentFile().exists()) {
+                    dataFile.getParentFile().mkdirs();
+                }
+                FileOutputStream fileOutputStream = new FileOutputStream(dataFile, true);
+                fileOutputStream.write(blob);
+                fileOutputStream.close();
+            }
+            rawQuery.close();
+            openDatabase.close();
+        }
+    }
+
 
     private static void changeMiuiBak2AndroidBak() throws IOException {
         String source = getExternalStorageDir() + "/MIUI/backup/AllBackup";
@@ -625,7 +717,7 @@ public class MessageUtils {
             for (int i = 0; i < files.length; i++) {
                 File[] baks = files[i].listFiles();
                 for (File tmpbak : baks) {
-                    if (tmpbak.getAbsolutePath().endsWith(".bak")) {
+                    if (tmpbak.getAbsolutePath().contains("com.tencent.mm") && tmpbak.getAbsolutePath().endsWith(".bak")) {
                         if (bak != null && bak.length() < tmpbak.length()) {
                             bak = tmpbak;
                         }
@@ -643,6 +735,9 @@ public class MessageUtils {
             String password = System.getenv("ABE_PASSWD");
             AndroidBackup.extractAsTar(dest, zip, password, false);
             unpackZip(zip, dir);
+
+            destFile.delete();
+            new File(zip).delete();
         }
     }
 
@@ -689,255 +784,6 @@ public class MessageUtils {
             }
         }
         return null;
-    }
-
-    private static String mLastUid;
-    private static int mMsgIndex;
-
-    public static List<WxChatMsgInfo> fetchMessageInfo(String account_parent, String uid, String self_uid, boolean load_more) {
-        String str4 = account_parent;
-        String str5 = uid;
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("FetchMessageInfo parent = ");
-        stringBuilder.append(str4);
-        stringBuilder.append(",UID = ");
-        stringBuilder.append(str5);
-
-        List<WxChatMsgInfo> arrayList = new ArrayList<>();
-        if (!(TextUtils.equals(mLastUid, str5) && load_more)) {
-            mLastUid = str5;
-            mMsgIndex = 0;
-        }
-        StringBuilder stringBuilder2 = new StringBuilder();
-//        stringBuilder2.append(mCurrentBakId);
-        stringBuilder2.append(str4);
-        stringBuilder2.append(str5);
-        String stringBuilder3 = stringBuilder2.toString();
-        StringBuilder stringBuilder4 = new StringBuilder();
-        stringBuilder4.append("msgKey = ");
-        stringBuilder4.append(stringBuilder3);
-        Log.d("TAG", stringBuilder4.toString());
-        int i = 30;
-        StringBuilder stringBuilder5;
-        if (load_more) {
-            SQLiteDatabase sQLiteDatabase;
-            String str6;
-            SQLiteDatabase GetDatabase = null;
-            try {
-                GetDatabase = getSQLiteDatabase();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String userHeadPath = getUserHeadPath(uid);
-            String userHeadPath2 = getUserHeadPath(self_uid);
-            StringBuilder stringBuilder6 = new StringBuilder();
-            stringBuilder6.append("select msgSvrId,type,talker,createTime,content,imgPath,isSend,msgSeq from message where talker = '");
-            stringBuilder6.append(str5);
-            stringBuilder6.append("'order by createTime asc");
-            Cursor rawQuery = GetDatabase.rawQuery(stringBuilder6.toString(), null);
-            StringBuilder stringBuilder7 = new StringBuilder();
-            stringBuilder7.append("...msg count = ");
-            stringBuilder7.append(rawQuery.getCount());
-            Log.d("TAG", stringBuilder7.toString());
-            stringBuilder7 = new StringBuilder();
-            stringBuilder7.append("...mMsgIndex = ");
-            stringBuilder7.append(mMsgIndex);
-            Log.d("TAG", stringBuilder7.toString());
-            if (rawQuery.getCount() > mMsgIndex + 30) {
-                int count = (rawQuery.getCount() - mMsgIndex) - 30;
-                StringBuilder stringBuilder8 = new StringBuilder();
-                stringBuilder8.append("...moveIndex = ");
-                stringBuilder8.append(count);
-                Log.d("TAG", stringBuilder8.toString());
-                rawQuery.move(count);
-            }
-            int i2 = mMsgIndex;
-            String str7 = userHeadPath;
-            int i3 = 0;
-            long j = 0;
-
-            while (rawQuery.moveToNext()) {
-
-                i3++;
-                if (i3 > i || i3 + i2 > rawQuery.getCount()) {
-                    break;
-                }
-                String str8;
-
-                mMsgIndex++;
-                WxChatMsgInfo chatMsgBean = new WxChatMsgInfo();
-
-
-                String string = rawQuery.getString(rawQuery.getColumnIndex("talker"));
-                int type = rawQuery.getInt(rawQuery.getColumnIndex("type"));
-                int isSend = rawQuery.getInt(rawQuery.getColumnIndex("isSend"));
-                int i6 = i2;
-                String imgPath = rawQuery.getString(rawQuery.getColumnIndex("imgPath"));
-                int i7 = i3;
-                sQLiteDatabase = GetDatabase;
-                long createTime = rawQuery.getLong(rawQuery.getColumnIndex("createTime"));
-                String str9 = str7;
-                str7 = rawQuery.getString(rawQuery.getColumnIndex("msgSeq"));
-                str6 = stringBuilder3;
-                stringBuilder3 = rawQuery.getString(rawQuery.getColumnIndex("content"));
-
-                stringBuilder5 = new StringBuilder();
-                Cursor cursor = rawQuery;
-                stringBuilder5.append("====talker=== ");
-                stringBuilder5.append(string);
-                Log.d("TAG", stringBuilder5.toString());
-                stringBuilder5 = new StringBuilder();
-                stringBuilder5.append("type=== ");
-                stringBuilder5.append(type);
-                Log.d("TAG", stringBuilder5.toString());
-                stringBuilder5 = new StringBuilder();
-                stringBuilder5.append("isSend=== ");
-                stringBuilder5.append(isSend);
-                Log.d("TAG", stringBuilder5.toString());
-                stringBuilder5 = new StringBuilder();
-                stringBuilder5.append("imgPath=== ");
-                stringBuilder5.append(imgPath);
-                Log.d("TAG", stringBuilder5.toString());
-                stringBuilder5 = new StringBuilder();
-                stringBuilder5.append("createTime=== ");
-                stringBuilder5.append(createTime);
-                Log.d("TAG", stringBuilder5.toString());
-                stringBuilder5 = new StringBuilder();
-                stringBuilder5.append("msgSeq=== ");
-                stringBuilder5.append(str7);
-                Log.d("TAG", stringBuilder5.toString());
-                stringBuilder5 = new StringBuilder();
-                stringBuilder5.append("content=== ");
-                stringBuilder5.append(stringBuilder3);
-                Log.d("TAG", stringBuilder5.toString());
-                Log.d("TAG", "=============");
-
-
-                chatMsgBean.setSend(isSend == 1);
-                chatMsgBean.setType(isSend == 1 ? WxChatMsgInfo.TYPE_ME : WxChatMsgInfo.TYPE_FRIEND);
-                chatMsgBean.setContent(getChangeContent(type, stringBuilder3));
-                chatMsgBean.setContentType(type);
-                chatMsgBean.setHeadPath(getUserHeadPath(string));
-                chatMsgBean.setTime((int) createTime);
-
-                if (Math.abs(createTime - j) > 360000) {
-                    chatMsgBean.setType(WxChatMsgInfo.TYPE_TITLE);
-                    str8 = string;
-                    chatMsgBean.setContent(Func.formatData("yyyy/MM/dd HH:mm", createTime / 1000));
-
-                } else {
-                    str8 = string;
-                }
-
-
-                String str10 = str8;
-                if (!str10.contains("@chatroom")) {
-                    chatMsgBean.setName(str10);
-                } else if (!TextUtils.isEmpty(stringBuilder3) && stringBuilder3.indexOf(":") > 0) {
-                    chatMsgBean.setName(stringBuilder3.substring(0, stringBuilder3.indexOf(":")));
-                    String substring = stringBuilder3.substring(0, stringBuilder3.indexOf(":"));
-                    stringBuilder3 = stringBuilder3.substring(stringBuilder3.indexOf(":") + 1).replace("\n", "");
-                    stringBuilder6 = new StringBuilder();
-                    stringBuilder6.append("tmpUid = ");
-                    stringBuilder6.append(substring);
-                    Log.d("TAG", stringBuilder6.toString());
-                    str10 = getUserHeadPath(str4);
-                    StringBuilder stringBuilder9 = new StringBuilder();
-                    stringBuilder9.append("room avatar = ");
-                    stringBuilder9.append(str10);
-                    Log.d("TAG", stringBuilder9.toString());
-                    if (!new File(str10).exists()) {
-//                        str10 = getAvatarById(substring);
-                        stringBuilder5 = new StringBuilder();
-                        stringBuilder5.append("by id avatar = ");
-                        stringBuilder5.append(str10);
-//                        log.e(stringBuilder5.toString());
-                    }
-                    str7 = str10;
-                    chatMsgBean.setContentType(type);
-                    chatMsgBean.setContent(getChangeContent(type, stringBuilder3));
-                    if (type != 10000) {
-                        chatMsgBean.setType(WxChatMsgInfo.TYPE_TITLE);
-//                        arrayList.add(chatMsgBean);
-                    } else if (type == 570425393) {
-                        chatMsgBean.setType(WxChatMsgInfo.TYPE_TITLE);
-//                        arrayList.add(chatMsgBean);
-                    } else {
-                        chatMsgBean.setTime((int) (createTime / 1000));
-                        if (isSend == 1) {
-                            chatMsgBean.setType(WxChatMsgInfo.TYPE_ME);
-                            chatMsgBean.setHeadPath(userHeadPath2);
-                        } else {
-                            chatMsgBean.setType(WxChatMsgInfo.TYPE_FRIEND);
-                            chatMsgBean.setHeadPath(str7);
-                        }
-                        if (type == 47 && stringBuilder3.contains("cdnurl")) {
-                            substring = stringBuilder3.substring(stringBuilder3.indexOf("cdnurl") + 8);
-                            if (substring.indexOf("\"") <= 2) {
-                                substring = substring.substring(substring.indexOf("\"") + 1);
-                            }
-                            substring = substring.substring(0, substring.indexOf("\"")).replace("*#*", ":");
-                            stringBuilder2 = new StringBuilder();
-                            stringBuilder2.append("strUrl = ");
-                            stringBuilder2.append(substring);
-                            Log.d("TAG", stringBuilder2.toString());
-                            chatMsgBean.setImgPath(substring);
-                        } else {
-                            chatMsgBean.setImgPath(getChatImagePath(str4, imgPath));
-                            stringBuilder5 = new StringBuilder();
-                            stringBuilder5.append("getImgPath = ");
-                            stringBuilder5.append(chatMsgBean.getImgPath());
-                            Log.d("TAG", stringBuilder5.toString());
-                        }
-                        if (chatMsgBean.getContentType() == 43) {
-                            stringBuilder5 = new StringBuilder();
-                            stringBuilder5.append(GlobalData.microMsgPath);
-                            stringBuilder5.append(File.separator);
-                            stringBuilder5.append(str4);
-                            stringBuilder5.append("/video/");
-                            stringBuilder5.append(imgPath);
-                            stringBuilder5.append(".mp4");
-                            chatMsgBean.setVideoPath(stringBuilder5.toString());
-                        }
-                        if (chatMsgBean.getContentType() == 34) {
-                            chatMsgBean.setVoicePath(getChatVoicePath(str4, imgPath));
-
-                            chatMsgBean.setVoiceSec(new PlayVoiceTask(null).getVoiceMiSecond(chatMsgBean.getVoicePath()) / 1000);
-                        } else {
-
-                        }
-                        chatMsgBean.setUid(str5);
-
-
-                    }
-
-                    stringBuilder3 = str6;
-
-                }
-                str7 = str9;
-                chatMsgBean.setContentType(type);
-                chatMsgBean.setContent(getChangeContent(type, stringBuilder3));
-                if (type != 10000) {
-                }
-
-                j = createTime;
-                i2 = i6;
-                i3 = i7;
-                GetDatabase = sQLiteDatabase;
-                stringBuilder3 = str6;
-                rawQuery = cursor;
-                i = 30;
-                arrayList.add(chatMsgBean);
-            }
-
-
-            sQLiteDatabase = GetDatabase;
-            rawQuery.close();
-            sQLiteDatabase.close();
-        }
-
-
-        return arrayList;
     }
 
 
