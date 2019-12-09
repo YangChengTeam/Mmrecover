@@ -28,7 +28,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -588,13 +587,10 @@ public class MessageUtils {
                 backupIntent.setComponent(new android.content.ComponentName("com.huawei.KoBackup", "com.huawei.KoBackup.InitializeActivity"));
                 context.startActivity(backupIntent);
             } catch (Exception ae) {
-                try {
-                    context.startActivity(new Intent(Settings.ACTION_PRIVACY_SETTINGS));
-                } catch (Exception e) {
 
-                }
             }
-        } else if (GlobalData.brand.equals("meizu")) {
+        } else if (GlobalData.brand.equals("meizu"))
+        {
             if (Build.MODEL.toLowerCase().contains("m1 metal")) {
                 context.startActivity(new Intent("android.settings.INTERNAL_STORAGE_SETTINGS"));
                 return;
@@ -604,11 +600,7 @@ public class MessageUtils {
                 intent.setComponent(new android.content.ComponentName("com.meizu.backup", "com.meizu.backup.ui.MainBackupAct"));
                 context.startActivity(intent);
             } catch (ActivityNotFoundException unused) {
-                try {
-                    context.startActivity(new Intent(Settings.ACTION_PRIVACY_SETTINGS));
-                } catch (Exception e) {
 
-                }
             }
         } else {
             try {
@@ -623,12 +615,10 @@ public class MessageUtils {
 
     public static void unPackHuaweiBackup() throws IOException {
         String source = getExternalStorageDir() + "/Huawei/Backup";
-
         unPackHuaweiBackup(source);
         if (huaWeiBackupFile != null) {
             unPackHuaweiBackup2(huaWeiBackupFile.getAbsolutePath());
         }
-
     }
 
     public static void unPackHuaweiBackup(String source) throws IOException {
