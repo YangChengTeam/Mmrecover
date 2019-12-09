@@ -14,15 +14,13 @@ import com.jakewharton.rxbinding3.view.RxView;
 import com.kk.utils.TaskUtil;
 import com.kk.utils.VUiKit;
 import com.yc.mmrecover.R;
-import com.yc.mmrecover.constant.Config;
 import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.model.bean.WxChatMsgInfo;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.utils.MessageUtils;
 import com.yc.mmrecover.utils.PlayVoiceTask;
-import com.yc.mmrecover.utils.SpUtils;
-import com.yc.mmrecover.view.adapters.WxMsgAdapterNew;
+import com.yc.mmrecover.view.adapters.WxMsgAdapter;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
 
 import java.io.File;
@@ -50,7 +48,7 @@ public class MessageChatActivity extends BaseActivity {
     private String mParent;
     private String mUid;
     private String mUserName;
-    private WxMsgAdapterNew mAdapter;
+    private WxMsgAdapter mAdapter;
     private boolean mIsloading;
 
     private Handler mTimeHandler = new Handler();
@@ -75,22 +73,21 @@ public class MessageChatActivity extends BaseActivity {
         }
 
         initTitle(this.mUserName);
-//        Log.e("TAG", "initViews: " + mFriendUid);
+
         initRecyclerView();
         scan();
 
     }
 
     private void initRecyclerView() {
-        mAdapter = new WxMsgAdapterNew(null);
+        mAdapter = new WxMsgAdapter(null);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new SpacesItemDecoration(30));
         recyclerView.setAdapter(mAdapter);
         recyclerView.scrollToPosition(this.mAdapter.getItemCount() - 1);
-//        recyclerView.addOnScrollListener(new C08432());
-//        TextView textView = (TextView) findViewById(C0810R.C0809id.tv_buy);
+
         tvBuy.setBackgroundDrawable(new BackgroundShape(this, 3, R.color.blue));
-//        textView.setOnClickListener(new C08443());
+
 
         initListener();
     }

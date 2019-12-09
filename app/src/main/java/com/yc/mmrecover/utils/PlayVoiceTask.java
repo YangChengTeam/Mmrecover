@@ -1,11 +1,15 @@
 package com.yc.mmrecover.utils;
 
+import android.content.Context;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.fulongbin.decoder.Silk;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -53,9 +57,12 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
         void onStop();
     }
 
-    public PlayVoiceTask(PlayCallback playCallback) {
+    public PlayVoiceTask( PlayCallback playCallback) {
         this.mCallback = playCallback;
+//        this.mContex = context;
     }
+
+//
 
     protected String doInBackground(String... strArr) {
         String amr2mp3 = amr2mp3(strArr[0]);
@@ -72,87 +79,27 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
         playVoice(str);
     }
 
-    public static String amr2mp3(String str) {
+    public static String amr2mp3(String voicePath) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("amr2mp3 str = ");
-        stringBuilder.append(str);
+        stringBuilder.append(voicePath);
+//        String replace = voicePath.replace(".amr", ".mp3");
         Log.d("TAG", stringBuilder.toString());
-        String replace = str.replace(".amr", ".mp3");
-        if (new File(replace).exists()) {
+
+        String fileName = voicePath.substring(voicePath.lastIndexOf("/") + 1);
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/数据恢复助手/微信音频解码恢复/";
+        File dir = new File(path);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        path = dir.getAbsolutePath() + "/" + fileName+".mp3";
+        if (new File(path).exists() || Silk.convertSilkToMp3(voicePath, path)) {
             Log.d("TAG", "amr2mp3 file exists");
-            return replace;
+            return path;
         }
-        File file = new File(str);
-        if (file.exists()) {
-            str = str.substring(str.lastIndexOf(File.separator) + 1);
-            StringBuilder stringBuilder2 = new StringBuilder();
-            stringBuilder2.append("str = ");
-            stringBuilder2.append(str);
-            Log.d("TAG", stringBuilder2.toString());
-            stringBuilder2 = new StringBuilder();
-            stringBuilder2.append("f^#$2");
-            stringBuilder2.append(str);
-            stringBuilder2.append("32(&f");
-            String md5 = Func.md5(stringBuilder2.toString());
-            Map<String, String> hashMap = new HashMap<>();
-            hashMap.put("_model", "Amr");
-            hashMap.put("_key", md5);
-            OkHttpClient build = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).writeTimeout(1, TimeUnit.MINUTES).readTimeout(1, TimeUnit.MINUTES).build();
-            MultipartBody.Builder addFormDataPart = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("file", str, RequestBody.create(MediaType.parse("application/octet-stream"), file));
-            for (Map.Entry entry : hashMap.entrySet()) {
-                addFormDataPart.addFormDataPart((String) entry.getKey(), (String) entry.getValue());
-            }
-            try {
-                Response execute = build.newCall(new Request.Builder().url("http://www.fulmz.com/v1/uploadFile").post(addFormDataPart.build()).build()).execute();
-                if (execute.isSuccessful()) {
-                    str = execute.body().string();
-                    StringBuilder stringBuilder3 = new StringBuilder();
-                    stringBuilder3.append("result = ");
-                    stringBuilder3.append(str);
-                    Log.d("TAG", stringBuilder3.toString());
-//                    Gson gson = new Gson();
-                    hashMap = JSON.parseObject(str, Map.class);
-//                    hashMap = (Map) gson.fromJson(str, Map.class);
-                    String str2 = (String) hashMap.get("success");
-                    StringBuilder stringBuilder4 = new StringBuilder();
-                    stringBuilder4.append("msg = ");
-                    stringBuilder4.append(hashMap.get("msg"));
-                    Log.d("TAG", stringBuilder4.toString());
-                    if (str2.equals("1")) {
-//                        ObjResponseVo objResponseVo = (ObjResponseVo) gson.fromJson(str, ObjResponseVo.class);
-                        ObjResponseVo objResponseVo = JSON.parseObject(str, ObjResponseVo.class);
-                        byte[] bArr = new byte[1024];
-                        StringBuilder stringBuilder5 = new StringBuilder();
-                        stringBuilder5.append(mDomain);
-                        stringBuilder5.append(objResponseVo.getObj().toString());
-                        execute = build.newCall(new Request.Builder().url(stringBuilder5.toString()).get().build()).execute();
-                        File file2 = new File(replace);
-                        if (execute.body() == null) {
-                            return null;
-                        }
-                        InputStream byteStream = execute.body().byteStream();
-                        if (!file2.getParentFile().exists()) {
-                            file2.getParentFile().mkdirs();
-                        }
-                        FileOutputStream fileOutputStream = new FileOutputStream(file2);
-                        while (true) {
-                            int read = byteStream.read(bArr);
-                            if (read == -1) {
-                                break;
-                            }
-                            fileOutputStream.write(bArr, 0, read);
-                        }
-                        fileOutputStream.flush();
-                        byteStream.close();
-                        fileOutputStream.close();
-                        Log.d("TAG", "write file end");
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return replace;
+
+        return path;
     }
 
     public int getVoiceMiSecond(String str) {
@@ -195,6 +142,7 @@ public class PlayVoiceTask extends AsyncTask<String, String, String> {
                     this.mMediaPlayer.release();
                 }
                 this.mMediaPlayer.reset();
+//                this.mMediaPlayer.setDataSource(mContex, Uri.fromFile(new File(str)));
                 this.mMediaPlayer.setDataSource(str);
                 this.mMediaPlayer.prepare();
                 if (this.mCallback != null) {

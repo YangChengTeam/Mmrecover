@@ -319,6 +319,9 @@ public class MessageUtils {
                         break;
                     case 34:
                         wxChatMsgInfo.setVoicePath(getChatVoicePath(dbFile.getParentFile().getName(), imgPath));
+
+                        wxChatMsgInfo.setVoiceSec(new PlayVoiceTask(null).getVoiceMiSecond(getChatVoicePath(dbFile.getParentFile().getName(), imgPath)) / 1000);
+
                         break;
                     case 43:
                         wxChatMsgInfo.setVideoPath(getChatVideoPath(dbFile.getParentFile().getName(), imgPath));

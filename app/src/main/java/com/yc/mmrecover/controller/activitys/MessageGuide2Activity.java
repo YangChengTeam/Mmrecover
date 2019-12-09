@@ -18,10 +18,8 @@ import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding3.view.RxView;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.GlobalData;
-import com.yc.mmrecover.utils.Func1;
 import com.yc.mmrecover.utils.MessageUtils;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -30,7 +28,6 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
-import butterknife.OnCheckedChanged;
 import io.reactivex.functions.Consumer;
 import kotlin.Unit;
 
@@ -80,11 +77,15 @@ public class MessageGuide2Activity extends BaseActivity {
         tvQa.getPaint().setAntiAlias(true);
         tvQa.setText(Html.fromHtml("常见问题"));
 
+        tvBackupErr.getPaint().setFlags(8);
+        tvBackupErr.getPaint().setAntiAlias(true);
+        tvBackupErr.setText(Html.fromHtml("无法备份微信数据？"));
+
+
 
         RxView.clicks(backupBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
             MessageUtils.openBackup(MessageGuide2Activity.this);
 
-//            Func1.gotoBackUp(MessageGuide2Activity.this);
         });
         RxView.clicks(tvShowBackup).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
             startActivity(new Intent(MessageGuide2Activity.this, MessageUserActivity.class));

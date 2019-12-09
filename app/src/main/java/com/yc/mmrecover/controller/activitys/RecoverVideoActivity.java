@@ -37,14 +37,12 @@ public class RecoverVideoActivity extends BaseRecoverActivity {
         recyclerView.setLayoutManager(layoutManage);
         recyclerView.setAdapter(this.mAdapter);
 
-        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
-                Intent intent = new Intent(RecoverVideoActivity.this, DetailVoiceActivity.class);
-                intent.putExtra("info",  (MediaInfo) adapter.getData().get(position));
-                RecoverVideoActivity.this.startActivity(intent);
-            }
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
+            Intent intent = new Intent(RecoverVideoActivity.this, DetailVideoActivity.class);
+            intent.putExtra("info",  mediaInfo);
+            RecoverVideoActivity.this.startActivity(intent);
+
         });
     }
 }

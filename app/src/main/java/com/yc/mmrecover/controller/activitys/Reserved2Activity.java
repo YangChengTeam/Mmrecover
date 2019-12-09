@@ -1,7 +1,12 @@
 package com.yc.mmrecover.controller.activitys;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
@@ -18,8 +23,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.kk.utils.LogUtil;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.utils.BeanUtils;
@@ -31,6 +36,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import butterknife.BindView;
 
@@ -67,6 +75,7 @@ public class Reserved2Activity extends BaseActivity {
 
     private Handler mUpdateProgressHandler;
 
+    public static final int REQUEST_INSTALL_PACKAGES = 100;
 
     @Override
     protected int getLayoutId() {
@@ -95,7 +104,7 @@ public class Reserved2Activity extends BaseActivity {
     }
 
     /* renamed from: com.recover.wechat.app.view.Reserved2Activity$4 */
-    class C09264 implements Runnable {
+   private class C09264 implements Runnable {
         C09264() {
         }
 
@@ -137,7 +146,7 @@ public class Reserved2Activity extends BaseActivity {
     }
 
     /* renamed from: com.recover.wechat.app.view.Reserved2Activity$5 */
-    class C09275 extends Handler {
+    private class C09275 extends Handler {
         C09275() {
         }
 
@@ -227,11 +236,12 @@ public class Reserved2Activity extends BaseActivity {
         this.mProgressBar.setProgress(0);
     }
 
-    @SuppressLint("WrongConstant")
+
     private void deleteApp() {
         Intent intent = new Intent("android.intent.action.DELETE");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse("package:com.huawei.KoBackup"));
-        intent.addFlags(SQLiteDatabase.CREATE_IF_NECESSARY);
+//        intent.addFlags(SQLiteDatabase.CREATE_IF_NECESSARY);
         startActivity(intent);
     }
 
@@ -244,21 +254,40 @@ public class Reserved2Activity extends BaseActivity {
         }
     }
 
-    @SuppressLint("WrongConstant")
+    private File downloadFile;
+
     protected void installAPK(File file) {
+
+        this.downloadFile = file;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            boolean canRequestPackageInstalls = getPackageManager().canRequestPackageInstalls();
+            if (canRequestPackageInstalls) {
+                realInstallAPK();
+            } else {
+                //请求安装未知应用来源的权限
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, REQUEST_INSTALL_PACKAGES);
+
+            }
+        }
+
+
+    }
+
+    @SuppressLint("WrongConstant")
+    private void realInstallAPK() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("mSavePath = ");
         stringBuilder.append(this.mSavePath);
-//        C0839log.m1285d(stringBuilder.toString());
-        if (file.exists()) {
+
+        if (downloadFile != null && downloadFile.exists()) {
             this.mProgressBar.setProgress(100);
             this.mTvPercent.setText("100%");
             Intent intent = new Intent("android.intent.action.VIEW");
             if (Build.VERSION.SDK_INT >= 24) {
                 intent.setFlags(1);
-                intent.setDataAndType(FileProvider.getUriForFile(this, "com.recover.ww.app.fileProvider", file), "application/vnd.android.package-archive");
+                intent.setDataAndType(FileProvider.getUriForFile(this, "com.recover.ww.app.fileProvider", downloadFile), "application/vnd.android.package-archive");
             } else {
-                intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                intent.setDataAndType(Uri.fromFile(downloadFile), "application/vnd.android.package-archive");
                 intent.setFlags(SQLiteDatabase.CREATE_IF_NECESSARY);
             }
             startActivity(intent);
@@ -267,4 +296,28 @@ public class Reserved2Activity extends BaseActivity {
         Log.d("TAG", "!apkFile.exists()");
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_INSTALL_PACKAGES) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.REQUEST_INSTALL_PACKAGES) == PackageManager.PERMISSION_GRANTED) {
+                installAPK(downloadFile);
+            } else {
+                showPermissionDenyedDialog();
+            }
+        }
+    }
+
+    private void showPermissionDenyedDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog alertDialog = builder.setTitle("提示")
+                .setMessage("安装apk需要获取安装权限")
+                .setPositiveButton("确定申请", (dialog, which) -> {
+                    ActivityCompat.requestPermissions(Reserved2Activity.this, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, REQUEST_INSTALL_PACKAGES);
+                    dialog.dismiss();
+                })
+                .setNegativeButton("取消", (dialog, which) -> dialog.dismiss()).create();
+        alertDialog.show();
+    }
 }
