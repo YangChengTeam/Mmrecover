@@ -49,7 +49,7 @@ dependencies {
     implementation 'top.zibin:Luban:1.1.8'
     implementation files('libs/abe.jar')
     implementation files('libs/jtar-2.3.jar')
-
+    implementation 'net.lingala.zip4j:zip4j:2.2.7'
     implementation 'net.zetetic:android-database-sqlcipher:4.2.0'
 
 

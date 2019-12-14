@@ -1,7 +1,6 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,12 +16,9 @@ import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.utils.MessageUtils;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import rx.functions.Action1;
 
 /**
  * Created by suns  on 2019/12/5 13:49.
@@ -91,25 +87,27 @@ public class DetailUserActivity extends BaseActivity {
 //            TextView textView2 = (TextView) findViewById(C0810R.C0809id.tv_buy);
             tvBuy.setBackgroundDrawable(new BackgroundShape(this, 3, R.color.blue));
 
+            StringBuilder stringBuilder;
+            if (GlobalData.vipType == 3) {
+                rlBuy.setVisibility(View.GONE);
+
+                stringBuilder = new StringBuilder();
+                stringBuilder.append("微信号:");
+                stringBuilder.append(this.mUserInfo.getWxId());
+                tvUserId.setText(stringBuilder.toString());
+                return;
+            }
+
+            stringBuilder = new StringBuilder();
+            stringBuilder.append("微信号:");
+            stringBuilder.append(Func.makeStringHeadMix(this.mUserInfo.getWxId()));
+            tvUserId.setText(stringBuilder.toString());
+
         }
 
         initListener();
 
-        StringBuilder stringBuilder;
-        if (GlobalData.vipType == 3) {
-            rlBuy.setVisibility(View.GONE);
 
-            stringBuilder = new StringBuilder();
-            stringBuilder.append("微信号:");
-            stringBuilder.append(this.mUserInfo.getWxId());
-            tvUserId.setText(stringBuilder.toString());
-            return;
-        }
-
-        stringBuilder = new StringBuilder();
-        stringBuilder.append("微信号:");
-        stringBuilder.append(Func.makeStringHeadMix(this.mUserInfo.getWxId()));
-        tvUserId.setText(stringBuilder.toString());
 
 
     }

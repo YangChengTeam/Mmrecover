@@ -1,11 +1,9 @@
 package com.yc.mmrecover.utils;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
-import android.provider.Settings;
 import android.text.TextUtils;
 
 import com.kk.utils.LogUtil;
@@ -16,6 +14,8 @@ import com.yc.mmrecover.model.bean.WxAccountInfo;
 import com.yc.mmrecover.model.bean.WxChatMsgInfo;
 import com.yc.mmrecover.model.bean.WxContactInfo;
 
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteDatabaseHook;
@@ -32,11 +32,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class MessageUtils {
+
+
     static {
         GlobalData.brand = Build.BRAND.toLowerCase();
         GlobalData.microMsgPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/tencent/MicroMsg";
@@ -172,6 +177,14 @@ public class MessageUtils {
         return microMsgPath;
     }
 
+    private static boolean isBackup() {
+        File microMsgDir = new File(getMicroMsgDir());
+        if (!microMsgDir.exists()) {
+            return false;
+        }
+        return true;
+    }
+
     private static SQLiteDatabase getSQLiteDatabase() throws IOException {
         File microMsgDir = new File(getMicroMsgDir());
         if (!microMsgDir.exists()) {
@@ -179,10 +192,12 @@ public class MessageUtils {
                 changeMiuiBak2AndroidBak();
             } else if (GlobalData.brand.equals("oppo")) {
                 String source = getExternalStorageDir() + "/backup/App/com.tencent.mm.tar";
-                unpackZip(source, getAppStorageDir());
+                unpackOppoZip(source, getAppStorageDir());
             } else if (GlobalData.brand.equals("huawei") || GlobalData.brand.equals("honor")) {
                 unPackHuaweiBackup();
-
+            } else if (GlobalData.brand.equals("meizu")) {
+                String source = getExternalStorageDir() + "/backup/";
+                unpackMeiZuZip(source, getAppStorageDir());
             }
         }
         SQLiteDatabase sqLiteDatabase = null;
@@ -213,6 +228,7 @@ public class MessageUtils {
                 int id = cursor.getInt(cursor.getColumnIndex("id"));
                 if (id == 2) {
                     wxAccountInfo.setWxAccount(cursor.getString(cursor.getColumnIndex("value")));
+                    SpUtils.getInstance().putString(Config.USER_ID, cursor.getString(cursor.getColumnIndex("value")));
                 } else if (id == 4) {
                     wxAccountInfo.setNickName(cursor.getString(cursor.getColumnIndex("value")));
                 } else if (id == 6) {
@@ -295,20 +311,27 @@ public class MessageUtils {
                 LogUtil.msg("SQLiteDatabase is null");
                 return null;
             }
+
+            String userId = SpUtils.getInstance().getString(Config.USER_ID);
+
             Cursor cursor = sqLiteDatabase.rawQuery("select msgSvrId,type,talker,createTime,content,imgPath,isSend,msgSeq from message where talker = ? order by createTime asc", new String[]{uid});
-            int startTime = 0;
+            long startTime = 0;
+
             while (cursor.moveToNext()) {
                 WxChatMsgInfo wxChatMsgInfo = new WxChatMsgInfo();
                 int type = cursor.getInt(cursor.getColumnIndex("type"));
                 String content = getChangeContent(type, cursor.getString(cursor.getColumnIndex("content")));
                 String imgPath = cursor.getString(cursor.getColumnIndex("imgPath"));
-                int createTime = cursor.getInt(cursor.getColumnIndex("createTime"));
+                long createTime = cursor.getLong(cursor.getColumnIndex("createTime"));
                 switch (type) {
                     case 3:
                         wxChatMsgInfo.setImgPath(getChatImagePath(dbFile.getParentFile().getName(), imgPath));
                         break;
                     case 34:
                         wxChatMsgInfo.setVoicePath(getChatVoicePath(dbFile.getParentFile().getName(), imgPath));
+
+                        wxChatMsgInfo.setVoiceSec(new PlayVoiceTask(null).getVoiceMiSecond(getChatVoicePath(dbFile.getParentFile().getName(), imgPath)) / 1000);
+
                         break;
                     case 43:
                         wxChatMsgInfo.setVideoPath(getChatVideoPath(dbFile.getParentFile().getName(), imgPath));
@@ -319,12 +342,20 @@ public class MessageUtils {
                     default:
                         break;
                 }
-                wxChatMsgInfo.setSend(cursor.getInt(cursor.getColumnIndex("isSend")) == 1 ? true : false);
-                wxChatMsgInfo.setType(cursor.getInt(cursor.getColumnIndex("isSend")) == 1 ? 1 : 0);
+
+                int isSend = cursor.getInt(cursor.getColumnIndex("isSend"));
+                wxChatMsgInfo.setSend(isSend == 1);
+                wxChatMsgInfo.setType(isSend == 1 ? 0 : 1);
                 wxChatMsgInfo.setContent(content);
                 wxChatMsgInfo.setContentType(type);
-                wxChatMsgInfo.setHeadPath(getUserHeadPath(cursor.getString(cursor.getColumnIndex("talker"))));
                 wxChatMsgInfo.setTime(createTime);
+                if (isSend == 1) {
+                    wxChatMsgInfo.setUid(userId);
+                    wxChatMsgInfo.setHeadPath(SpUtils.getInstance().getString(Config.HEAD_PATH));
+                } else {
+                    wxChatMsgInfo.setUid(cursor.getString(cursor.getColumnIndex("talker")));
+                    wxChatMsgInfo.setHeadPath(getUserHeadPath(cursor.getString(cursor.getColumnIndex("talker"))));
+                }
 
                 if (Math.abs(createTime - startTime) > 360000) {
                     WxChatMsgInfo wxChatMsgTimeInfo = new WxChatMsgInfo();
@@ -333,6 +364,7 @@ public class MessageUtils {
                     wxContactInfos.add(wxChatMsgTimeInfo);
                 }
                 startTime = createTime;
+
 
                 wxContactInfos.add(wxChatMsgInfo);
             }
@@ -589,25 +621,14 @@ public class MessageUtils {
             } catch (Exception ae) {
 
             }
-        } else if (GlobalData.brand.equals("meizu"))
-        {
-            if (Build.MODEL.toLowerCase().contains("m1 metal")) {
+        } else if (GlobalData.brand.equals("meizu")) {
+            try {
                 context.startActivity(new Intent("android.settings.INTERNAL_STORAGE_SETTINGS"));
-                return;
-            }
-            try {
-                Intent intent = new Intent("android.intent.action.VIEW");
-                intent.setComponent(new android.content.ComponentName("com.meizu.backup", "com.meizu.backup.ui.MainBackupAct"));
-                context.startActivity(intent);
-            } catch (ActivityNotFoundException unused) {
+            } catch (Exception unused) {
 
             }
-        } else {
-            try {
-                context.startActivity(new Intent(Settings.ACTION_PRIVACY_SETTINGS));
-            } catch (Exception e) {
+        } else if (GlobalData.brand.equals("vivo")) {
 
-            }
         }
     }
 
@@ -664,7 +685,6 @@ public class MessageUtils {
         }
     }
 
-
     private static void changeMiuiBak2AndroidBak() throws IOException {
         String source = getExternalStorageDir() + "/MIUI/backup/AllBackup";
         String dir = getAppStorageDir();
@@ -687,8 +707,8 @@ public class MessageUtils {
             for (int i = 0; i < files.length; i++) {
                 File[] baks = files[i].listFiles();
                 for (File tmpbak : baks) {
-                    if (tmpbak.getAbsolutePath().contains("com.tencent.mm") && tmpbak.getAbsolutePath().endsWith(".bak")) {
-                        if (bak != null && bak.length() < tmpbak.length()) {
+                    if (tmpbak.getAbsolutePath().contains("com.tencent.mm")) {
+                        if (bak == null || (bak.length() < tmpbak.length())) {
                             bak = tmpbak;
                         }
                     }
@@ -704,14 +724,53 @@ public class MessageUtils {
             }
             String password = System.getenv("ABE_PASSWD");
             AndroidBackup.extractAsTar(dest, zip, password, false);
-            unpackZip(zip, dir);
+            unpackOppoZip(zip, dir);
 
             destFile.delete();
             new File(zip).delete();
         }
     }
 
-    private static void unpackZip(String tarFile, String destFolder) throws IOException {
+    private static void unpackMeiZuZip(String dir, String destFolder) throws IOException {
+        File backDir = new File(dir);
+        File[] tarFiles = backDir.listFiles();
+        File tarFile = null;
+
+        if (tarFiles != null) {
+            for (File tmpFile : tarFiles) {
+                if (tmpFile.getAbsolutePath().endsWith(".zip") && (tarFile == null || tarFile.length() < tmpFile.length())) {
+                    tarFile = tmpFile;
+                }
+            }
+        }
+        if (tarFile == null) {
+            return;
+        }
+        try {
+            UnZip(tarFile.getAbsolutePath(), destFolder);
+            File tencentMMFile = new File(destFolder + "/" + tarFile.getName().replace(".zip", "/App/com.tencent.mm.zip"));
+            if (tencentMMFile.exists()) {
+                UnZip(tencentMMFile.getAbsolutePath(), destFolder);
+                tencentMMFile.delete();
+            }
+        } catch (ZipException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void UnZip(String zip, String destFolder) throws ZipException {
+        ZipFile zipFile = new ZipFile(zip);
+        if (zipFile.isValidZipFile()) {
+            File file = new File(destFolder);
+            if (file.isDirectory() && !file.exists()) {
+                file.mkdirs();
+            }
+            zipFile.setRunInThread(true);
+            zipFile.extractAll(destFolder);
+        }
+    }
+
+    private static void unpackOppoZip(String tarFile, String destFolder) throws IOException {
         TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(tarFile)));
         TarEntry entry;
 
@@ -755,5 +814,4 @@ public class MessageUtils {
         }
         return null;
     }
-
 }

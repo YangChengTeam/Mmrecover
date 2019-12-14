@@ -1,6 +1,8 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.text.Html;
@@ -26,7 +28,6 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
-import butterknife.OnCheckedChanged;
 import io.reactivex.functions.Consumer;
 import kotlin.Unit;
 
@@ -63,6 +64,7 @@ public class MessageGuide2Activity extends BaseActivity {
     @SuppressLint("CheckResult")
     @Override
     protected void initViews() {
+        initTitle("恢复微信消息");
 
 
         this.mIsFromGuid3 = getIntent().getBooleanExtra("from_guid3", false);
@@ -75,9 +77,15 @@ public class MessageGuide2Activity extends BaseActivity {
         tvQa.getPaint().setAntiAlias(true);
         tvQa.setText(Html.fromHtml("常见问题"));
 
+        tvBackupErr.getPaint().setFlags(8);
+        tvBackupErr.getPaint().setAntiAlias(true);
+        tvBackupErr.setText(Html.fromHtml("无法备份微信数据？"));
+
+
 
         RxView.clicks(backupBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
             MessageUtils.openBackup(MessageGuide2Activity.this);
+
         });
         RxView.clicks(tvShowBackup).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
             startActivity(new Intent(MessageGuide2Activity.this, MessageUserActivity.class));
@@ -88,6 +96,28 @@ public class MessageGuide2Activity extends BaseActivity {
             intent.putExtra("web_url", "http://wxapp.leshu.com/home/help");
             MessageGuide2Activity.this.startActivity(intent);
         });
+        RxView.clicks(tvBackupErr).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+            Intent intent = new Intent(MessageGuide2Activity.this, Reserved2Activity.class);
+            intent.putExtra("need_uninstall", isHasDiffBackup());
+            startActivity(intent);
+
+        });
+    }
+
+
+    private boolean isHasDiffBackup() {
+        for (PackageInfo packageInfo : getPackageManager().getInstalledPackages(0)) {
+            if (TextUtils.equals(packageInfo.packageName, "com.huawei.KoBackup")) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("versionCode = ");
+                stringBuilder.append(packageInfo.versionCode);
+
+                if (packageInfo.versionCode != 80002301) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 
@@ -123,6 +153,7 @@ public class MessageGuide2Activity extends BaseActivity {
         while (strArr != null && i < strArr.length && !TextUtils.isEmpty(strArr[i])) {
             ImageView imageView = new ImageView(this);
             Glide.with(this).load(strArr[i]).into(imageView);
+
             int finalI = i;
             imageView.setOnClickListener(view -> {
                 Intent intent = new Intent(MessageGuide2Activity.this, ImagePageViewActivity.class);
@@ -318,5 +349,15 @@ public class MessageGuide2Activity extends BaseActivity {
         return mGuidImageList;
     }
 
+    public static void startActivityForPackage(Context context, String str, String str2) {
+        try {
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName(str, str2));
+            intent.setAction("android.intent.action.VIEW");
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Log.e("TAG", "startActivityForPackage: " + e.getMessage());
+        }
+    }
 
 }

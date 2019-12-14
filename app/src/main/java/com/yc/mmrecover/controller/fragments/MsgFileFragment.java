@@ -1,5 +1,7 @@
 package com.yc.mmrecover.controller.fragments;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -8,11 +10,13 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kk.utils.TaskUtil;
 import com.kk.utils.VUiKit;
 import com.yc.mmrecover.R;
+import com.yc.mmrecover.controller.activitys.RecoverFileActivity;
 import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.view.adapters.VerticalFileAdapter;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +37,7 @@ public class MsgFileFragment extends BaseScanFragment {
     private boolean mIsOperate;
     private List<MediaInfo> mMediaList;
     private VerticalFileAdapter mAdapter;
+    private List<MediaInfo> selectList;
 
     @Override
     protected int getLayoutId() {
@@ -48,6 +53,7 @@ public class MsgFileFragment extends BaseScanFragment {
         recyclerView.setAdapter(mAdapter);
 
         mMediaList = new ArrayList<>();
+        selectList = new ArrayList<>();
         initData();
         initListener();
     }
@@ -60,10 +66,20 @@ public class MsgFileFragment extends BaseScanFragment {
             MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
             if (mediaInfo.isSelect()) {
                 view.findViewById(R.id.im_select).setVisibility(View.GONE);
+                selectList.remove(mediaInfo);
             } else {
                 view.findViewById(R.id.im_select).setVisibility(View.VISIBLE);
+                selectList.add(mediaInfo);
             }
             mediaInfo.setSelect(!mediaInfo.isSelect());
+        });
+
+        mAdapter.setOnItemLongClickListener((adapter, view, position) -> {
+            Intent intent = new Intent(getActivity(), RecoverFileActivity.class);
+
+            startActivity(intent);
+
+            return false;
         });
     }
 

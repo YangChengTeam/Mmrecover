@@ -42,24 +42,22 @@ public abstract class BaseRecoverActivity extends BaseActivity {
 
 
     private void scanDisk(String str) {
-        new File(str).listFiles(new FilenameFilter() {
-            public boolean accept(File file, String str) {
-                File file2 = new File(file, str);
-                String absolutePath = file2.getAbsolutePath();
-                if (file2.isDirectory()) {
-                    BaseRecoverActivity.this.scanDisk(absolutePath);
-                } else {
-                    long length = file2.length();
-                    MediaInfo mediaBean = new MediaInfo();
-                    mediaBean.setLastModifyTime((int) (file2.lastModified() / 1000));
-                    mediaBean.setPath(absolutePath);
-                    mediaBean.setFileName(file2.getName());
-                    mediaBean.setSize(length);
-                    mediaBean.setStrSize(Func.getSizeString(length));
-                    BaseRecoverActivity.this.mMediaList.add(mediaBean);
-                }
-                return false;
+        new File(str).listFiles((file, str1) -> {
+            File file2 = new File(file, str1);
+            String absolutePath = file2.getAbsolutePath();
+            if (file2.isDirectory()) {
+                BaseRecoverActivity.this.scanDisk(absolutePath);
+            } else {
+                long length = file2.length();
+                MediaInfo mediaBean = new MediaInfo();
+                mediaBean.setLastModifyTime((int) (file2.lastModified() / 1000));
+                mediaBean.setPath(absolutePath);
+                mediaBean.setFileName(file2.getName());
+                mediaBean.setSize(length);
+                mediaBean.setStrSize(Func.getSizeString(length));
+                BaseRecoverActivity.this.mMediaList.add(mediaBean);
             }
+            return false;
         });
     }
 }

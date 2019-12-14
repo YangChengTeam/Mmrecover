@@ -26,6 +26,7 @@ public class DetailVoiceActivity extends BaseActivity {
 
     private MediaInfo mediaInfo;
     private MediaController mediaController;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_video_detail;
@@ -37,6 +38,7 @@ public class DetailVoiceActivity extends BaseActivity {
 
         Intent intent = getIntent();
         mediaInfo = (MediaInfo) intent.getSerializableExtra("info");
+
         MediaController mediaController = new MediaController(this) {
             @Override
             public void show() {
@@ -49,14 +51,13 @@ public class DetailVoiceActivity extends BaseActivity {
             dir.mkdirs();
         }
         path = dir.getAbsolutePath() + "/" + mediaInfo.getFileName() + ".mp3";
+//        Log.e("TAG", "initViews: " + mediaInfo.getFileName() + "--path--" + path);
         if (new File(path).exists() || Silk.convertSilkToMp3(mediaInfo.getPath(), path)) {
             this.mVideoView.setVideoURI(Uri.fromFile(new File(path)));
             this.mVideoView.setMediaController(mediaController);
-            this.mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                public void onPrepared(MediaPlayer mediaPlayer) {
-                    DetailVoiceActivity.this.mVideoView.start();
-                    mediaController.show();
-                }
+            this.mVideoView.setOnPreparedListener(mediaPlayer -> {
+                DetailVoiceActivity.this.mVideoView.start();
+                mediaController.show();
             });
 
             this.mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -74,7 +75,7 @@ public class DetailVoiceActivity extends BaseActivity {
     @Override
     public void onStop() {
         super.onStop();
-        if(this.mVideoView != null) {
+        if (this.mVideoView != null) {
             this.mVideoView.pause();
         }
     }
