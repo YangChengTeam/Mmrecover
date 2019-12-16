@@ -3,6 +3,7 @@ package com.yc.mmrecover.controller.activitys;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -14,18 +15,31 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kk.securityhttp.domain.ResultInfo;
+import com.kk.securityhttp.net.contains.HttpConfig;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.BroadcastInfo;
 import com.yc.mmrecover.model.bean.GlobalData;
+import com.yc.mmrecover.model.bean.VipItemInfo;
+import com.yc.mmrecover.model.engin.VipEngine;
+import com.yc.mmrecover.utils.VipItemHelper;
+import com.yc.mmrecover.view.adapters.VipItemAdapter;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
 import com.yc.mmrecover.view.wdiget.VTextView;
+
+import org.w3c.dom.ls.LSInput;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.BindViews;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Subscriber;
 
 public class PayActivity extends BaseActivity {
     @BindViews({R.id.rl_price1, R.id.rl_price2})
@@ -52,6 +66,8 @@ public class PayActivity extends BaseActivity {
     TextView tv28;
     @BindView(R.id.tv_98)
     TextView tv98;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
 
     private String[][] tmpBroadcastInfo;
 
@@ -60,6 +76,8 @@ public class PayActivity extends BaseActivity {
     private int mPayType = 2;  //支付类型  2 微信  1 支付宝
     private boolean mIs98 = true; //是否为支付98元购买会员
     private boolean mIsRead = true; //我已阅读用户须知
+    private VipItemAdapter vipItemAdapter;
+    private VipItemInfo vipItemInfo;
 
     @Override
     protected int getLayoutId() {
@@ -128,6 +146,10 @@ public class PayActivity extends BaseActivity {
         tvTitle.setText("订单支付");
         tvPay.setBackground(new BackgroundShape(this, 22, R.color.yellow_btn));
 
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        vipItemAdapter = new VipItemAdapter(null);
+        recyclerView.setAdapter(vipItemAdapter);
+
 
         initPayNum();
 
@@ -142,6 +164,20 @@ public class PayActivity extends BaseActivity {
         rlPrices.get(1).setBackground(new BackgroundShape(this, 50, R.color.white, 10, R.color.gray_bk2));
 
         initBoradInfo();
+
+        getData();
+        initListener();
+    }
+
+
+    private void initListener() {
+        vipItemAdapter.setOnItemClickListener((adapter, view, position) -> {
+            vipItemInfo = vipItemAdapter.getItem(position);
+            if (vipItemInfo != null) {
+                vipItemAdapter.setSelected(position);
+            }
+
+        });
     }
 
     private void initBoradInfo() {
@@ -267,5 +303,41 @@ public class PayActivity extends BaseActivity {
         showNormalDialog();
         return true;
     }
+
+    private void getData() {
+
+        List<VipItemInfo> vipItemInfoList = VipItemHelper.getVipItemInfos();
+        if (vipItemInfoList != null && vipItemInfoList.size() > 0) {
+            vipItemAdapter.setNewData(vipItemInfoList);
+            vipItemInfo = vipItemInfoList.get(0);
+        }
+
+        VipEngine vipEngine = new VipEngine(this);
+        vipEngine.getVipItemInfos().subscribe(new Subscriber<ResultInfo<List<VipItemInfo>>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(ResultInfo<List<VipItemInfo>> listResultInfo) {
+                if (listResultInfo != null && listResultInfo.getCode() == HttpConfig.STATUS_OK && listResultInfo.getData() != null) {
+                    List<VipItemInfo> data = listResultInfo.getData();
+                    vipItemAdapter.setNewData(data);
+                    VipItemHelper.saveVipItemInfos(data);
+                    if (data.size() > 0) {
+                        vipItemInfo = data.get(0);
+                    }
+
+                }
+            }
+        });
+    }
+
 
 }
