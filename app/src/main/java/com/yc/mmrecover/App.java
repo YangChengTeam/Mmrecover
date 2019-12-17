@@ -13,6 +13,7 @@ import com.kk.utils.LogUtil;
 import com.kk.utils.TaskUtil;
 import com.umeng.commonsdk.UMConfigure;
 import com.yc.mmrecover.model.bean.ChannelInfo;
+import com.yc.mmrecover.utils.Func;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -99,7 +100,7 @@ public class App extends MultiDexApplication {
         params.put("device_type", "android");
         params.put("app_type", "app");
         params.put("app_id", "16");
-        params.put("imeil", GoagalInfo.get().uuid);
+        params.put("imeil", Func.getImei(this));
         String sv = Build.MODEL.contains(Build.BRAND) ? Build.MODEL + " " + Build.VERSION.RELEASE : Build.BRAND + " " + Build.MODEL + " " + Build.VERSION.RELEASE;
         params.put("sv", sv);
         if (channelInfo != null) {

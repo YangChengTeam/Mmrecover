@@ -71,8 +71,10 @@ public class MyActivity extends BaseActivity {
         if (userInfo != null) {
             int isVip = userInfo.getIsVip();
             String vipStr = "普通用户";
-            if (isVip == 1 || isVip == 2) {
-                vipStr = "VIP用户";
+            if (isVip == 1) {
+                vipStr = "VIP1用户";
+            } else if (isVip == 2) {
+                vipStr = "VIP2用户";
             }
             tvUser.setText(vipStr);
         }
