@@ -3,9 +3,9 @@ package com.yc.mmrecover.controller.activitys;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,20 +15,31 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kk.securityhttp.domain.ResultInfo;
 import com.kk.securityhttp.net.contains.HttpConfig;
+import com.umeng.analytics.MobclickAgent;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.BroadcastInfo;
+import com.yc.mmrecover.model.bean.EventPayState;
 import com.yc.mmrecover.model.bean.GlobalData;
+import com.yc.mmrecover.model.bean.UserInfo;
 import com.yc.mmrecover.model.bean.VipItemInfo;
+import com.yc.mmrecover.model.engin.PayEngine;
 import com.yc.mmrecover.model.engin.VipEngine;
+import com.yc.mmrecover.pay.alipay.IAliPay1Impl;
+import com.yc.mmrecover.pay.alipay.IPayCallback;
+import com.yc.mmrecover.pay.alipay.IWXPay1Impl;
+import com.yc.mmrecover.pay.alipay.OrderInfo;
+import com.yc.mmrecover.utils.EngineUtils;
+import com.yc.mmrecover.utils.HttpUtils;
+import com.yc.mmrecover.utils.PayListener;
+import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.utils.VipItemHelper;
 import com.yc.mmrecover.view.adapters.VipItemAdapter;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
 import com.yc.mmrecover.view.wdiget.VTextView;
 
-import org.w3c.dom.ls.LSInput;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +48,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.BindViews;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Subscriber;
 
@@ -78,6 +88,8 @@ public class PayActivity extends BaseActivity {
     private boolean mIsRead = true; //我已阅读用户须知
     private VipItemAdapter vipItemAdapter;
     private VipItemInfo vipItemInfo;
+    private IAliPay1Impl iAliPay;
+    private IWXPay1Impl iwxPay;
 
     @Override
     protected int getLayoutId() {
@@ -97,6 +109,9 @@ public class PayActivity extends BaseActivity {
                     return;
                 }
                 // TODO to pay
+
+                createOrder(vipItemInfo.getId() + "", mPayType == 1 ? "alipay" : "wxpay");
+
                 break;
             case R.id.rl_pay_wx: //微信支付
                 ivPayTypes.get(0).setImageDrawable(PayActivity.this.getResources().getDrawable(R.mipmap.pay_check));
@@ -149,7 +164,8 @@ public class PayActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         vipItemAdapter = new VipItemAdapter(null);
         recyclerView.setAdapter(vipItemAdapter);
-
+        iAliPay = new IAliPay1Impl(this);
+        iwxPay = new IWXPay1Impl(this);
 
         initPayNum();
 
@@ -175,6 +191,7 @@ public class PayActivity extends BaseActivity {
             vipItemInfo = vipItemAdapter.getItem(position);
             if (vipItemInfo != null) {
                 vipItemAdapter.setSelected(position);
+                changeTvPayText(vipItemInfo.getPrice());
             }
 
         });
@@ -276,20 +293,14 @@ public class PayActivity extends BaseActivity {
 
     private void showNormalDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle((CharSequence) "温馨提示");
-        builder.setMessage((CharSequence) "如没有及时恢复，误删的微信数据会被系统碎片覆盖掉造成永久丢失。\n数据无价，尽快恢复，确定要放弃恢复吗？");
-        builder.setPositiveButton((CharSequence) "继续恢复", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        builder.setNegativeButton((CharSequence) "放弃恢复", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+        builder.setTitle("温馨提示");
+        builder.setMessage("如没有及时恢复，误删的微信数据会被系统碎片覆盖掉造成永久丢失。\n数据无价，尽快恢复，确定要放弃恢复吗？");
+        builder.setPositiveButton("继续恢复", (dialogInterface, i) -> dialogInterface.dismiss());
+        builder.setNegativeButton("放弃恢复", (dialogInterface, i) -> {
+            dialogInterface.dismiss();
 //                CacheSave.setValue(PayActivity.this, "order_id", ""); //TODO
 //                StModel.event(2005);
-                PayActivity.this.finish();
-            }
+            PayActivity.this.finish();
         });
         builder.show();
     }
@@ -332,12 +343,112 @@ public class PayActivity extends BaseActivity {
                     VipItemHelper.saveVipItemInfos(data);
                     if (data.size() > 0) {
                         vipItemInfo = data.get(0);
+                        changeTvPayText(vipItemInfo.getPrice());
                     }
+
 
                 }
             }
         });
     }
 
+
+    private void createOrder(String cardId, String payway) {
+        PayEngine payEngine = new PayEngine(this);
+
+        payEngine.createOrder(cardId, payway).subscribe(new Subscriber<ResultInfo<OrderInfo>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(ResultInfo<OrderInfo> orderInfoResultInfo) {
+                if (orderInfoResultInfo != null && orderInfoResultInfo.getCode() == HttpConfig.STATUS_OK && orderInfoResultInfo.getData() != null) {
+                    if (TextUtils.equals("alipay", payway)) {
+                        aliPay(orderInfoResultInfo.getData());
+                    } else {
+                        wxPay(orderInfoResultInfo.getData());
+                    }
+                }
+            }
+        });
+
+//        EngineUtils.createOrder("test", "1", new PayListener() {
+//            @Override
+//            public void onPayResult(OrderInfo orderInfo) {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        wxPay(orderInfo);
+//                    }
+//                });
+//
+//            }
+//        });
+    }
+
+    // 微信支付
+    private void wxPay(OrderInfo orderInfo) {
+        iwxPay.pay(orderInfo, new IPayCallback() {
+            @Override
+            public void onSuccess(OrderInfo orderInfo) {
+                showPaySuccessDialog(true, orderInfo.getMessage());
+            }
+
+
+            @Override
+            public void onFailure(OrderInfo orderInfo) {
+
+                showPaySuccessDialog(false, orderInfo.getMessage());
+            }
+        });
+    }
+
+
+    private void showPaySuccessDialog(final boolean result, String des) {
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setCancelable(false);
+        alertDialog.setTitle("提示");
+        if (result) {
+
+            UserInfo userInfo = UserInfoHelper.getUserInfo();
+
+            if (vipItemInfo != null) {
+                userInfo.setIsVip(vipItemInfo.getLevel());
+            }
+            UserInfoHelper.saveUserInfo(userInfo);
+            EventBus.getDefault().post(new EventPayState());
+
+        }
+        alertDialog.setMessage(des);
+
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定", (dialog, which) -> {
+            alertDialog.dismiss();
+        });
+        alertDialog.show();
+
+
+    }
+
+    //支付宝支付
+    private void aliPay(OrderInfo orderInfo) {
+        iAliPay.pay(orderInfo, new IPayCallback() {
+            @Override
+            public void onSuccess(OrderInfo orderInfo) {
+                showPaySuccessDialog(true, orderInfo.getMessage());
+            }
+
+            @Override
+            public void onFailure(OrderInfo orderInfo) {
+                showPaySuccessDialog(false, orderInfo.getMessage());
+            }
+        });
+    }
 
 }

@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding3.view.RxView;
 import com.kk.securityhttp.domain.ResultInfo;
 import com.kk.securityhttp.net.contains.HttpConfig;
+import com.kk.utils.ToastUtil;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.model.engin.GuideEngine;
@@ -73,6 +74,12 @@ public class MessageGuide2Activity extends BaseActivity {
 
         this.mIsFromGuid3 = getIntent().getBooleanExtra("from_guid3", false);
 
+//        if (this.mIsFromGuid3) {
+//            GlobalData.isNeedConnectPC = true;
+//
+//        } else {
+//            initViewPage(getGuidImagePath());
+//        }
 
         getGuidImagePath();
 
@@ -91,7 +98,12 @@ public class MessageGuide2Activity extends BaseActivity {
 
         });
         RxView.clicks(tvShowBackup).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+            if (!MessageUtils.isBackup()) {
+                ToastUtil.toast2(MessageGuide2Activity.this, "您还没有备份，请先备份");
+                return;
+            }
             startActivity(new Intent(MessageGuide2Activity.this, MessageUserActivity.class));
+//            startActivity(new Intent(MessageGuide2Activity.this, MessageGuide3Activity.class));
         });
         RxView.clicks(tvQa).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((Consumer<? super Unit>) aVoid -> {
             Intent intent = new Intent(MessageGuide2Activity.this, WebActivity.class);

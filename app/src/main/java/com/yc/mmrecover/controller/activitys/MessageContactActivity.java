@@ -9,15 +9,25 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding3.view.RxView;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.controller.fragments.MsgContactChatFragment;
 import com.yc.mmrecover.controller.fragments.MsgContactFragment;
 import com.yc.mmrecover.controller.fragments.MsgFileFragment;
 import com.yc.mmrecover.controller.fragments.MsgPhotoFragment;
+import com.yc.mmrecover.model.bean.EventPayState;
+import com.yc.mmrecover.model.bean.UserInfo;
+import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -57,6 +67,7 @@ public class MessageContactActivity extends BaseActivity {
     protected void initViews() {
         initTitle("恢复微信消息");
         Intent intent = getIntent();
+        EventBus.getDefault().register(this);
 
         if (intent != null) {
 
@@ -80,9 +91,16 @@ public class MessageContactActivity extends BaseActivity {
                 mLastTab = finalI;
             });
         }
+        if (UserInfoHelper.getVipType() == 2) {
+            rlBuy.setVisibility(View.GONE);
+        }
+
         setTabSelect(0);
         tvBuy.setBackgroundDrawable(new BackgroundShape(this, 3, R.color.blue));
-//        textView.setOnClickListener(new C08462());
+
+        RxView.clicks(tvBuy).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v -> {
+            startActivity(new Intent(MessageContactActivity.this, PayActivity.class));
+        }));
 
     }
 
@@ -120,6 +138,14 @@ public class MessageContactActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (UserInfoHelper.getVipType() == 2) {
+            findViewById(R.id.rl_buy).setVisibility(View.GONE);
+        }
+
+    }
 
     private void setTabSelect(int i) {
         ImageView imageView = this.llBottomMenu.getChildAt(this.mLastTab).findViewById(R.id.im_menu);
@@ -130,5 +156,15 @@ public class MessageContactActivity extends BaseActivity {
         imageView2.setImageDrawable(ContextCompat.getDrawable(this, this.selectMenu[i]));
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void paySuccess(EventPayState eventPayState) {
+        rlBuy.setVisibility(View.GONE);
+    }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

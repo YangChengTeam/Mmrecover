@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.GlobalData;
+import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.wdiget.GestureImageView;
 
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class ImagePageViewActivity extends BaseActivity {
             this.mImagePathList = intent.getStringArrayExtra("image_path");
             this.mPosition = getIntent().getIntExtra("position", 0);
             boolean booleanExtra = getIntent().getBooleanExtra("is_guid", false);
-            if (!booleanExtra && GlobalData.vipType == 1) {
+            if (!booleanExtra && UserInfoHelper.getVipType() == 0) {
                 Intent intent1 = new Intent(this, PayActivity.class);
                 intent.putExtra("sta_type", getIntent().getIntExtra("sta_type", 4003));
                 startActivity(intent1);

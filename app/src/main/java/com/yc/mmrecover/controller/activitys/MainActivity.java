@@ -200,6 +200,8 @@ public class MainActivity extends BaseActivity {
                     IndexInfo indexInfo = indexInfoResultInfo.getData();
                     UserInfo userInfo = indexInfo.getUserInfo();
                     userInfo.setIsVip(indexInfo.getUserCard());
+                    userInfo.setWx(indexInfo.getKf().getWx());
+                    userInfo.setQq(indexInfo.getKf().getQq());
                     UserInfoHelper.saveUserInfo(userInfo);
                 }
             }

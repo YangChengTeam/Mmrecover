@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yc.mmrecover.R;
+import com.yc.mmrecover.model.bean.UserInfo;
+import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
 import com.yc.mmrecover.utils.Func;
 
@@ -71,6 +73,16 @@ public class MyActivity extends BasePermissionActivity {
     protected void initViews() {
         tvCopy.setBackground(new BackgroundShape(this, 14, R.color.gray_button));
         tvCode.setText(Func.getMachineCode(MyActivity.this));
+
+        UserInfo userInfo = UserInfoHelper.getUserInfo();
+        if (userInfo != null) {
+            int isVip = userInfo.getIsVip();
+            String vipStr = "普通用户";
+            if (isVip == 1 || isVip == 2) {
+                vipStr = "VIP用户";
+            }
+            tvUser.setText(vipStr);
+        }
     }
 
     @Override

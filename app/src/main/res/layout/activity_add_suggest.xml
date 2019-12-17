@@ -34,6 +34,7 @@
                 android:gravity="left"
                 android:hint="请详细描述您遇到的问题，并留下您的联系方式，我们会在第一时间给予反馈，谢谢！"
                 android:lineSpacingExtra="3dp"
+                android:maxLength="200"
                 android:minHeight="200dp"
                 android:textColorHint="#4c4c4c"
                 android:textSize="@dimen/sp_14" />

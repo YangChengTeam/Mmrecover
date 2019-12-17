@@ -38,6 +38,8 @@ public class VipItemInfo {
     private int is_open;
     private int is_del;
 
+    private int level;
+
     public int getId() {
         return id;
     }
@@ -148,5 +150,13 @@ public class VipItemInfo {
 
     public void setIs_del(int is_del) {
         this.is_del = is_del;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

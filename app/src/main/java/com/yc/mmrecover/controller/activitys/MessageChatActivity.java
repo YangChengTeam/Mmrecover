@@ -14,14 +14,20 @@ import com.jakewharton.rxbinding3.view.RxView;
 import com.kk.utils.TaskUtil;
 import com.kk.utils.VUiKit;
 import com.yc.mmrecover.R;
+import com.yc.mmrecover.model.bean.EventPayState;
 import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.model.bean.WxChatMsgInfo;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.utils.MessageUtils;
 import com.yc.mmrecover.utils.PlayVoiceTask;
+import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.adapters.WxMsgAdapter;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.List;
@@ -62,7 +68,7 @@ public class MessageChatActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-
+        EventBus.getDefault().register(this);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -149,7 +155,7 @@ public class MessageChatActivity extends BaseActivity {
                     } else if (contentType == 34) {
                         if (view.getId() == R.id.ll_voice) {
 
-                            if (GlobalData.vipType == 1) {
+                            if (UserInfoHelper.getVipType() == 0) {
                                 Intent intent = new Intent(MessageChatActivity.this, PayActivity.class);
                                 intent.putExtra("sta_type", 2007);
                                 startActivity(intent);
@@ -238,5 +244,29 @@ public class MessageChatActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (UserInfoHelper.getVipType() == 2) {
+            findViewById(R.id.rl_buy).setVisibility(View.GONE);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("GlobalData.vipType = ");
+            stringBuilder.append(GlobalData.vipType);
+            Log.d("TAG", stringBuilder.toString());
 
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void paySuccess(EventPayState eventPayState) {
+        rlBuy.setVisibility(View.GONE);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

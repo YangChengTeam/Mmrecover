@@ -17,6 +17,7 @@ public class Config {
         return (DEBUG ? debugBaseUrl : baseUrl);
     }
 
+
     public static final String USER_URL = getBaseUrl().concat("v1.user/info");
 
     public static final String GUIDE_URL = getBaseUrl().concat("v1.info/backUpImg");
@@ -26,4 +27,7 @@ public class Config {
     public static final String UPLOAD_URL = getBaseUrl().concat("v1.suggest/upload");
 
     public static final String VIP_ITEM_URL = getBaseUrl().concat("v1.card/index");
+
+    public static final String ORDER_URL= getBaseUrl().concat("v1.card/addCardOrder");
+
 }

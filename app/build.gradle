@@ -22,9 +22,34 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    signingConfigs {
+        debug {
+            storeFile file('recover.jks')
+            storePassword "123456"
+            keyAlias "recover"
+            keyPassword "123456"
+        }
+
+        release {
+            storeFile file('recover.jks')
+            storePassword "123456"
+            keyAlias "recover"
+            keyPassword "123456"
+        }
+    }
 }
 
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+    mavenCentral()
+    google()
+}
 dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -49,9 +74,10 @@ dependencies {
     implementation 'top.zibin:Luban:1.1.8'
     implementation files('libs/abe.jar')
     implementation files('libs/jtar-2.3.jar')
-
+    implementation 'net.lingala.zip4j:zip4j:2.2.7'
     implementation 'net.zetetic:android-database-sqlcipher:4.2.0'
-
-
-
+    implementation(name: 'alipaySdk-15.6.5-20190718211159-noUtdid', ext: 'aar')
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    //    implementation files('libs/jdom-2.0.1.jar')
+    implementation files('libs/wftsdk5.0.jar')
 }

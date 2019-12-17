@@ -2,6 +2,7 @@ package com.yc.mmrecover.controller.activitys;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.GlobalData;
+import com.yc.mmrecover.model.bean.UserInfo;
+import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
 
 import butterknife.BindView;
@@ -55,61 +58,58 @@ public class ContactActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (GlobalData.vipType == 1) {
+        if (UserInfoHelper.getVipType() == 0) {
             ((TextView) this.wxView.findViewById(R.id.tv_title)).setText("微信号：********");
             ((TextView) this.wxView.findViewById(R.id.tv_content)).setText("VIP专属客服，成为会员显示号码");
             ((TextView) this.qqView.findViewById(R.id.tv_title)).setText("QQ号：********");
             ((TextView) this.qqView.findViewById(R.id.tv_content)).setText("VIP专属客服，成为会员显示号码");
-            this.wxView.setOnClickListener(new OnClickListener() {
-                public void onClick(View view) {
-                    Toast.makeText(ContactActivity.this, "成为会员显示号码", Toast.LENGTH_SHORT).show();
-                }
-            });
-            this.qqView.setOnClickListener(new OnClickListener() {
-                public void onClick(View view) {
-                    Toast.makeText(ContactActivity.this, "成为会员显示号码", Toast.LENGTH_SHORT).show();
-                }
-            });
+            this.wxView.setOnClickListener(view -> Toast.makeText(ContactActivity.this, "成为会员显示号码", Toast.LENGTH_SHORT).show());
+            this.qqView.setOnClickListener(view -> Toast.makeText(ContactActivity.this, "成为会员显示号码", Toast.LENGTH_SHORT).show());
             this.tvPay.setVisibility(View.VISIBLE);
             return;
         }
+        UserInfo userInfo = UserInfoHelper.getUserInfo();
         String wechatId = "123456";
         String qqId = "123456";
-        TextView tvTitle = (TextView) this.wxView.findViewById(R.id.tv_title);
+        if (null != userInfo) {
+            wechatId = userInfo.getWx();
+            qqId = userInfo.getQq();
+        }
+
+
+        TextView tvTitle = this.wxView.findViewById(R.id.tv_title);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("微信号：");
 //        stringBuilder.append(GlobalData.customer_wx); //TODO
         stringBuilder.append(wechatId);
         tvTitle.setText(stringBuilder.toString());
         ((TextView) this.wxView.findViewById(R.id.tv_content)).setText("专人专线，您的专属VIP客服");
-        tvTitle = (TextView) this.qqView.findViewById(R.id.tv_title);
+        tvTitle = this.qqView.findViewById(R.id.tv_title);
         StringBuilder stringBuilder2 = new StringBuilder();
         stringBuilder2.append("QQ号：");
 //        stringBuilder2.append(GlobalData.customer_qq);  //TODO
         stringBuilder2.append(qqId);
         tvTitle.setText(stringBuilder2.toString());
         ((TextView) this.qqView.findViewById(R.id.tv_content)).setText("专人专线，您的专属VIP客服");
-        this.wxView.setOnClickListener(new OnClickListener() {
-            public void onClick(View view) {
-                ClipboardManager clipboardManager = (ClipboardManager) ContactActivity.this.getSystemService("clipboard");
+        String finalWechatId = wechatId;
+        this.wxView.setOnClickListener(view -> {
+            ClipboardManager clipboardManager = (ClipboardManager) ContactActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
 //                String wechatId= GlobalData.customer_wx; //TODO
-                ClipData newPlainText = ClipData.newPlainText("Label", wechatId);
-                if (clipboardManager != null) {
-                    clipboardManager.setPrimaryClip(newPlainText);
-                }
-                Toast.makeText(ContactActivity.this, "微信号已复制到剪贴板", Toast.LENGTH_SHORT).show();
+            ClipData newPlainText = ClipData.newPlainText("Label", finalWechatId);
+            if (clipboardManager != null) {
+                clipboardManager.setPrimaryClip(newPlainText);
             }
+            Toast.makeText(ContactActivity.this, "微信号已复制到剪贴板", Toast.LENGTH_SHORT).show();
         });
-        this.qqView.setOnClickListener(new OnClickListener() {
-            public void onClick(View view) {
-                ClipboardManager clipboardManager = (ClipboardManager) ContactActivity.this.getSystemService("clipboard");
+        String finalQqId = qqId;
+        this.qqView.setOnClickListener(view -> {
+            ClipboardManager clipboardManager = (ClipboardManager) ContactActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
 //                String qqId = GlobalData.customer_qq;  //TODO
-                ClipData newPlainText = ClipData.newPlainText("Label", qqId);
-                if (clipboardManager != null) {
-                    clipboardManager.setPrimaryClip(newPlainText);
-                }
-                Toast.makeText(ContactActivity.this, "QQ号已复制到剪贴板", Toast.LENGTH_SHORT).show();
+            ClipData newPlainText = ClipData.newPlainText("Label", finalQqId);
+            if (clipboardManager != null) {
+                clipboardManager.setPrimaryClip(newPlainText);
             }
+            Toast.makeText(ContactActivity.this, "QQ号已复制到剪贴板", Toast.LENGTH_SHORT).show();
         });
         this.tvPay.setVisibility(View.GONE);
     }
@@ -126,18 +126,16 @@ public class ContactActivity extends BaseActivity {
         llContact.addView(this.gdView);
         ((TextView) this.gdView.findViewById(R.id.tv_title)).setText("用户工单支持");
         ((TextView) this.gdView.findViewById(R.id.tv_content)).setText("全体用户可用，VIP优先回复");
-        this.gdView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent intent = new Intent(ContactActivity.this, WebActivity.class);
-                intent.putExtra("web_title", "意见反馈");
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append("http://wxapp.leshu.com/home/enquiry?device_id=");
-                String deviceId = "2";
-//                stringBuilder.append(Func.getMachineCode(ContactActivity.this)); //TODO
-                stringBuilder.append(deviceId);
-                intent.putExtra("web_url", stringBuilder.toString());
-                ContactActivity.this.startActivity(intent);
-            }
+        this.gdView.setOnClickListener(view -> {
+            Intent intent = new Intent(ContactActivity.this, AddSuggestActivity.class);
+//            intent.putExtra("web_title", "意见反馈");
+//            StringBuilder stringBuilder = new StringBuilder();
+//            stringBuilder.append("http://wxapp.leshu.com/home/enquiry?device_id=");
+//            String deviceId = "2";
+////                stringBuilder.append(Func.getMachineCode(ContactActivity.this)); //TODO
+//            stringBuilder.append(deviceId);
+//            intent.putExtra("web_url", stringBuilder.toString());
+            ContactActivity.this.startActivity(intent);
         });
     }
 

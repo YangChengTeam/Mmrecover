@@ -54,6 +54,9 @@ public class UserInfo {
 
     private int isVip; //0不是会员 1:低级别会员 2:高级别会员
 
+    private String wx;
+    private String qq;
+
     public String getId() {
         return id;
     }
@@ -231,5 +234,21 @@ public class UserInfo {
 
     public void setIsVip(int isVip) {
         this.isVip = isVip;
+    }
+
+    public String getWx() {
+        return wx;
+    }
+
+    public void setWx(String wx) {
+        this.wx = wx;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
     }
 }

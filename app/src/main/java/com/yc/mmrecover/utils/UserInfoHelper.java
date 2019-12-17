@@ -35,4 +35,11 @@ public class UserInfoHelper {
             Log.e("TAG", "json转换失败: " + e.getMessage());
         }
     }
+
+    public static int getVipType() {
+        if (userInfo != null) {
+            return userInfo.getIsVip();
+        }
+        return 0;//非vip
+    }
 }

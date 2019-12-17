@@ -12,6 +12,7 @@ import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.Func;
+import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
 import com.yc.mmrecover.view.wdiget.GestureImageView;
 
@@ -79,7 +80,7 @@ public class DetailImageActivity extends BaseActivity {
 
         tvRecover.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.yellow_btn));
         tvRecover.setOnClickListener(view -> {
-            if (GlobalData.vipType == 1) {
+            if (UserInfoHelper.getVipType() == 0) {
                 Intent intent = new Intent(DetailImageActivity.this, PayActivity.class);
                 intent.putExtra("sta_type", 4003);
                 DetailImageActivity.this.startActivity(intent);
@@ -127,7 +128,7 @@ public class DetailImageActivity extends BaseActivity {
 
         tvRecovered.setBackgroundDrawable(new BackgroundShape(this, 22, R.color.gray_button2));
         tvRecovered.setOnClickListener(view -> {
-            if (GlobalData.vipType == 1) {
+            if (UserInfoHelper.getVipType() == 0) {
                 Intent intent = new Intent(DetailImageActivity.this, PayActivity.class);
                 intent.putExtra("sta_type", 4003);
                 DetailImageActivity.this.startActivity(intent);
@@ -136,7 +137,7 @@ public class DetailImageActivity extends BaseActivity {
             }
             DetailImageActivity.this.startActivity(new Intent(DetailImageActivity.this, RecoverImageActivity.class));
         });
-        if (GlobalData.vipType != 1) {
+        if (UserInfoHelper.getVipType() != 0) {
             imWaterMark.setVisibility(View.GONE);
         }
     }

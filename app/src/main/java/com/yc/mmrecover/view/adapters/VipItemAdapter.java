@@ -12,6 +12,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.controller.activitys.PayActivity;
 import com.yc.mmrecover.model.bean.VipItemInfo;
+import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
 
 import java.util.List;
@@ -49,6 +50,11 @@ public class VipItemAdapter extends BaseQuickAdapter<VipItemInfo, BaseViewHolder
             } else {
                 helper.itemView.setBackground(new BackgroundShape(mContext, 50, R.color.white, 10, R.color.gray_bk2));
                 helper.setGone(R.id.tv_recommend, false);
+            }
+            if (UserInfoHelper.getVipType() == 1) {
+                if (UserInfoHelper.getVipType() == item.getLevel()) {
+                    helper.itemView.setVisibility(View.GONE);
+                }
             }
             sparseArray.put(position, helper.itemView);
             textViewSparseArray.put(position, helper.getView(R.id.tv_recommend));
