@@ -106,8 +106,9 @@ public class IAliPay1Impl extends IPayImpl {
             // 构造PayTask 对象
             PayTask alipay = new PayTask(mContext);
 
+//            mPayInfo="app_id=2019121669932569&biz_content=%7B%22button%22%3A%5B%7B%22actionParam%22%3A%22ZFB_HFCZ%22%2C%22actionType%22%3A%22out%22%2C%22name%22%3A%2211%22%7D%5D%7D&charset=GBK&method=alipay.mobile.public.menu.add&sign_type=RSA2&timestamp=2019-12-16%2003%3A07%3A50&version=1.0&sign=a1th42nJRVHBa4qbSvcDztP4klbsXt348lA%2BwgJWCAxEsdOXL%2FBzjRv1%2BFHRBl0LtBz9zW%2BFBwnz9vOk1r%2ByX1N2nEibt8%2BlE2PDKWOYFnFIEyYhu0f%2BR1A4oICcCkQZW5pNBgIzR9m186agzD5BcSAttQCjHkjGIcsRZ8vd1zqGht%2Bsrtd0wTPs53ggsB2V5u%2B68WadL7nH9S7fVEpD6cuIHxFCL5J%2BNQk4ES0%2FzvwRSZQLbzKwfZIHUqlIzfsA9WDiO3OIg%2F0qXVfcDDcErugEKJYo21kUrvhDGcLvtqpWGTdhubitJsMY3S6C7QYz47w1NIu1uEadoy61RzziAg%3D%3D";
             // 调用支付接口，获取支付结果
-            Map<String, String> result = alipay.payV2(mPayInfo, false);
+            Map<String, String> result = alipay.payV2(mPayInfo, true);
             PayResult payResult = new PayResult(result);
             final String resultInfo = payResult.getResult();// 同步返回需要验证的信息
 

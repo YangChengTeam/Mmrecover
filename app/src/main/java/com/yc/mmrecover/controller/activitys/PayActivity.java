@@ -29,6 +29,7 @@ import com.yc.mmrecover.model.engin.VipEngine;
 import com.yc.mmrecover.pay.alipay.IAliPay1Impl;
 import com.yc.mmrecover.pay.alipay.IPayCallback;
 import com.yc.mmrecover.pay.alipay.IWXPay1Impl;
+import com.yc.mmrecover.pay.alipay.LoadingDialog;
 import com.yc.mmrecover.pay.alipay.OrderInfo;
 import com.yc.mmrecover.utils.EngineUtils;
 import com.yc.mmrecover.utils.HttpUtils;
@@ -352,14 +353,18 @@ public class PayActivity extends BaseActivity {
         });
     }
 
+    private LoadingDialog loadingDialog = null;
 
     private void createOrder(String cardId, String payway) {
         PayEngine payEngine = new PayEngine(this);
+        if (loadingDialog == null)
+            loadingDialog = new LoadingDialog(this);
+        loadingDialog.showLoadingDialog();
 
         payEngine.createOrder(cardId, payway).subscribe(new Subscriber<ResultInfo<OrderInfo>>() {
             @Override
             public void onCompleted() {
-
+                loadingDialog.dismissLoadingDialog();
             }
 
             @Override
@@ -432,7 +437,6 @@ public class PayActivity extends BaseActivity {
             alertDialog.dismiss();
         });
         alertDialog.show();
-
 
     }
 
