@@ -1,10 +1,8 @@
 package com.yc.mmrecover.controller.activitys;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
@@ -12,23 +10,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding3.view.RxView;
-import com.kk.utils.LogUtil;
+import com.kk.securityhttp.domain.ResultInfo;
+import com.kk.securityhttp.net.contains.HttpConfig;
 import com.kk.utils.TaskUtil;
-import com.kk.utils.ToastUtil;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.BroadcastInfo;
-import com.yc.mmrecover.model.bean.WxContactInfo;
+import com.yc.mmrecover.model.bean.IndexInfo;
+import com.yc.mmrecover.model.bean.UserInfo;
+import com.yc.mmrecover.model.engin.IndexEngine;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.utils.MessageUtils;
+import com.yc.mmrecover.utils.SpUtils;
+import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.wdiget.VTextView;
 
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import rx.Subscriber;
 
 
 public class MainActivity extends BaseActivity {
@@ -78,7 +80,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-
+        getUserInfo();
     }
 
     private void initBoradInfo() {
@@ -175,6 +177,35 @@ public class MainActivity extends BaseActivity {
         ((TextView) inflate.findViewById(R.id.tv_name)).setText(str);
         ((ImageView) inflate.findViewById(R.id.im_icon)).setImageDrawable(getResources().getDrawable(i));
         return inflate;
+    }
+
+    private void getUserInfo() {
+        IndexEngine indexEngine = new IndexEngine(this);
+        indexEngine.getIndexInfo().subscribe(new Subscriber<ResultInfo<IndexInfo>>() {
+
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(ResultInfo<IndexInfo> indexInfoResultInfo) {
+                if (indexInfoResultInfo != null && indexInfoResultInfo.getCode() == HttpConfig.STATUS_OK && indexInfoResultInfo.getData() != null) {
+                    IndexInfo indexInfo = indexInfoResultInfo.getData();
+                    UserInfo userInfo = indexInfo.getUserInfo();
+                    userInfo.setIsVip(indexInfo.getUserCard());
+                    userInfo.setWx(indexInfo.getKf().getWx());
+                    userInfo.setQq(indexInfo.getKf().getQq());
+                    UserInfoHelper.saveUserInfo(userInfo);
+                }
+            }
+        });
     }
 
 

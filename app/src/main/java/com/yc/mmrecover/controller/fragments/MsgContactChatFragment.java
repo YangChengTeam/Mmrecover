@@ -10,9 +10,14 @@ import com.kk.utils.TaskUtil;
 import com.kk.utils.VUiKit;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.controller.activitys.MessageChatActivity;
+import com.yc.mmrecover.model.bean.EventPayState;
 import com.yc.mmrecover.model.bean.WxContactInfo;
 import com.yc.mmrecover.utils.MessageUtils;
 import com.yc.mmrecover.view.adapters.WxContactAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,6 +49,7 @@ public class MsgContactChatFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
+        EventBus.getDefault().register(this);
         Intent intent = getActivity().getIntent();
         if (intent != null) {
             this.mParent = intent.getStringExtra("account_parent");
@@ -120,5 +126,14 @@ public class MsgContactChatFragment extends BaseFragment {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void paySuccess(EventPayState eventPayState) {
+        wxContactAdapter.notifyDataSetChanged();
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

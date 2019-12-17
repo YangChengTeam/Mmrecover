@@ -1,15 +1,13 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.content.Intent;
-import android.view.View;
+
+import com.yc.mmrecover.R;
+import com.yc.mmrecover.helper.GridSpacingItemDecoration;
+import com.yc.mmrecover.model.bean.MediaInfo;
+import com.yc.mmrecover.view.adapters.GridVideoAdapter;
 
 import androidx.recyclerview.widget.GridLayoutManager;
-
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.yc.mmrecover.R;
-import com.yc.mmrecover.model.bean.MediaInfo;
-import com.yc.mmrecover.helper.GridSpacingItemDecoration;
-import com.yc.mmrecover.view.adapters.GridVideoAdapter;
 
 public class RecoverVideoActivity extends BaseRecoverActivity {
 

@@ -16,9 +16,9 @@ import com.kk.utils.TaskUtil;
 import com.kk.utils.VUiKit;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.controller.activitys.DetailUserActivity;
-import com.yc.mmrecover.controller.activitys.MessageChatActivity;
 import com.yc.mmrecover.model.bean.WxContactInfo;
 import com.yc.mmrecover.utils.MessageUtils;
+import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.adapters.WxContactAdapter;
 
 import java.util.ArrayList;
@@ -178,5 +178,11 @@ public class MsgContactFragment extends BaseFragment {
         });
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (UserInfoHelper.getVipType() == 2) {
+            wxContactAdapter.notifyDataSetChanged();
+        }
+    }
 }

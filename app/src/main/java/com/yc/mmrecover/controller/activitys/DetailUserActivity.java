@@ -10,11 +10,17 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding3.view.RxView;
 import com.yc.mmrecover.R;
+import com.yc.mmrecover.model.bean.EventPayState;
 import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.model.bean.WxContactInfo;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.utils.MessageUtils;
+import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.concurrent.TimeUnit;
 
@@ -50,6 +56,7 @@ public class DetailUserActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
+        EventBus.getDefault().register(this);
         initTitle("详细资料");
         this.mUid = getIntent().getStringExtra("uid");
         boolean booleanExtra = getIntent().getBooleanExtra("is_from_chat", false);
@@ -87,28 +94,31 @@ public class DetailUserActivity extends BaseActivity {
 //            TextView textView2 = (TextView) findViewById(C0810R.C0809id.tv_buy);
             tvBuy.setBackgroundDrawable(new BackgroundShape(this, 3, R.color.blue));
 
-            StringBuilder stringBuilder;
-            if (GlobalData.vipType == 3) {
-                rlBuy.setVisibility(View.GONE);
-
-                stringBuilder = new StringBuilder();
-                stringBuilder.append("微信号:");
-                stringBuilder.append(this.mUserInfo.getWxId());
-                tvUserId.setText(stringBuilder.toString());
-                return;
-            }
-
-            stringBuilder = new StringBuilder();
-            stringBuilder.append("微信号:");
-            stringBuilder.append(Func.makeStringHeadMix(this.mUserInfo.getWxId()));
-            tvUserId.setText(stringBuilder.toString());
+            setUserId();
 
         }
 
         initListener();
 
 
+    }
 
+    private void setUserId() {
+        StringBuilder stringBuilder;
+        if (UserInfoHelper.getVipType() == 2) {
+            rlBuy.setVisibility(View.GONE);
+
+            stringBuilder = new StringBuilder();
+            stringBuilder.append("微信号:");
+            stringBuilder.append(this.mUserInfo.getWxId());
+            tvUserId.setText(stringBuilder.toString());
+            return;
+        }
+
+        stringBuilder = new StringBuilder();
+        stringBuilder.append("微信号:");
+        stringBuilder.append(Func.makeStringHeadMix(this.mUserInfo.getWxId()));
+        tvUserId.setText(stringBuilder.toString());
 
     }
 
@@ -122,4 +132,15 @@ public class DetailUserActivity extends BaseActivity {
 
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void paySuccess(EventPayState eventPayState) {
+        setUserId();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

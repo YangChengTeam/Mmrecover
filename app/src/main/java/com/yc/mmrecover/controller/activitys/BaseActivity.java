@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.umeng.analytics.MobclickAgent;
 import com.yc.mmrecover.R;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -70,5 +72,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             window.setStatusBarColor(0);
         }
     }
+
 
 }

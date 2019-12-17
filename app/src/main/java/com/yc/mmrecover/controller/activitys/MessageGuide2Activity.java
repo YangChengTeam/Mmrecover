@@ -16,8 +16,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding3.view.RxView;
+import com.kk.securityhttp.domain.ResultInfo;
+import com.kk.securityhttp.net.contains.HttpConfig;
+import com.kk.utils.ToastUtil;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.GlobalData;
+import com.yc.mmrecover.model.engin.GuideEngine;
 import com.yc.mmrecover.utils.MessageUtils;
 
 import java.util.ArrayList;
@@ -30,6 +34,7 @@ import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import io.reactivex.functions.Consumer;
 import kotlin.Unit;
+import rx.Subscriber;
 
 
 public class MessageGuide2Activity extends BaseActivity {
@@ -69,8 +74,14 @@ public class MessageGuide2Activity extends BaseActivity {
 
         this.mIsFromGuid3 = getIntent().getBooleanExtra("from_guid3", false);
 
+//        if (this.mIsFromGuid3) {
+//            GlobalData.isNeedConnectPC = true;
+//
+//        } else {
+//            initViewPage(getGuidImagePath());
+//        }
 
-        initViewPage(getGuidImagePath());
+        getGuidImagePath();
 
 
         tvQa.getPaint().setFlags(8);
@@ -82,13 +93,17 @@ public class MessageGuide2Activity extends BaseActivity {
         tvBackupErr.setText(Html.fromHtml("无法备份微信数据？"));
 
 
-
         RxView.clicks(backupBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
             MessageUtils.openBackup(MessageGuide2Activity.this);
 
         });
         RxView.clicks(tvShowBackup).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+            if (!MessageUtils.isBackup()) {
+                ToastUtil.toast2(MessageGuide2Activity.this, "您还没有备份，请先备份");
+                return;
+            }
             startActivity(new Intent(MessageGuide2Activity.this, MessageUserActivity.class));
+//            startActivity(new Intent(MessageGuide2Activity.this, MessageGuide3Activity.class));
         });
         RxView.clicks(tvQa).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((Consumer<? super Unit>) aVoid -> {
             Intent intent = new Intent(MessageGuide2Activity.this, WebActivity.class);
@@ -291,6 +306,19 @@ public class MessageGuide2Activity extends BaseActivity {
                 strArr[5] = "第6步 备份完成返回本软件";
             }
         }
+        strArr[0] = "第1步（电脑上）用电脑下载并安装pc端微信恢复管家";
+        strArr[1] = "第2步（手机上）手机连接电脑，并打开开发者选项，选择“设置”";
+        strArr[2] = "第3步（手机上）进入“更多设置”";
+        strArr[3] = "第4步（手机上）进入“关于手机”";
+        strArr[4] = "第5步（手机上）进入“版本信息”";
+        strArr[5] = "第6步（手机上）“软件版本号”快速点击5-7次，等待提示";
+        strArr[6] = "第7步（手机上）再回到第二步“更多设置”拉倒最后,“开发者选项”";
+        strArr[7] = "第8步（手机上）打开“开发者选项”和“USB调试”开关";
+        strArr[8] = "第9步（电脑上）选择空间足够大的盘存放备份文件";
+        strArr[9] = "第10步（电脑上）出现以下信息时，请在手机上确认";
+        strArr[10] = "第11步（手机上）不要设置密码，点击“备份我的数据”";
+        strArr[11] = "第12步（电脑上）备份完成";
+
 
         return strArr;
     }
@@ -336,17 +364,29 @@ public class MessageGuide2Activity extends BaseActivity {
     }
 
 
-    private String[] getGuidImagePath() {
-        if (mGuidImageList == null) {
-            mGuidImageList = new String[6];
-            mGuidImageList[0] = "http://wxapp.leshu.com/public/image/huawei_1.jpg";
-            mGuidImageList[1] = "http://wxapp.leshu.com/public/image/huawei_2.jpg";
-            mGuidImageList[2] = "http://wxapp.leshu.com/public/image/huawei_3.jpg";
-            mGuidImageList[3] = "http://wxapp.leshu.com/public/image/huawei_4.jpg";
-            mGuidImageList[4] = "http://wxapp.leshu.com/public/image/huawei_5.jpg";
-            mGuidImageList[5] = "http://wxapp.leshu.com/public/image/huawei_6.jpg";
-        }
-        return mGuidImageList;
+    private void getGuidImagePath() {
+
+        GuideEngine guideEngine = new GuideEngine(this);
+        guideEngine.getGuideImages().subscribe(new Subscriber<ResultInfo<List<String>>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(ResultInfo<List<String>> listResultInfo) {
+                if (listResultInfo != null && listResultInfo.getCode() == HttpConfig.STATUS_OK && listResultInfo.getData() != null) {
+                    initViewPage(listResultInfo.getData().toArray(new String[0]));
+                }
+            }
+        });
+
+
     }
 
     public static void startActivityForPackage(Context context, String str, String str2) {

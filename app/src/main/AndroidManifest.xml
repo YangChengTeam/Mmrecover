@@ -62,7 +62,6 @@
 
         <activity android:name=".controller.activitys.MessageGuideActivity"></activity>
         <activity android:name=".controller.activitys.MessageGuide2Activity"></activity>
-        <activity android:name=".controller.activitys.MessageGuide3Activity"></activity>
         <activity android:name=".controller.activitys.MessageUserActivity"></activity>
         <activity android:name=".controller.activitys.MessageContactActivity"></activity>
         <activity android:name=".controller.activitys.MessageChatActivity"></activity>
@@ -77,6 +76,14 @@
         <activity android:name=".controller.activitys.DetailUserActivity" />
         <activity android:name=".controller.activitys.Reserved2Activity" />
         <activity android:name=".controller.activitys.DetailImageActivity" />
+        <activity android:name=".controller.activitys.AddSuggestActivity" />
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"

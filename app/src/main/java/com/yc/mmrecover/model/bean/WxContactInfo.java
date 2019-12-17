@@ -3,6 +3,7 @@ package com.yc.mmrecover.model.bean;
 import android.text.TextUtils;
 
 import com.yc.mmrecover.utils.Func;
+import com.yc.mmrecover.utils.UserInfoHelper;
 
 public class WxContactInfo {
     private int contactType;
@@ -26,7 +27,7 @@ public class WxContactInfo {
     }
 
     public String getContent() {
-        if (GlobalData.vipType == 3) {
+        if (UserInfoHelper.getVipType() == 2) {
             return this.content;
         }
         if (TextUtils.isEmpty(this.tmpContent) && !TextUtils.isEmpty(this.content)) {

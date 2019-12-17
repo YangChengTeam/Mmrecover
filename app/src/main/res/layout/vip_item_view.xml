@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/rl_price1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="15.0dip"
+    android:layout_marginTop="12.0dip"
+    android:layout_marginRight="15.0dip">
+
+    <ImageView
+        android:id="@id/im_select_bk1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="fitXY"
+        android:src="@mipmap/pay_frame_on"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@id/tv_recommend"
+        android:layout_width="75.0dip"
+        android:layout_height="23.0dip"
+        android:layout_alignParentEnd="true"
+        android:background="@mipmap/pay_recommend"
+        android:gravity="center"
+        android:text="  推荐"
+        android:textColor="@color/white"
+        android:textSize="15.0sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12.0dip"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="15.0dip"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¥"
+                android:textColor="@color/red_money"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@id/tv_98"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="98"
+                android:textColor="@color/red_money"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_pay98_des"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8.0dip"
+                android:background="@color/red_case"
+                android:paddingLeft="4dp"
+                android:paddingTop="1dp"
+                android:paddingRight="4dp"
+                android:paddingBottom="1dp"
+                android:text="永久恢复"
+                android:textColor="@color/white"
+                android:textSize="11.0sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10.0dip"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@id/tv_content1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="可恢复微信聊天记录、微信好友、视频、语音、图片，"
+                android:textColor="@color/gray_word2"
+                android:textSize="13.0sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@id/tv_content1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="彻底删除数据"
+                    android:textColor="@color/gray_word2"
+                    android:textSize="13.0sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:text="+VIP专属客服"
+                    android:textColor="@color/red_word"
+                    android:textSize="13.0sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@id/im_select1"
+        android:layout_width="20.0dip"
+        android:layout_height="20.0dip"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@mipmap/pay_select"
+        android:visibility="gone" />
+</RelativeLayout>

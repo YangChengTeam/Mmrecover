@@ -1,6 +1,10 @@
 package com.yc.mmrecover.model.bean;
 
+import android.text.TextUtils;
+
 import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.yc.mmrecover.utils.Func;
+import com.yc.mmrecover.utils.UserInfoHelper;
 
 public class WxChatMsgInfo implements MultiItemEntity {
     private static final int LOAD_NUM = 10;
@@ -49,16 +53,16 @@ public class WxChatMsgInfo implements MultiItemEntity {
 
 
     public String getContent() {
-//        if (GlobalData.vipType == 3) {
-//            return this.content;
-//        }
-//        if (TextUtils.isEmpty(this.tmpContent)) {
-//            this.tmpContent = Func.getMixString(this.content);
-//        }
-//        if (this.type == 2) {
-//            this.tmpContent = this.content;
-//        }
-        return this.content;
+        if (UserInfoHelper.getVipType() == 2) {
+            return this.content;
+        }
+        if (TextUtils.isEmpty(this.tmpContent)) {
+            this.tmpContent = Func.getMixString(this.content);
+        }
+        if (this.type == 2) {
+            this.tmpContent = this.content;
+        }
+        return this.tmpContent;
     }
 
     public void setContent(String str) {

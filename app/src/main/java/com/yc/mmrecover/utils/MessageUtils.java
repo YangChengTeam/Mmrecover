@@ -177,7 +177,7 @@ public class MessageUtils {
         return microMsgPath;
     }
 
-    private static boolean isBackup() {
+    public static boolean isBackup() {
         File microMsgDir = new File(getMicroMsgDir());
         if (!microMsgDir.exists()) {
             return false;

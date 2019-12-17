@@ -82,7 +82,7 @@ public abstract class BaseShowActivity extends BaseActivity {
     private boolean isDestory = false;
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         isDestory = true;
     }
