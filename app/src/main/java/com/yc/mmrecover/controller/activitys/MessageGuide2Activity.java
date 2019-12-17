@@ -108,7 +108,7 @@ public class MessageGuide2Activity extends BaseActivity {
         RxView.clicks(tvQa).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((Consumer<? super Unit>) aVoid -> {
             Intent intent = new Intent(MessageGuide2Activity.this, WebActivity.class);
             intent.putExtra("web_title", "帮助");
-            intent.putExtra("web_url", "http://wxapp.leshu.com/home/help");
+            intent.putExtra("web_url", "http://uu.zhanyu22.com/html/help.html");
             MessageGuide2Activity.this.startActivity(intent);
         });
         RxView.clicks(tvBackupErr).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {

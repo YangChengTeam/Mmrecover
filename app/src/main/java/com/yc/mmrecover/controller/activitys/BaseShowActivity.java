@@ -23,6 +23,7 @@ import com.kk.utils.ToastUtil;
 import com.kk.utils.VUiKit;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.MediaInfo;
+import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
 import com.yc.mmrecover.utils.BeanUtils;
 
@@ -100,49 +101,53 @@ public abstract class BaseShowActivity extends BaseActivity {
         });
 
         RxView.clicks(mTvRecover).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
-            if (mIsOperate) return;
 
-            mIsOperate = true;
+            if (!UserInfoHelper.gotoVip(this)) {
 
-            mRlMask.setVisibility(View.VISIBLE);
-            mTvMask.setText("正在恢复" + initTitle());
 
-            TaskUtil.getImpl().runTask(() -> {
-                File dir = new File(Environment.getExternalStorageDirectory() + "/" + initPath());
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
+                if (mIsOperate) return;
 
-                mRlMask.setTag(false);
-                for (MediaInfo mediaBean : BaseShowActivity.this.mMediaList) {
-                    if (mediaBean.isSelect()) {
-                        File source = new File(mediaBean.getPath());
-                        File dest = new File(dir.getAbsolutePath() + "/" + mediaBean.getFileName());
-                        try {
-                            FileUtils.copyFile(source, dest);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            LogUtil.msg(initTitle() + "恢复错误->" + e.getMessage());
+                mIsOperate = true;
+
+                mRlMask.setVisibility(View.VISIBLE);
+                mTvMask.setText("正在恢复" + initTitle());
+
+                TaskUtil.getImpl().runTask(() -> {
+                    File dir = new File(Environment.getExternalStorageDirectory() + "/" + initPath());
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+
+                    mRlMask.setTag(false);
+                    for (MediaInfo mediaBean : BaseShowActivity.this.mMediaList) {
+                        if (mediaBean.isSelect()) {
+                            File source = new File(mediaBean.getPath());
+                            File dest = new File(dir.getAbsolutePath() + "/" + mediaBean.getFileName());
+                            try {
+                                FileUtils.copyFile(source, dest);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                LogUtil.msg(initTitle() + "恢复错误->" + e.getMessage());
+                            }
+                            mediaBean.setSelect(false);
+                            mRlMask.setTag(true);
                         }
-                        mediaBean.setSelect(false);
-                        mRlMask.setTag(true);
                     }
-                }
 
-                VUiKit.post(() -> {
-                    mIsOperate = false;
-                    if (Boolean.parseBoolean(mRlMask.getTag() + "")) {
-                        mAdapter.notifyDataSetChanged();
-                        start2RecoverActivity();
-                    } else {
-                        ToastUtil.toast2(BaseShowActivity.this, "请选择要恢复的" + initTitle());
-                    }
-                    mRlMask.setVisibility(View.GONE);
+                    VUiKit.post(() -> {
+                        mIsOperate = false;
+                        if (Boolean.parseBoolean(mRlMask.getTag() + "")) {
+                            mAdapter.notifyDataSetChanged();
+                            start2RecoverActivity();
+                        } else {
+                            ToastUtil.toast2(BaseShowActivity.this, "请选择要恢复的" + initTitle());
+                        }
+                        mRlMask.setVisibility(View.GONE);
+
+                    });
 
                 });
-
-            });
-
+            }
         });
 
         RxView.clicks(mDelBtn).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
@@ -151,8 +156,8 @@ public abstract class BaseShowActivity extends BaseActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("温馨提示");
             builder.setMessage("你确认删除选择的" + initTitle() + "吗？");
-            builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogInterface, int i) {
+            builder.setPositiveButton("确认", (dialogInterface, i) -> {
+                if (!UserInfoHelper.gotoVip(this)) {
                     mRlMask.setVisibility(View.VISIBLE);
                     mTvMask.setText("正在删除" + initTitle());
                     mRlMask.setTag(false);
@@ -185,16 +190,13 @@ public abstract class BaseShowActivity extends BaseActivity {
                     });
                 }
             });
-            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
+            builder.setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss());
             builder.show();
         });
 
         RxView.clicks(mTvRecovered).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
-            start2RecoverActivity();
+            if (!UserInfoHelper.gotoVip(this))
+                start2RecoverActivity();
         });
 
         this.mTvRecover.setBackground(new BackgroundShape(this, 22, R.color.yellow_btn));

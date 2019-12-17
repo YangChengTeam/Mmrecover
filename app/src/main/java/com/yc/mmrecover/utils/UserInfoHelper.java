@@ -1,9 +1,13 @@
 package com.yc.mmrecover.utils;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.rtp.RtpStream;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.yc.mmrecover.constant.Config;
+import com.yc.mmrecover.controller.activitys.PayActivity;
 import com.yc.mmrecover.model.bean.UserInfo;
 
 /**
@@ -41,5 +45,14 @@ public class UserInfoHelper {
             return userInfo.getIsVip();
         }
         return 0;//非vip
+    }
+
+
+    public static boolean gotoVip(Context context) {
+        if (!(getVipType() == 1 || getVipType() == 2)) {
+            context.startActivity(new Intent(context, PayActivity.class));
+            return true;
+        }
+        return false;
     }
 }
