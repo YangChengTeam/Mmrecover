@@ -2,10 +2,13 @@ package com.yc.mmrecover.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.text.format.Formatter;
 
 import androidx.core.content.FileProvider;
@@ -14,10 +17,13 @@ import com.fulongbin.decoder.Silk;
 import com.kk.securityhttp.domain.GoagalInfo;
 import com.kk.utils.ToastUtil;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
@@ -303,5 +309,62 @@ public class Func {
         }
     }
 
+    public static String getImei(Context context) {
+        String str = GoagalInfo.get().uuid;
+        String str2 = "";
+        if (!TextUtils.isEmpty(str)) {
+            return str;
+        }
+        if (context != null) {
+            try {
+                TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                if (telephonyManager != null && checkPermission(context, "android.permission.READ_PHONE_STATE")) {
+                    if (Build.VERSION.SDK_INT < 26) {
+                        return telephonyManager.getDeviceId();
+                    }
+                    String str3;
+                    try {
+                        Method method = telephonyManager.getClass().getMethod("getImei", new Class[0]);
+                        method.setAccessible(true);
+                        str3 = (String) method.invoke(telephonyManager, new Object[0]);
+                    } catch (Exception unused) {
+                        str3 = null;
+                    }
+                    try {
+                        if (TextUtils.isEmpty(str3)) {
+                            str3 = telephonyManager.getDeviceId();
+                        }
+                        return str3;
+                    } catch (Throwable unused2) {
+                        return str2;
+                    }
+                }
+            } catch (Throwable unused3) {
+                return str2;
+            }
+        }
+        return str;
+    }
+
+    public static boolean checkPermission(Context context, String str) {
+        boolean z = false;
+        if (context == null) {
+            return false;
+        }
+        if (Build.VERSION.SDK_INT < 23) {
+            if (context.getPackageManager().checkPermission(str, context.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+                z = true;
+            }
+            return z;
+        }
+        try {
+            if (((Integer) Class.forName("android.content.Context").getMethod("checkSelfPermission", new Class[]{String.class}).invoke(context, new Object[]{str})).intValue() == 0) {
+                z = true;
+            }
+            return z;
+        } catch (Throwable unused) {
+            return false;
+        }
+    }
 
 }

@@ -9,6 +9,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -241,7 +242,7 @@ public class MessageGuide2Activity extends BaseActivity {
         if (!GlobalData.isNeedConnectPC) {
             String str = GlobalData.brand;
             Object obj = -1;
-            switch (str.hashCode()) {
+            switch (str.hashCode()) {//3620012
                 case -1206476313:
                     if (str.equals("huawei")) {
                         obj = 1;
@@ -297,6 +298,19 @@ public class MessageGuide2Activity extends BaseActivity {
                 strArr[2] = "第3步 找到微信并勾选";
                 strArr[3] = "第4步 耐心等待备份完成";
                 strArr[4] = "第5步 备份完成返回本软件";
+            } else if (TextUtils.equals("vivo", str)) {
+                strArr[0] = "第1步（电脑上）用电脑下载并安装pc端微信恢复管家";
+                strArr[1] = "第2步（手机上）手机连接电脑，并打开开发者选项，选择“设置”";
+                strArr[2] = "第3步（手机上）进入“更多设置”";
+                strArr[3] = "第4步（手机上）进入“关于手机”";
+                strArr[4] = "第5步（手机上）进入“版本信息”";
+                strArr[5] = "第6步（手机上）“软件版本号”快速点击5-7次，等待提示";
+                strArr[6] = "第7步（手机上）再回到第二步“更多设置”拉倒最后,“开发者选项”";
+                strArr[7] = "第8步（手机上）打开“开发者选项”和“USB调试”开关";
+                strArr[8] = "第9步（电脑上）选择空间足够大的盘存放备份文件";
+                strArr[9] = "第10步（电脑上）出现以下信息时，请在手机上确认";
+                strArr[10] = "第11步（手机上）不要设置密码，点击“备份我的数据”";
+                strArr[11] = "第12步（电脑上）备份完成";
             } else {
                 strArr[0] = "第1步 点击 备份";
                 strArr[1] = "第2步 选择 内部存储";
@@ -306,19 +320,6 @@ public class MessageGuide2Activity extends BaseActivity {
                 strArr[5] = "第6步 备份完成返回本软件";
             }
         }
-        strArr[0] = "第1步（电脑上）用电脑下载并安装pc端微信恢复管家";
-        strArr[1] = "第2步（手机上）手机连接电脑，并打开开发者选项，选择“设置”";
-        strArr[2] = "第3步（手机上）进入“更多设置”";
-        strArr[3] = "第4步（手机上）进入“关于手机”";
-        strArr[4] = "第5步（手机上）进入“版本信息”";
-        strArr[5] = "第6步（手机上）“软件版本号”快速点击5-7次，等待提示";
-        strArr[6] = "第7步（手机上）再回到第二步“更多设置”拉倒最后,“开发者选项”";
-        strArr[7] = "第8步（手机上）打开“开发者选项”和“USB调试”开关";
-        strArr[8] = "第9步（电脑上）选择空间足够大的盘存放备份文件";
-        strArr[9] = "第10步（电脑上）出现以下信息时，请在手机上确认";
-        strArr[10] = "第11步（手机上）不要设置密码，点击“备份我的数据”";
-        strArr[11] = "第12步（电脑上）备份完成";
-
 
         return strArr;
     }

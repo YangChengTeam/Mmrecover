@@ -61,6 +61,8 @@ public class AddSuggestActivity extends BaseActivity {
     private static final int REQUEST_LOAD_IMAGE_FROM_GALLERY = 0x10;
     private SuggestEngine suggestEngine;
 
+    private String[] strArr = new String[1];
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_add_suggest;
@@ -93,9 +95,15 @@ public class AddSuggestActivity extends BaseActivity {
             if (item != null) {
                 if (UploadInfo.ITEM_CASE == item.getItemType()) {
                     openGallery();
-                } else {
-
                 }
+//                else {
+//                    strArr[0] = item.getPath();
+//                    Intent intent = new Intent(AddSuggestActivity.this, ImagePageViewActivity.class);
+//                    intent.putExtra("image_path", strArr);
+//                    intent.putExtra("position", 0);
+//                    intent.putExtra("is_guid", true);
+//                    startActivity(intent);
+//                }
             }
         });
         suggestPicAdapter.setOnItemChildClickListener((adapter, view, position) -> {

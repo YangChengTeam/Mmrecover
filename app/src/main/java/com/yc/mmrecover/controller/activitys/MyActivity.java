@@ -54,7 +54,7 @@ public class MyActivity extends BasePermissionActivity {
             case R.id.ll_help:
                 Intent intent2 = new Intent(this, WebActivity.class);
                 intent2.putExtra("web_title", "帮助");
-                intent2.putExtra("web_url", "http://wxgj.wuhanup.com/help.html");
+                intent2.putExtra("web_url", "http://uu.zhanyu22.com/html/help.html");
                 startActivity(intent2);
                 break;
             case R.id.ll_about:
@@ -78,8 +78,10 @@ public class MyActivity extends BasePermissionActivity {
         if (userInfo != null) {
             int isVip = userInfo.getIsVip();
             String vipStr = "普通用户";
-            if (isVip == 1 || isVip == 2) {
-                vipStr = "VIP用户";
+            if (isVip == 1) {
+                vipStr = "VIP1用户";
+            } else if (isVip == 2) {
+                vipStr = "VIP2用户";
             }
             tvUser.setText(vipStr);
         }

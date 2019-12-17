@@ -435,6 +435,7 @@ public class PayActivity extends BaseActivity {
 
         alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定", (dialog, which) -> {
             alertDialog.dismiss();
+            finish();
         });
         alertDialog.show();
 
