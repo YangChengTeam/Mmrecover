@@ -323,21 +323,33 @@ public class MessageUtils {
                 String content = getChangeContent(type, cursor.getString(cursor.getColumnIndex("content")));
                 String imgPath = cursor.getString(cursor.getColumnIndex("imgPath"));
                 long createTime = cursor.getLong(cursor.getColumnIndex("createTime"));
+                boolean isAdd = true;
                 switch (type) {
                     case 3:
                         wxChatMsgInfo.setImgPath(getChatImagePath(dbFile.getParentFile().getName(), imgPath));
+                        if (!new File(wxChatMsgInfo.getImgPath()).exists()) {
+                            isAdd = false;
+                        }
                         break;
                     case 34:
                         wxChatMsgInfo.setVoicePath(getChatVoicePath(dbFile.getParentFile().getName(), imgPath));
-
                         wxChatMsgInfo.setVoiceSec(new PlayVoiceTask(null).getVoiceMiSecond(getChatVoicePath(dbFile.getParentFile().getName(), imgPath)) / 1000);
 
+                        if (!new File(wxChatMsgInfo.getVoicePath()).exists()) {
+                            isAdd = false;
+                        }
                         break;
                     case 43:
                         wxChatMsgInfo.setVideoPath(getChatVideoPath(dbFile.getParentFile().getName(), imgPath));
+                        if (!new File(wxChatMsgInfo.getVideoPath()).exists()) {
+                            isAdd = false;
+                        }
                         break;
                     case 47:
                         wxChatMsgInfo.setImgPath(getChatImagePath(dbFile.getParentFile().getName(), imgPath));
+                        if (!new File(wxChatMsgInfo.getImgPath()).exists()) {
+                            isAdd = false;
+                        }
                         break;
                     default:
                         break;
@@ -364,9 +376,10 @@ public class MessageUtils {
                     wxContactInfos.add(wxChatMsgTimeInfo);
                 }
                 startTime = createTime;
+                if (isAdd) {
+                    wxContactInfos.add(wxChatMsgInfo);
+                }
 
-
-                wxContactInfos.add(wxChatMsgInfo);
             }
             sqLiteDatabase.close();
 
