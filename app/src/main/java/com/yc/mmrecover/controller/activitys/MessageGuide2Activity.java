@@ -347,22 +347,6 @@ public class MessageGuide2Activity extends BaseActivity {
     }
 
 
-    private List<String> initPageData() {
-        List<String> pages = new ArrayList<>();
-        pages.add("http://wxapp.leshu.com/public/image/vivo1.png");
-        pages.add("http://wxapp.leshu.com/public/image/vivo2.png");
-        pages.add("http://wxapp.leshu.com/public/image/vivo3.png");
-        pages.add("http://wxapp.leshu.com/public/image/vivo4.png");
-        pages.add("http://wxapp.leshu.com/public/image/vivo5.png");
-        pages.add("http://wxapp.leshu.com/public/image/vivo6.png");
-        pages.add("http://wxapp.leshu.com/public/image/vivo7.png");
-        pages.add("http://wxapp.leshu.com/public/image/vivo8.png");
-        pages.add("http://wxapp.leshu.com/public/image/vivo9.png");
-        pages.add("http://wxapp.leshu.com/public/image/vivo10.png");
-        pages.add("http://wxapp.leshu.com/public/image/vivo11.png");
-        pages.add("http://wxapp.leshu.com/public/image/vivo12.png");
-        return pages;
-    }
 
 
     private void getGuidImagePath() {
@@ -390,15 +374,5 @@ public class MessageGuide2Activity extends BaseActivity {
 
     }
 
-    public static void startActivityForPackage(Context context, String str, String str2) {
-        try {
-            Intent intent = new Intent();
-            intent.setComponent(new ComponentName(str, str2));
-            intent.setAction("android.intent.action.VIEW");
-            context.startActivity(intent);
-        } catch (Exception e) {
-            Log.e("TAG", "startActivityForPackage: " + e.getMessage());
-        }
-    }
 
 }

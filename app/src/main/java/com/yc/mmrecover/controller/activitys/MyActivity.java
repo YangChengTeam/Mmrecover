@@ -54,6 +54,10 @@ public class MyActivity extends BaseActivity {
                 startActivity(new Intent(MyActivity.this, AboutUsActivity.class));
                 break;
 
+            case R.id.ll_contact:
+                startActivity(new Intent(MyActivity.this, AddSuggestActivity.class));
+                break;
+
         }
     }
 

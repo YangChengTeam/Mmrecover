@@ -54,6 +54,7 @@ public class WxMsgAdapter extends BaseMultiItemQuickAdapter<WxChatMsgInfo, BaseV
                                     .addOnClickListener(R.id.im_pic);
 
                             imgPath = item.getVideoPath();
+
                         } else if (contentType == 3) {
                             helper.setGone(R.id.im_video_mask, false)
                                     .addOnClickListener(R.id.im_pic);

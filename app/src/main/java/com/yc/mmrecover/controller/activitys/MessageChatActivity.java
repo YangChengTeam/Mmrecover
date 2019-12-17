@@ -207,7 +207,6 @@ public class MessageChatActivity extends BaseActivity {
                     return;
                 }
 
-
                 mAdapter.setNewData(wxChatMsgInfos);
                 recyclerView.scrollToPosition(this.mAdapter.getItemCount() - 1);
                 this.mTimeHandler.postDelayed(this.runnableDelay, 500);

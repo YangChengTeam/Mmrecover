@@ -39,19 +39,12 @@ public class DetailVideoActivity extends BaseActivity {
         };
         this.mVideoView.setVideoURI(Uri.fromFile(new File(mediaInfo.getPath())));
         this.mVideoView.setMediaController(mediaController);
-        this.mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                DetailVideoActivity.this.mVideoView.start();
-                mediaController.show();
-            }
+        this.mVideoView.setOnPreparedListener(mediaPlayer -> {
+            DetailVideoActivity.this.mVideoView.start();
+            mediaController.show();
         });
 
-        this.mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                mediaController.show();
-            }
-        });
+        this.mVideoView.setOnCompletionListener(mp -> mediaController.show());
     }
 
     @Override
