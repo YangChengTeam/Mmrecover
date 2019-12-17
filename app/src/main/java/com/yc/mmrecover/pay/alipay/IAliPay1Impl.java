@@ -35,9 +35,6 @@ public class IAliPay1Impl extends IPayImpl {
     private static String PRIVATE_KEY = "";
     private static String NOTIFY_URL = "";
 
-    private static final int SDK_PAY_FLAG = 1;
-    private static final int SDK_AUTH_FLAG = 2;
-
     public IAliPay1Impl(Activity context) {
         super(context);
     }
@@ -51,21 +48,13 @@ public class IAliPay1Impl extends IPayImpl {
             PRIVATE_KEY = get(orderInfo.getPayInfo().getPrivatekey(), PRIVATE_KEY);
             NOTIFY_URL = get(orderInfo.getPayInfo().getNotify_url(), NOTIFY_URL);
         }
-        alipay(orderInfo, orderInfo.getMoney() + "", orderInfo.getOrder_sn(), orderInfo.getName(), orderInfo.getName(),
-                iPayCallback);
+        alipay(orderInfo, iPayCallback);
     }
 
     /**
      * 支付宝支付
-     *
-     * @param money
-     * @param ordeID
-     * @param theOrderName
-     * @param theOrderDetail
      */
-    private void alipay(OrderInfo orderInfo, String money, String ordeID, String theOrderName, String theOrderDetail,
-                        IPayCallback
-                                iPayCallback) {
+    private void alipay(OrderInfo orderInfo, IPayCallback iPayCallback) {
 
 
 //        String privatekey = GoagalInfo.get().getPublicKey(PRIVATE_KEY);
@@ -106,7 +95,6 @@ public class IAliPay1Impl extends IPayImpl {
             // 构造PayTask 对象
             PayTask alipay = new PayTask(mContext);
 
-//            mPayInfo="app_id=2019121669932569&biz_content=%7B%22button%22%3A%5B%7B%22actionParam%22%3A%22ZFB_HFCZ%22%2C%22actionType%22%3A%22out%22%2C%22name%22%3A%2211%22%7D%5D%7D&charset=GBK&method=alipay.mobile.public.menu.add&sign_type=RSA2&timestamp=2019-12-16%2003%3A07%3A50&version=1.0&sign=a1th42nJRVHBa4qbSvcDztP4klbsXt348lA%2BwgJWCAxEsdOXL%2FBzjRv1%2BFHRBl0LtBz9zW%2BFBwnz9vOk1r%2ByX1N2nEibt8%2BlE2PDKWOYFnFIEyYhu0f%2BR1A4oICcCkQZW5pNBgIzR9m186agzD5BcSAttQCjHkjGIcsRZ8vd1zqGht%2Bsrtd0wTPs53ggsB2V5u%2B68WadL7nH9S7fVEpD6cuIHxFCL5J%2BNQk4ES0%2FzvwRSZQLbzKwfZIHUqlIzfsA9WDiO3OIg%2F0qXVfcDDcErugEKJYo21kUrvhDGcLvtqpWGTdhubitJsMY3S6C7QYz47w1NIu1uEadoy61RzziAg%3D%3D";
             // 调用支付接口，获取支付结果
             Map<String, String> result = alipay.payV2(mPayInfo, true);
             PayResult payResult = new PayResult(result);
@@ -137,102 +125,6 @@ public class IAliPay1Impl extends IPayImpl {
 
             }
         }
-    }
-
-
-    /**
-     * 对订单签名
-     *
-     * @param map
-     * @param rsaKey
-     * @return
-     */
-    public static String getSign(Map<String, String> map, String rsaKey) {
-        List<String> keys = new ArrayList<>(map.keySet());
-        // key排序
-        Collections.sort(keys);
-
-        StringBuilder authInfo = new StringBuilder();
-        for (int i = 0; i < keys.size() - 1; i++) {
-            String key = keys.get(i);
-            String value = map.get(key);
-            authInfo.append(buildKeyValue(key, value, false));
-            authInfo.append("&");
-        }
-
-        String tailKey = keys.get(keys.size() - 1);
-        String tailValue = map.get(tailKey);
-        authInfo.append(buildKeyValue(tailKey, tailValue, false));
-
-        String oriSign = SignUtils.sign(authInfo.toString(), rsaKey, true);
-        String encodedSign = "";
-
-        try {
-            encodedSign = URLEncoder.encode(oriSign, "UTF-8");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "sign=" + encodedSign;
-    }
-
-    /**
-     * 生成订单信息
-     *
-     * @param money
-     * @param theOrderName
-     * @param theOrderDetail
-     * @param ordeID
-     * @return
-     */
-
-    private static Map<String, String> buildOrderParamMap(String money, String theOrderName, String theOrderDetail, String ordeID) {
-
-        Map<String, String> keyValues = new HashMap<>();
-        keyValues.put("app_id", APPID);
-        keyValues.put("partner", PARTNERID);
-        keyValues.put("seller_id", EMAIL);
-        keyValues.put("notify_url", NOTIFY_URL);
-        keyValues.put("biz_content", "{\"timeout_express\":\"30m\",\"product_code\":\"QUICK_MSECURITY_PAY\",\"total_amount\":\"" + money + "\",\"subject\":\"" + theOrderName + "\",\"body\":\"" + theOrderDetail + "\",\"out_trade_no\":\"" + ordeID + "\"}");
-        keyValues.put("charset", "utf-8");
-        keyValues.put("method", "alipay.trade.app.pay");
-        keyValues.put("sign_type", "RSA2");
-        keyValues.put("timestamp", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()));
-        keyValues.put("payment_type", "1");
-        keyValues.put("version", "1.0");
-
-        return keyValues;
-    }
-
-
-    private static String buildOrderParam(Map<String, String> map) {
-        List<String> keys = new ArrayList<>(map.keySet());
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < keys.size() - 1; i++) {
-            String key = keys.get(i);
-            String value = map.get(key);
-            sb.append(buildKeyValue(key, value, true));
-            sb.append("&");
-        }
-        String tailKey = keys.get(keys.size() - 1);
-        String tailValue = map.get(tailKey);
-        sb.append(buildKeyValue(tailKey, tailValue, true));
-        return sb.toString();
-    }
-
-    private static String buildKeyValue(String key, String value, boolean isEncode) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(key);
-        sb.append("=");
-        if (isEncode) {
-            try {
-                sb.append(URLEncoder.encode(value, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                sb.append(value);
-            }
-        } else {
-            sb.append(value);
-        }
-        return sb.toString();
     }
 
 

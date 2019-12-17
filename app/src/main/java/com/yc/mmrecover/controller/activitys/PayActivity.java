@@ -141,7 +141,7 @@ public class PayActivity extends BaseActivity {
             case R.id.tv_note: //用户须知
                 Intent intent = new Intent(PayActivity.this, WebActivity.class);
                 intent.putExtra("web_title", "会员须知");
-                intent.putExtra("web_url", "http://wxgj.wuhanup.com/userNotice.html");
+                intent.putExtra("web_url", "http://uu.zhanyu22.com/html/userNotice.html");
                 PayActivity.this.startActivity(intent);
                 break;
             case R.id.ll_read: //我已阅读用户须知

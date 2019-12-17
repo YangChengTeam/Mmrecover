@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -37,6 +38,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -76,6 +78,7 @@ public class Reserved2Activity extends BaseActivity {
     private Handler mUpdateProgressHandler;
 
     public static final int REQUEST_INSTALL_PACKAGES = 100;
+    public static final int GET_UNKNOWN_APP_SOURCES = 200;
 
     @Override
     protected int getLayoutId() {
@@ -104,7 +107,7 @@ public class Reserved2Activity extends BaseActivity {
     }
 
     /* renamed from: com.recover.wechat.app.view.Reserved2Activity$4 */
-   private class C09264 implements Runnable {
+    private class C09264 implements Runnable {
         C09264() {
         }
 
@@ -268,6 +271,8 @@ public class Reserved2Activity extends BaseActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, REQUEST_INSTALL_PACKAGES);
 
             }
+        } else {
+            realInstallAPK();
         }
 
 
@@ -285,7 +290,7 @@ public class Reserved2Activity extends BaseActivity {
             Intent intent = new Intent("android.intent.action.VIEW");
             if (Build.VERSION.SDK_INT >= 24) {
                 intent.setFlags(1);
-                intent.setDataAndType(FileProvider.getUriForFile(this, "com.recover.ww.app.fileProvider", downloadFile), "application/vnd.android.package-archive");
+                intent.setDataAndType(FileProvider.getUriForFile(this, "com.yc.mmrecover.myFileProvider", downloadFile), "application/vnd.android.package-archive");
             } else {
                 intent.setDataAndType(Uri.fromFile(downloadFile), "application/vnd.android.package-archive");
                 intent.setFlags(SQLiteDatabase.CREATE_IF_NECESSARY);
@@ -314,10 +319,21 @@ public class Reserved2Activity extends BaseActivity {
         AlertDialog alertDialog = builder.setTitle("提示")
                 .setMessage("安装apk需要获取安装权限")
                 .setPositiveButton("确定申请", (dialog, which) -> {
-                    ActivityCompat.requestPermissions(Reserved2Activity.this, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, REQUEST_INSTALL_PACKAGES);
+                    //  引导用户手动开启安装权限
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+                    startActivityForResult(intent, GET_UNKNOWN_APP_SOURCES);
+//                    ActivityCompat.requestPermissions(Reserved2Activity.this, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, REQUEST_INSTALL_PACKAGES);
                     dialog.dismiss();
                 })
                 .setNegativeButton("取消", (dialog, which) -> dialog.dismiss()).create();
         alertDialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GET_UNKNOWN_APP_SOURCES) {
+
+        }
     }
 }
