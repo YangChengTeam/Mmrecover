@@ -1,6 +1,5 @@
 package com.yc.mmrecover.controller.activitys;
 
-import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -12,18 +11,15 @@ import android.widget.Toast;
 
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.UserInfo;
+import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
-import com.yc.mmrecover.utils.Func;
-
-import java.util.Arrays;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class MyActivity extends BasePermissionActivity {
+public class MyActivity extends BaseActivity {
 
     @BindView(R.id.im_head)
     ImageView ivHead;
@@ -47,9 +43,6 @@ public class MyActivity extends BasePermissionActivity {
                     clipboardManager.setPrimaryClip(newPlainText);
                 }
                 Toast.makeText(MyActivity.this, "机器码已复制到剪贴板", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.ll_contact:
-                checkAndRequestPermission();
                 break;
             case R.id.ll_help:
                 Intent intent2 = new Intent(this, WebActivity.class);
@@ -87,20 +80,4 @@ public class MyActivity extends BasePermissionActivity {
         }
     }
 
-    @Override
-    protected List<String> getMustPermissions() {
-        return Arrays.asList(Manifest.permission.CAMERA);
-    }
-
-    @Override
-    protected void onRequestPermissionSuccess() {
-        Intent intent = new Intent(MyActivity.this, AddSuggestActivity.class);
-//        intent.putExtra("web_title", "意见反馈");
-//        StringBuilder stringBuilder = new StringBuilder();
-//        stringBuilder.append("http://wxapp.leshu.com/home/enquiry?device_id=");
-////        stringBuilder.append("http://wxgj.wuhanup.com/feedback.html?device_id=");
-//        stringBuilder.append(Func.getMachineCode(MyActivity.this));
-//        intent.putExtra("web_url", stringBuilder.toString());
-        startActivity(intent);
-    }
 }
