@@ -394,15 +394,14 @@ public class MessageUtils {
         stringBuilder.append(md5.substring(0, 2));
         stringBuilder.append("/");
         stringBuilder.append(md5.substring(2, 4));
-        stringBuilder.append("/msg_");
         str = stringBuilder.toString();
         StringBuilder stringBuilder2 = new StringBuilder();
         stringBuilder2.append(str);
         stringBuilder2.append(str2);
-        stringBuilder2.append(".amr");
+        stringBuilder2.append(".mp4");
         str = stringBuilder2.toString();
         StringBuilder stringBuilder3 = new StringBuilder();
-        stringBuilder3.append("getChatVoicePath = ");
+        stringBuilder3.append("getChatVideoPath = ");
         stringBuilder3.append(str);
         return str;
     }

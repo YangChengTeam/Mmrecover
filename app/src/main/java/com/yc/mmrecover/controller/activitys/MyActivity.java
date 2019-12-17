@@ -21,7 +21,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class MyActivity extends BasePermissionActivity {
+public class MyActivity extends BaseActivity {
 
     @BindView(R.id.im_head)
     ImageView ivHead;
@@ -46,13 +46,10 @@ public class MyActivity extends BasePermissionActivity {
                 }
                 Toast.makeText(MyActivity.this, "机器码已复制到剪贴板", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.ll_contact:
-                checkAndRequestPermission();
-                break;
             case R.id.ll_help:
                 Intent intent2 = new Intent(this, WebActivity.class);
                 intent2.putExtra("web_title", "帮助");
-                intent2.putExtra("web_url", "http://wxgj.wuhanup.com/help.html");
+                intent2.putExtra("web_url", "http://uu.zhanyu22.com/html/help.html");
                 startActivity(intent2);
                 break;
             case R.id.ll_about:
@@ -72,21 +69,5 @@ public class MyActivity extends BasePermissionActivity {
         tvCopy.setBackground(new BackgroundShape(this, 14, R.color.gray_button));
         tvCode.setText(Func.getMachineCode(MyActivity.this));
     }
-
-    @Override
-    protected List<String> getMustPermissions() {
-        return Arrays.asList(Manifest.permission.CAMERA);
-    }
-
-    @Override
-    protected void onRequestPermissionSuccess() {
-        Intent intent = new Intent(MyActivity.this, WebActivity.class);
-        intent.putExtra("web_title", "意见反馈");
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("http://wxapp.leshu.com/home/enquiry?device_id=");
-//        stringBuilder.append("http://wxgj.wuhanup.com/feedback.html?device_id=");
-        stringBuilder.append(Func.getMachineCode(MyActivity.this));
-        intent.putExtra("web_url", stringBuilder.toString());
-        startActivity(intent);
-    }
+    
 }
