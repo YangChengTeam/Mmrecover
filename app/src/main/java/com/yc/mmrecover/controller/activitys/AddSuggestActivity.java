@@ -204,7 +204,6 @@ public class AddSuggestActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(File file) {
-
                         uploadFile(file);
                     }
 

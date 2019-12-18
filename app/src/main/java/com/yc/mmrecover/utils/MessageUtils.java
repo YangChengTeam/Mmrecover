@@ -640,7 +640,13 @@ public class MessageUtils {
 
             }
         } else if (GlobalData.brand.equals("vivo")) {
+            
+        } else {
+            try {
+                context.startActivity(new Intent("android.settings.INTERNAL_STORAGE_SETTINGS"));
+            } catch (Exception unused) {
 
+            }
         }
     }
 
