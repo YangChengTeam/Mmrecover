@@ -183,7 +183,6 @@ public class MainActivity extends BaseActivity {
         IndexEngine indexEngine = new IndexEngine(this);
         indexEngine.getIndexInfo().subscribe(new Subscriber<ResultInfo<IndexInfo>>() {
 
-
             @Override
             public void onCompleted() {
 

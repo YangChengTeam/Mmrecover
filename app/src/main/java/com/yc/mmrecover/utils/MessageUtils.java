@@ -749,7 +749,7 @@ public class MessageUtils {
         }
     }
 
-    private static void unpackMeiZuZip(String dir, String destFolder) throws IOException {
+    private static void unpackMeiZuZip(String dir, String destFolder) {
         File backDir = new File(dir);
         File[] tarFiles = backDir.listFiles();
         File tarFile = null;
