@@ -13,14 +13,14 @@ android {
         multiDexEnabled true
     }
 
-//    buildTypes {
-//        release {
-//            minifyEnabled false
-////            shrinkResources true
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            zipAlignEnabled false
-//        }
-//    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            zipAlignEnabled true
+        }
+    }
 
 
     compileOptions {
