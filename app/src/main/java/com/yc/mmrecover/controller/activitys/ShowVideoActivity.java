@@ -82,34 +82,28 @@ public class ShowVideoActivity extends BaseShowActivity {
         recyclerView.setLayoutManager(layoutManage);
         recyclerView.setAdapter(this.mAdapter);
 
-        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (mIsOperate) {
-                    return;
-                }
-                MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
-                if (mediaInfo.isSelect()) {
-                    view.findViewById(R.id.im_select).setVisibility(View.GONE);
-                } else {
-                    view.findViewById(R.id.im_select).setVisibility(View.VISIBLE);
-                }
-                mediaInfo.setSelect(!mediaInfo.isSelect());
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            if (mIsOperate) {
+                return;
             }
+            MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
+            if (mediaInfo.isSelect()) {
+                view.findViewById(R.id.im_select).setVisibility(View.GONE);
+            } else {
+                view.findViewById(R.id.im_select).setVisibility(View.VISIBLE);
+            }
+            mediaInfo.setSelect(!mediaInfo.isSelect());
         });
 
-        mAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-                if (mIsOperate) {
-                    return false;
-                }
-                MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
-                Intent intent = new Intent(ShowVideoActivity.this, DetailVideoActivity.class);
-                intent.putExtra("info", mediaInfo);
-                ShowVideoActivity.this.startActivity(intent);
+        mAdapter.setOnItemLongClickListener((adapter, view, position) -> {
+            if (mIsOperate) {
                 return false;
             }
+            MediaInfo mediaInfo = (MediaInfo) adapter.getData().get(position);
+            Intent intent = new Intent(ShowVideoActivity.this, DetailVideoActivity.class);
+            intent.putExtra("info", mediaInfo);
+            ShowVideoActivity.this.startActivity(intent);
+            return false;
         });
     }
 

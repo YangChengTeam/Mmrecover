@@ -1,24 +1,31 @@
 package com.yc.mmrecover.controller.fragments;
 
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.jakewharton.rxbinding3.view.RxView;
+import com.kk.utils.LogUtil;
 import com.kk.utils.TaskUtil;
+import com.kk.utils.ToastUtil;
 import com.kk.utils.VUiKit;
 import com.yc.mmrecover.R;
+import com.yc.mmrecover.controller.activitys.BaseShowActivity;
 import com.yc.mmrecover.controller.activitys.RecoverFileActivity;
 import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.Func;
+import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.adapters.VerticalFileAdapter;
+import com.yc.mmrecover.view.wdiget.BackgroundShape;
+
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +41,10 @@ public class MsgFileFragment extends BaseScanFragment {
     RelativeLayout rlMask;
     @BindView(R.id.tv_mask)
     TextView mTvMask;
+    @BindView(R.id.tv_recover)
+    TextView tvRecover;
+    @BindView(R.id.tv_recovered)
+    TextView tvRecovered;
     private boolean mIsOperate;
     private List<MediaInfo> mMediaList;
     private VerticalFileAdapter mAdapter;
@@ -46,6 +57,10 @@ public class MsgFileFragment extends BaseScanFragment {
 
     @Override
     protected void initViews() {
+
+        this.tvRecover.setBackground(new BackgroundShape(getActivity(), 22, R.color.yellow_btn));
+        this.tvRecovered.setBackground(new BackgroundShape(getActivity(), 22, R.color.gray_button));
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mAdapter = new VerticalFileAdapter(null);
@@ -75,12 +90,74 @@ public class MsgFileFragment extends BaseScanFragment {
         });
 
         mAdapter.setOnItemLongClickListener((adapter, view, position) -> {
-            Intent intent = new Intent(getActivity(), RecoverFileActivity.class);
-
-            startActivity(intent);
+            start2RecoverActivity();
 
             return false;
         });
+
+
+        RxView.clicks(tvRecover).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+
+            if (!UserInfoHelper.gotoVip(getActivity())) {
+
+
+                if (mIsOperate) return;
+
+                mIsOperate = true;
+
+                rlMask.setVisibility(View.VISIBLE);
+                mTvMask.setText("微信文件扫描中");
+
+                TaskUtil.getImpl().runTask(() -> {
+                    File dir = new File(Environment.getExternalStorageDirectory() + "/数据恢复助手/微信文档恢复/");
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+
+                    rlMask.setTag(false);
+                    for (MediaInfo mediaBean : this.mMediaList) {
+                        if (mediaBean.isSelect()) {
+                            File source = new File(mediaBean.getPath());
+                            File dest = new File(dir.getAbsolutePath() + "/" + mediaBean.getFileName());
+                            try {
+                                FileUtils.copyFile(source, dest);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                LogUtil.msg("微信文件恢复错误->" + e.getMessage());
+                            }
+                            mediaBean.setSelect(false);
+                            rlMask.setTag(true);
+                        }
+                    }
+
+                    VUiKit.post(() -> {
+                        mIsOperate = false;
+                        if (Boolean.parseBoolean(rlMask.getTag() + "")) {
+                            mAdapter.notifyDataSetChanged();
+                            start2RecoverActivity();
+                        } else {
+                            ToastUtil.toast2(getActivity(), "请选择要恢复的微信文件");
+                        }
+                        rlMask.setVisibility(View.GONE);
+
+                    });
+
+                });
+            }
+        });
+
+        RxView.clicks(tvRecovered).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
+
+            start2RecoverActivity();
+        });
+    }
+
+    private void start2RecoverActivity() {
+        if (!UserInfoHelper.gotoVip(getActivity())) {
+            Intent intent = new Intent(getActivity(), RecoverFileActivity.class);
+
+            startActivity(intent);
+        }
     }
 
     private void initData() {
@@ -88,7 +165,7 @@ public class MsgFileFragment extends BaseScanFragment {
         this.mMediaList.clear();
         this.mAdapter.notifyDataSetChanged();
         rlMask.setVisibility(View.VISIBLE);
-        this.mTvMask.setText("微信相册扫描中");
+        this.mTvMask.setText("微信文件扫描中");
         TaskUtil.getImpl().runTask(() -> {
             scanDisk();
             VUiKit.post(() -> notifyDataSetChanged(null));

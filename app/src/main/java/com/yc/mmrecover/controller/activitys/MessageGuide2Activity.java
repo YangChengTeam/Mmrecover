@@ -99,10 +99,7 @@ public class MessageGuide2Activity extends BaseActivity {
 
         });
         RxView.clicks(tvShowBackup).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
-            if (!MessageUtils.isBackup()) {
-                ToastUtil.toast2(MessageGuide2Activity.this, "您还没有备份，请先备份");
-                return;
-            }
+
             startActivity(new Intent(MessageGuide2Activity.this, MessageUserActivity.class));
 //            startActivity(new Intent(MessageGuide2Activity.this, MessageGuide3Activity.class));
         });

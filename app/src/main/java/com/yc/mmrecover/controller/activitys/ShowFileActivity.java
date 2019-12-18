@@ -1,12 +1,7 @@
 package com.yc.mmrecover.controller.activitys;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
 import android.view.View;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yc.mmrecover.R;
@@ -14,10 +9,9 @@ import com.yc.mmrecover.model.bean.MediaInfo;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.view.adapters.VerticalFileAdapter;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
-import java.io.Serializable;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class ShowFileActivity extends BaseShowActivity {
     @Override
