@@ -1,6 +1,7 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.text.TextUtils;
 import android.view.View;
@@ -42,7 +43,18 @@ public class ShowVideoActivity extends BaseShowActivity {
 
     @Override
     public boolean filterExt(String path) {
-        return true;
+        boolean z = false;
+        if (TextUtils.isEmpty(path) || path.endsWith(".jpg") || path.endsWith(".png") || path.endsWith(".gif") || path.endsWith(".txt") || path.endsWith(".db") || path.endsWith(".apk") || path.endsWith(".ppm") || path.endsWith(".zip") || path.endsWith(".slk") || path.endsWith(".json") || path.endsWith(".so") || path.endsWith(".js") || path.endsWith(".log") || path.endsWith(".html") || path.endsWith(".amr") || path.endsWith(".xlog") || path.endsWith(".xml")) {
+            return false;
+        }
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        if (options.outWidth <= 0 || options.outHeight <= 0 || options.outMimeType == null || !options.outMimeType.toLowerCase().contains("image")) {
+            z = true;
+        }
+        return z;
+
     }
 
     @Override

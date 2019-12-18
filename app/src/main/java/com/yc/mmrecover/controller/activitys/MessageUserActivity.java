@@ -21,6 +21,7 @@ import java.util.List;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 
 public class MessageUserActivity extends BaseActivity {
@@ -82,7 +83,7 @@ public class MessageUserActivity extends BaseActivity {
 
 
         this.mRlMask.setVisibility(View.VISIBLE);
-        this.mTvMask.setText("微信账号扫描中");
+        this.mTvMask.setText("                 微信账号扫描中\n第一次描扫需要3-6分钟，请稍后");
 
         TaskUtil.getImpl().runTask(() -> {
             List<WxAccountInfo> accountInfos = new ArrayList<>();

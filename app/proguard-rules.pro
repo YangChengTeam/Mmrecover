@@ -41,15 +41,20 @@
 -keep class com.chad.library.adapter.** {
 *;
 }
+
+-keep class com.tencent.mm.opensdk.** {*;}
+-keep class net.zetetic.** {*;}
+
 -keep public class * extends com.chad.library.adapter.base.BaseQuickAdapter
 -keep public class * extends com.chad.library.adapter.base.BaseViewHolder
 -keepclassmembers  class **$** extends com.chad.library.adapter.base.BaseViewHolder {
      <init>(...);
 }
- -keep class net.sqlcipher.database.** {*;}
 
--keep class com.yc.mmrecover.model.bean.** {*;}
--keep class com.yc.mmrecover.view.** {*;}
+-keep class net.sqlcipher.** {*;}
+
+-keep class com.yc.mmrecover.** {*;}
+
 -keep class com.kk.securityhttp.domain.** {*;}
 
 -dontwarn   rx.**
