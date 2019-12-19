@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.kk.utils.VUiKit;
 import com.yc.mmrecover.R;
+import com.yc.mmrecover.utils.UiUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,7 @@ public class SplashActivity extends BasePermissionActivity {
 
     @Override
     protected void initViews() {
+        appNameTextView.setText(UiUtils.getAppName());
         checkAndRequestPermission();
     }
 

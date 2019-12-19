@@ -65,7 +65,7 @@
                 android:layout_marginTop="12.0dip"
                 android:layout_marginRight="20dp"
                 android:lineSpacingExtra="5dp"
-                android:text="       聊天恢复助手团队专注于移动设备的数据恢复服务，深入底层数据技术，还原微信聊天加密算法，帮助用户找回在移动设备误删的图片、视频、语音、好友和聊天记录等数据。\n\n
+                android:text="       我们团队专注于移动设备的数据恢复服务，深入底层数据技术，还原微信聊天加密算法，帮助用户找回在移动设备误删的图片、视频、语音、好友和聊天记录等数据。\n\n
        数据是无价的，但生活中有诸多的不慎和意外会导致您宝贵的数据被误删除。我们希望为用户提供最后一道屏障，尽我们所能为您挽回遗憾和损失。"
                 android:textColor="@color/gray_word"
                 android:textSize="14.0sp" />

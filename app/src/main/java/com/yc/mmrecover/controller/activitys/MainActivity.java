@@ -1,6 +1,7 @@
 package com.yc.mmrecover.controller.activitys;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
@@ -20,16 +21,16 @@ import com.yc.mmrecover.model.bean.UserInfo;
 import com.yc.mmrecover.model.engin.IndexEngine;
 import com.yc.mmrecover.utils.Func;
 import com.yc.mmrecover.utils.MessageUtils;
-import com.yc.mmrecover.utils.SpUtils;
+import com.yc.mmrecover.utils.UiUtils;
 import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.wdiget.VTextView;
-
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Subscriber;
 
 
@@ -48,6 +49,8 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.im_user)
     ImageView myBtn;
+    @BindView(R.id.tv_app_name)
+    TextView tvAppName;
 
     private String[][] tmpBroadcastInfo;
 
@@ -65,6 +68,7 @@ public class MainActivity extends BaseActivity {
             startActivity(new Intent(MainActivity.this, MyActivity.class));
         });
 
+        tvAppName.setText(UiUtils.getAppName());
         tvSize.setText(Func.getUsedInternalMemorySize(this) + "/" + Func.getInternalMemorySize(this));
         tvPercent.setText(Func.getUsedMemoryPresent() + "");
 
@@ -211,4 +215,10 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }
