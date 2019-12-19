@@ -57,6 +57,8 @@ public class UserInfo {
     private String wx;
     private String qq;
 
+    private String vip_name;
+
     public String getId() {
         return id;
     }
@@ -250,5 +252,13 @@ public class UserInfo {
 
     public void setQq(String qq) {
         this.qq = qq;
+    }
+
+    public String getVip_name() {
+        return vip_name;
+    }
+
+    public void setVip_name(String vip_name) {
+        this.vip_name = vip_name;
     }
 }

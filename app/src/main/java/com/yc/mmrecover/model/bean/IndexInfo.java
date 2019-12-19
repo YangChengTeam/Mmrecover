@@ -9,7 +9,8 @@ public class IndexInfo {
 
     private UserInfo userInfo;//用户信息
     private ContactInfo kf; //联系客服
-    private int userCard; //用户拥有的会员卡id
+//    private int userCard; //用户拥有的会员卡id
+    private VipItemInfo userLevel;//
 
 
     public UserInfo getUserInfo() {
@@ -28,13 +29,11 @@ public class IndexInfo {
         this.kf = kf;
     }
 
-    public int getUserCard() {
-        return userCard;
+    public VipItemInfo getUserLevel() {
+        return userLevel;
     }
 
-    public void setUserCard(int userCard) {
-        this.userCard = userCard;
+    public void setUserLevel(VipItemInfo userLevel) {
+        this.userLevel = userLevel;
     }
-
-
 }

@@ -198,7 +198,9 @@ public class MainActivity extends BaseActivity {
                 if (indexInfoResultInfo != null && indexInfoResultInfo.getCode() == HttpConfig.STATUS_OK && indexInfoResultInfo.getData() != null) {
                     IndexInfo indexInfo = indexInfoResultInfo.getData();
                     UserInfo userInfo = indexInfo.getUserInfo();
-                    userInfo.setIsVip(indexInfo.getUserCard());
+
+                    userInfo.setIsVip(indexInfo.getUserLevel().getLevel());
+                    userInfo.setVip_name(indexInfo.getUserLevel().getName());
                     userInfo.setWx(indexInfo.getKf().getWx());
                     userInfo.setQq(indexInfo.getKf().getQq());
                     UserInfoHelper.saveUserInfo(userInfo);
