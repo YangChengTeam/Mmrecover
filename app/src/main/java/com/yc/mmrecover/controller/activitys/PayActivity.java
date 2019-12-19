@@ -110,6 +110,7 @@ public class PayActivity extends BaseActivity {
                     return;
                 }
                 // TODO to pay
+                if (vipItemInfo == null) return;
 
                 createOrder(vipItemInfo.getId() + "", mPayType == 1 ? "alipay" : "wxpay");
 
@@ -274,7 +275,7 @@ public class PayActivity extends BaseActivity {
         stringBuilder.append(GlobalData.payCount3);
         tv98.setText(stringBuilder.toString());
 
-        changeTvPayText(GlobalData.payCount3);
+//        changeTvPayText(GlobalData.payCount3);
 
 
         StringBuilder stringBuilder2 = new StringBuilder();
