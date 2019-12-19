@@ -55,4 +55,12 @@ public class UserInfoHelper {
         }
         return false;
     }
+
+    public static boolean isGotoSuperVip(Context context) {
+        if (getVipType() != 2) {
+            context.startActivity(new Intent(context, PayActivity.class));
+            return true;
+        }
+        return false;
+    }
 }

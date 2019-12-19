@@ -100,7 +100,7 @@ public class App extends MultiDexApplication {
         params.put("device_type", "android");
         params.put("app_type", "app");
         params.put("app_id", "16");
-        params.put("imeil", Func.getImei(this));
+        params.put("imeil", Func.getMachineCode(this));
         String sv = Build.MODEL.contains(Build.BRAND) ? Build.MODEL + " " + Build.VERSION.RELEASE : Build.BRAND + " " + Build.MODEL + " " + Build.VERSION.RELEASE;
         params.put("sv", sv);
         if (channelInfo != null) {
