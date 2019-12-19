@@ -34,6 +34,7 @@ import com.yc.mmrecover.pay.alipay.OrderInfo;
 import com.yc.mmrecover.utils.EngineUtils;
 import com.yc.mmrecover.utils.HttpUtils;
 import com.yc.mmrecover.utils.PayListener;
+import com.yc.mmrecover.utils.UiUtils;
 import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.utils.VipItemHelper;
 import com.yc.mmrecover.view.adapters.VipItemAdapter;
@@ -142,7 +143,7 @@ public class PayActivity extends BaseActivity {
             case R.id.tv_note: //用户须知
                 Intent intent = new Intent(PayActivity.this, WebActivity.class);
                 intent.putExtra("web_title", "会员须知");
-                intent.putExtra("web_url", "http://uu.zhanyu22.com/html/userNotice.html");
+                intent.putExtra("web_url", "http://uu.zhanyu22.com/html/userNotice.html?name="+ UiUtils.getAppName());
                 PayActivity.this.startActivity(intent);
                 break;
             case R.id.ll_read: //我已阅读用户须知

@@ -24,6 +24,7 @@ import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.GlobalData;
 import com.yc.mmrecover.model.engin.GuideEngine;
 import com.yc.mmrecover.utils.MessageUtils;
+import com.yc.mmrecover.utils.UiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +107,7 @@ public class MessageGuide2Activity extends BaseActivity {
         RxView.clicks(tvQa).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((Consumer<? super Unit>) aVoid -> {
             Intent intent = new Intent(MessageGuide2Activity.this, WebActivity.class);
             intent.putExtra("web_title", "帮助");
-            intent.putExtra("web_url", "http://uu.zhanyu22.com/html/help.html");
+            intent.putExtra("web_url", "http://uu.zhanyu22.com/html/help.html?name=" + UiUtils.getAppName());
             MessageGuide2Activity.this.startActivity(intent);
         });
         RxView.clicks(tvBackupErr).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
@@ -342,8 +343,6 @@ public class MessageGuide2Activity extends BaseActivity {
             }
         }
     }
-
-
 
 
     private void getGuidImagePath() {

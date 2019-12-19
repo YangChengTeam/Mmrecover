@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.yc.mmrecover.R;
 import com.yc.mmrecover.model.bean.UserInfo;
 import com.yc.mmrecover.utils.Func;
+import com.yc.mmrecover.utils.UiUtils;
 import com.yc.mmrecover.utils.UserInfoHelper;
 import com.yc.mmrecover.view.wdiget.BackgroundShape;
 
@@ -47,7 +48,7 @@ public class MyActivity extends BaseActivity {
             case R.id.ll_help:
                 Intent intent2 = new Intent(this, WebActivity.class);
                 intent2.putExtra("web_title", "帮助");
-                intent2.putExtra("web_url", "http://uu.zhanyu22.com/html/help.html");
+                intent2.putExtra("web_url", "http://uu.zhanyu22.com/html/help.html?name="+ UiUtils.getAppName());
                 startActivity(intent2);
                 break;
             case R.id.ll_about:
