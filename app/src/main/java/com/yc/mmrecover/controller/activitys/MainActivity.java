@@ -152,8 +152,8 @@ public class MainActivity extends BaseActivity {
             RxView.clicks(homeButton).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe((v) -> {
                 switch (Integer.valueOf(homeButton.getTag().toString())) {
                     case 0:
-                        if (!UserInfoHelper.isGotoSuperVip(this))
-                            startActivity(new Intent(MainActivity.this, MessageGuideActivity.class));
+//                        if (!UserInfoHelper.isGotoSuperVip(this))
+                        startActivity(new Intent(MainActivity.this, MessageGuideActivity.class));
                         break;
                     case 1:
                         startActivity(new Intent(MainActivity.this, ShowVideoActivity.class));
@@ -215,10 +215,4 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }
