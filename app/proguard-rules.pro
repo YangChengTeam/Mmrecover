@@ -42,7 +42,7 @@
 *;
 }
 
--keep class com.tencent.mm.opensdk.** {*;}
+-keep class com.tencent.** {*;}
 -keep class net.zetetic.** {*;}
 
 -keep public class * extends com.chad.library.adapter.base.BaseQuickAdapter
